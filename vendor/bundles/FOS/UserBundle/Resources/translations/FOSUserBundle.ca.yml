@@ -1,0 +1,82 @@
+# Group
+group.edit.submit: Actualitza el grup
+group.show.name: Nom del grup
+group.new.submit: Crea el grup
+group.flash.updated: S'ha actualitzat el grup
+group.flash.created: S'ha creat el grup
+group.flash.deleted: S'ha eliminat el grup
+
+# Security
+security.login.username: "Nom d'usuari:"
+security.login.password: "Contrasenya:"
+security.login.remember_me: Recorda'm
+security.login.submit: Entra
+
+# Profile
+profile.show.username: Nom d'usuari
+profile.show.email: Correu electrònic
+profile.edit.submit: Actualitza
+profile.flash.updated: S'ha actualitzat el perfil
+
+# Password change
+change_password.submit: Canvia la contrasenya
+change_password.flash.success: S'ha canviat la contrasenya
+
+# Registration
+registration.check_email: S'ha enviat un correu electrònic a %email%. Conté un enllaç d'activació que heu de clicar per activar el compte.
+registration.confirmed: Enhorabona %username%, el vostre compte s'ha activat.
+registration.back: Torna a la pàgina original.
+registration.submit: Registra
+registration.flash.user_created: S'ha creat l'usuari correctament
+
+registration.email: |
+    Benvingut %username%!
+    Hola %username%!
+
+    Per finalitzar l'activació del seu compte - si us plau visiteu %confirmationUrl%
+
+    Atentament,
+    L'equip.
+
+# Password resetting
+resetting.password_already_requested: La contrasenya per l'usuari ja ha estat sol·licitada en les últimes 24 hores.
+resetting.check_email: S'ha enviat un correu electrònic a %email%. Conté un enllaç que heu de clicar per restablir la contrasenya.
+resetting.request.invalid_username: El nom d'usuari o correu electrònic "%username%" no existeix.
+resetting.request.username: "Nom d'usuari o correu electrònic:"
+resetting.request.submit: Restableix la contrasenya
+resetting.reset.submit: Canvia la contrasenya
+resetting.flash.success: S'ha restablert la contrasenya correctament
+
+resetting.email: |
+    Restablir la contrasenya
+    Hola %username%!
+
+    Per restablir la contrasenya - si us plau visiteu %confirmationUrl%
+
+    Atentament,
+    L'equip.
+
+# Global strings
+layout.logout: Tanca la sessió
+layout.login: Entra
+layout.register: Registrar-se
+layout.logged_in_as: Heu iniciat sessió com a %username%
+
+# Form field labels
+fos_user_group_form_name: "Nom del grup:"
+
+fos_user_profile_form_user_username: "Nom d'usuari:"
+fos_user_profile_form_user_email: "Correu electrònic:"
+fos_user_profile_form_current: "Contrasenya actual:"
+
+fos_user_registration_form_username: "Nom d'usuari:"
+fos_user_registration_form_email: "Correu electrònic:"
+fos_user_registration_form_plainPassword_first: "Contrasenya:"
+fos_user_registration_form_plainPassword_second: "Verificació:"
+
+fos_user_resetting_form_new_first: "Nova contrasenya:"
+fos_user_resetting_form_new_second: "Verificació:"
+
+fos_user_change_password_form_new_first: "Nova contrasenya:"
+fos_user_change_password_form_new_second: "Verificació:"
+fos_user_change_password_form_current: "Contrasenya actual:"

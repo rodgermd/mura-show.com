@@ -1,0 +1,82 @@
+# Group
+group.edit.submit: Opdater gruppe group
+group.show.name: Gruppe navn
+group.new.submit: Opret gruppe
+group.flash.updated: Gruppen er blevet opdateret
+group.flash.created: Gruppen er blevet oprettet
+group.flash.deleted: Gruppen er blevet slettet
+
+# Security
+security.login.username: "Brugernavn:"
+security.login.password: "Kodeord:"
+security.login.remember_me: Husk mig
+security.login.submit: Logind
+
+# Profile
+profile.show.username: Brugernavn
+profile.show.email: Email
+profile.edit.submit: Opdater
+profile.flash.updated: Profilen er blevet opdateret
+
+# Password change
+change_password.submit: Skift kodeord
+change_password.flash.success: Kodeordet er blevet opdateret
+
+# Registration
+registration.check_email: En email er blevet send til %email%. Den indeholder et aktiverings link du skal bruge for at aktiverer din konto.
+registration.confirmed: Tillykke %username%, din konto er nu aktiveret
+#registration.back: Back to the originating page.
+registration.submit: Registrer
+registration.flash.user_created: Bruger er blevet oprettet
+
+registration.email: |
+    Velkommen %username%!
+    Hej %username%!
+
+    For at færdiggøre valideringen af din konto - besøg venligst %confirmationUrl%
+
+    Venlig Hilsen,
+    Holdet bag siden.
+
+# Password resetting
+resetting.password_already_requested: Denne brugers kodeord er allerede blevet nulstillet inden for de sidste 24 timer.
+resetting.check_email: En email er blevet sendt til %email%. Den indeholder et link til at nulstille dit kodeord.
+resetting.request.invalid_username: Brugeren "%username" findes ikke.
+resetting.request.username: "Brugernavn:"
+resetting.request.submit: Nulstil kodeord
+resetting.reset.submit: Skift kodeord
+resetting.flash.success: Kodeordet er blevet nulstillet
+
+resetting.email: |
+    Velkommen %username%!
+    Hej %username%!
+
+    For at nulstille dit kodeord - besøg venligst %confirmationUrl%
+
+    Venlig Hilsen,
+    Holdet bag siden.
+
+# Global strings
+layout.logout: Logud
+layout.login: Logind
+layout.register: Registrer
+layout.logged_in_as: Logget ind som %username%
+
+# Form field labels
+fos_user_group_form_name: "Gruppe navn:"
+
+fos_user_profile_form_user_username: "Brugernavn:"
+fos_user_profile_form_user_email: "Email:"
+fos_user_profile_form_current: "Nuværende kodeord:"
+
+fos_user_registration_form_username: "Brugernavn:"
+fos_user_registration_form_email: "Email:"
+fos_user_registration_form_plainPassword_first: "Kodeord:"
+fos_user_registration_form_plainPassword_second: "Verificering:"
+
+fos_user_resetting_form_new_first: "Nyt kodeord:"
+fos_user_resetting_form_new_second: "Verificering:"
+
+fos_user_change_password_form_new_first: "Nyt kodeord:"
+fos_user_change_password_form_new_second: "Verificering:"
+fos_user_change_password_form_current: "Nuværende kodeord:"

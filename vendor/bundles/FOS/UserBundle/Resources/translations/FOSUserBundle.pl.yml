@@ -1,0 +1,82 @@
+# Group
+group.edit.submit: Edytuj grupę
+group.show.name: Nazwa grupy
+group.new.submit: Utwórz grupę
+group.flash.updated: Grupa została zaktualizowana
+group.flash.created: Grupa została utworzona
+group.flash.deleted: Grupa została usunięta
+
+# Security
+security.login.username: "Nazwa użytkownika:"
+security.login.password: "Hasło:"
+security.login.remember_me: Nie wylogowuj mnie
+security.login.submit: Zaloguj
+
+# Profile
+profile.show.username: Nazwa użytkownika
+profile.show.email: E-mail
+profile.edit.submit: Edytuj użytkownika
+profile.flash.updated: Zapisano zmiany w profilu
+
+# Password change
+change_password.submit: Zmień hasło
+change_password.flash.success: Hasło zostało zmienione
+
+# Registration
+registration.check_email: Na adres %email% wysłano wiadomość e-mail. Zawiera ona link w którego należy kliknąć aby aktywować konto.
+registration.confirmed: Gratulacje %username%, potwierdziłeś konto.
+#registration.back: Back to the originating page.
+registration.submit: Zarejestruj
+registration.flash.user_created: Stworzono użytkownika
+
+registration.email: |
+    Witaj %username%!
+    Cześć %username%!
+
+    Aby potwierdzić swoje konto - proszę przejść do %confirmationUrl%
+
+    Pozdrawiamy,
+    Zespół.
+
+# Password resetting
+resetting.password_already_requested: W przeciągu ostatnich 24 godzin nastąpiła już próba odzyskania hasła.
+resetting.check_email: Na adres %email% Wysłano wiadomość e-mail. Zawiera ona link w którego należy kliknąć aby zresetować hasło.
+resetting.request.invalid_username: Nazwa użytkownika lub e-mail "%username%" nie istnieje.
+resetting.request.username: "Nazwa użytkownika lub e-mail:"
+resetting.request.submit: Resetuj hasło
+resetting.reset.submit: Zmień hasło
+resetting.flash.success: Hasło zostało zresetowane
+
+resetting.email: |
+    Witaj %username%!
+    Cześć %username%!
+
+    Aby zresetować hasło - proszę przejść do %confirmationUrl%
+
+    Pozdrawiamy,
+    Zespół.
+
+# Global strings
+layout.logout: Wyloguj
+layout.login: Zaloguj
+layout.register: Zarejestruj
+layout.logged_in_as: Zalogowano jako %username%
+
+# Form field labels
+fos_user_group_form_name: "Nazwa grupy:"
+
+fos_user_profile_form_user_username: "Nazwa użytkownika:"
+fos_user_profile_form_user_email: "E-mail:"
+fos_user_profile_form_current: "Obecne hasło:"
+
+fos_user_registration_form_username: "Nazwa użytkownika:"
+fos_user_registration_form_email: "E-mail:"
+fos_user_registration_form_plainPassword_first: "Hasło:"
+fos_user_registration_form_plainPassword_second: "Weryfikacja:"
+
+fos_user_resetting_form_new_first: "Nowe hasło:"
+fos_user_resetting_form_new_second: "Weryfikacja:"
+
+fos_user_change_password_form_new_first: "Nowe hasło:"
+fos_user_change_password_form_new_second: "Weryfikacja:"
+fos_user_change_password_form_current: "Obecne hasło:"
