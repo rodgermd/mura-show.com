@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Rodger\UserBundle\RodgerUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -62,4 +62,4 @@ jms_security_extra:
 fos_user:
     db_driver: orm
     firewall_name: fos
-    user_class: Acme\UserBundle\Entity\User
+    user_class: Rodger\UserBundle\Entity\User
