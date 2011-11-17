@@ -5,6 +5,8 @@ namespace Rodger\GalleryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation\Timestampable;
+use Rodger\UserBundle\Entity\User;
+use Rodger\GalleryBundle\Entity\Image;
 
 /**
  * Rodger\GalleryBundle\Entity\Album
@@ -50,6 +52,20 @@ class Album {
    * @ORM\Column(name="is_private", type="boolean")
    */
   private $is_private = false;
+  
+  /**
+   * Related User
+   * @var User $user 
+   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="Images") 
+   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
+   */
+  private $User;
+
+  /**
+   * @ORM\Column(name="user_id", type="integer")
+   * @var integer $user_id
+   */
+  private $user_id;
 
   public function __construct() {
     $this->Images = new ArrayCollection();
@@ -114,6 +130,41 @@ class Album {
   public function setCreatedAt($created_at)
   {
     $this->created_at = $created_at;
+  }
+  
+  /**
+   * Gets uploader User
+   * @return User 
+   */
+  public function getUser() {
+    return $this->User;
+  }
+  
+  /**
+   * Sets uploader User
+   * @param User $user 
+   */
+  public function setUser(User $user)
+  {
+    $this->User = $user;
+    $this->user_id = $user->getId();
+  }
+  
+  /**
+   * Gets related Images
+   * @return array 
+   */
+  public function getImages() {
+    return $this->Images;
+  }
+  
+  /**
+   * Adds Image
+   * @param Image $image 
+   */
+  public function addImage(Image $image)
+  {
+    $this->Images[] = $image;
   }
 
 }

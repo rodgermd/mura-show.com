@@ -10,52 +10,62 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="tags")
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\TagRepository")
  */
-class Tag
-{
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+class Tag {
 
-    /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=50)
-     */
-    private $name;
+  /**
+   * @var string $name
+   * @ORM\Id
+   * @ORM\Column(name="name", type="string", length=50)
+   */
+  private $name;
+  
+  /**
+   * @ORM\ManyToMany(targetEntity="Image", mappedBy="Tags")
+   * @var array Images 
+   */
+  private $Images;
 
+  /**
+   * Set name
+   *
+   * @param string $name
+   */
+  public function setName($name) {
+    $this->name = $name;
+  }
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+  /**
+   * Get name
+   *
+   * @return string 
+   */
+  public function getName() {
+    return $this->name;
+  }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+  /**
+   * Gets related Images
+   * @return array 
+   */
+  public function getImages()
+  {
+    return $this->Images;
+  }
+  
+  /**
+   * Sets related Images
+   * @param array $images 
+   */
+  public function setImages($images) {
+    $this->Images = $images;
+  }
+  
+  /**
+   * Add Image into collection
+   * @param Image $image 
+   */
+  public function addImage(Image $image)
+  {
+    $this->Images[] = $image;
+  }
 }

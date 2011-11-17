@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{% block title %}MuraShow.com{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+  </head>
+  <body>
+    {% block header %}
+      <div id="header">
+        <a href="{{ path('homepage') }}" title="{{ 'go to start page' | trans }}" id="sitelogo">murashow.com</a>
+        {% block subsite_name %}{% endblock subsite_name %}
+        {% block primary_menu %}{% endblock primary_menu %}
+        {% block secondary_menu %}{% endblock secondary_menu %}
+        <div id="user-data">
+          {% include "RodgerUserBundle:Default:user.login.html.twig" %}
+        </div>
+      </div>  
+    {% endblock header %}
+    <div id="content-wrapper">
+    {% block body %}{% endblock %}
+    </div>
+    {% block javascripts %}{% endblock %}
+  </body>
 </html>
