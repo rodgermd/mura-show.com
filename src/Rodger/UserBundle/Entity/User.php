@@ -33,7 +33,7 @@ class User extends BaseUser {
    * @var array Albums 
    */
   private $Albums;
-
+  
   /**
    * Get id
    *
@@ -42,5 +42,5 @@ class User extends BaseUser {
   public function getId() {
     return $this->id;
   }
-
+  
 }
