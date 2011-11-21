@@ -2,7 +2,7 @@ security:
     encoders:
         Symfony\Component\Security\Core\User\User: 
           algorithm:   sha1
-          iterations:  20
+          iterations:  84
           encode_as_base64: true
 
     role_hierarchy:

@@ -3,7 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{% block title %}MuraShow.com{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css">
+    <link rel="stylesheet" type="text/css" href="/css/default.css">
+    {% endblock %}
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
   </head>
   <body>

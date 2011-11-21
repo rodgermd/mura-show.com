@@ -1,0 +1,25 @@
+html { height: 100%}
+body { font: 12px Arial; color: #444;}
+
+#header { height: 60px; padding: 20px; background-color: #f3f3f3; border-bottom: 2px #ddd solid;}
+#content-wrapper { padding: 20px;}
+
+
+input[type=text], input[type=password], textarea {
+  padding: 3px; border: 1px #ccc solid; border-radius: 5px;
+  outline: 0!important;
+  color: #555;
+}
+input[type=text]:hover, input[type=password]:hover, textarea:hover {
+  box-shadow: 0 0 5px yellow;
+  background-color: #fdfce6;
+  color: #333;
+}
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  box-shadow: 0 0 5px #999;
+  background-color: #fffdcc;
+  color: #000;
+}
+input[type=submit] { padding: 4px; cursor: pointer}
+
+.error { color: #900}
