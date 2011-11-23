@@ -1,5 +1,5 @@
 {% if app.user %}
-{{ app.user }} <a href="{{ path('fos_user_security_logout') }}">{{ 'logout' | trans }}</a>
+{{ app.user }} <a href="{{ path('fos_user_security_logout') }}" class="button gray-button">{{ 'logout' | trans }}</a>
 {% else %}
-<a href="{{ path('login') }}">{{ 'login' | trans }}</a>
+<a href="{{ path('login') }}" class="button gray-button">{{ 'login' | trans }}</a>
 {% endif %}

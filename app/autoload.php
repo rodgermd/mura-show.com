@@ -21,6 +21,11 @@ $loader->registerNamespaces(array(
     'WhiteOctober\PagerfantaBundle' => __DIR__.'/../vendor/bundles',
     'Pagerfanta'                    => __DIR__.'/../vendor/bundles/pagerfanta/src',
     'FOS'              => __DIR__.'/../vendor/bundles',
+    
+    'Behat\\BehatBundle' => __DIR__.'/../vendor/bundles',
+    'Behat\\MinkBundle'  => __DIR__.'/../vendor/bundles',
+    'Behat\\Gherkin'      => '/home/rodger/web/test-dependencies/behat/gherkin/src',
+    'Behat\\Behat'        => '/home/rodger/web/test-dependencies/behat/src',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
