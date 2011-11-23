@@ -12,3 +12,11 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+    
+mink:
+  default_session:  goutte
+  goutte:           ~
+  
+doctrine:
+  dbal:
+    dbname:   %database_name%_test

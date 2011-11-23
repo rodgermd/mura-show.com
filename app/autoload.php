@@ -26,6 +26,8 @@ $loader->registerNamespaces(array(
     'Behat\\MinkBundle'  => __DIR__.'/../vendor/bundles',
     'Behat\\Gherkin'      => '/home/rodger/web/test-dependencies/behat/gherkin/src',
     'Behat\\Behat'        => '/home/rodger/web/test-dependencies/behat/src',
+    'Goutte'        => '/home/rodger/web/test-dependencies/goutte/src',
+    'Zend'        => '/home/rodger/web/test-dependencies/zf2/library',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
