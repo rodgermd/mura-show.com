@@ -7,15 +7,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Route("/")
+ * Route("/album")
  */
-class FrontController extends CommonController {
+class AlbumController extends CommonController {
 
   /**
-   * @Route("/", name="homepage")
+   * @Route("/create", name="albums.create")
    * @Template()
    */
-  public function indexAction() {
+  public function createAction() {
     return array();
   }
 
