@@ -1,0 +1,34 @@
+{% use "form_div_layout.html.twig" %}
+{% use "RodgerGalleryBundle:Form:fields.html.twig" %}
+
+{% block field_row %}
+{% spaceless %}
+    <div class="field" id="field-{{ id }}">
+        {{ form_label(form, label|default(null)) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock field_row %}
+
+{% block form_widget %}
+{% spaceless %}
+    <div id="fields-{{ id }}" class="div-layout-fields">
+        {{ block('field_rows') }}
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget %}
+
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ul class="errors-list">
+        {% for error in errors %}
+            <li class="error">{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+

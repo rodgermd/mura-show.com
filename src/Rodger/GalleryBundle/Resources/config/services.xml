@@ -7,4 +7,10 @@
   <parameters>
     <parameter key="gallery.pre_execute_class">Rodger\GalleryBundle\Listener\PreExecuteListener</parameter>
   </parameters>
+  
+  <services>
+    <service id="kernel.listener.pre_execute_listener" class="%gallery.pre_execute_class%">
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+    </service>
+  </services>
 </container>

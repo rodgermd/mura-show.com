@@ -1,0 +1,12 @@
+{% use "form_table_layout.html.twig" %}
+{% use "RodgerGalleryBundle:Form:fields.html.twig" %}
+{% use "RodgerGalleryBundle:Form:decorations.html.twig" %}
+
+{% block form_widget %}
+{% spaceless %}
+    <table id="fields-{{ id }}" class="fields-table">
+        {{ block('field_rows') }}
+        {{ form_rest(form) }}
+    </table>
+{% endspaceless %}
+{% endblock form_widget %}

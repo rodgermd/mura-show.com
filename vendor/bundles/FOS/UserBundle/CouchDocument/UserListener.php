@@ -50,12 +50,11 @@ class UserListener implements EventSubscriber
 
     private function handleEvent(LifecycleEventArgs $args)
     {
-        if (null === $this->userManager) {
-            $this->userManager = $this->container->get('fos_user.user_manager');
-        }
-
         $document = $args->getDocument();
         if ($document instanceof UserInterface) {
+            if (null === $this->userManager) {
+                $this->userManager = $this->container->get('fos_user.user_manager');
+            }
             $this->userManager->updateCanonicalFields($document);
             $this->userManager->updatePassword($document);
         }

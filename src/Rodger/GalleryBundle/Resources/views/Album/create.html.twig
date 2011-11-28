@@ -1,5 +1,15 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 {% block body %}
 <h1>{{ 'Create album' | trans }}</h1>
+<form method="post" action="{{ path('albums.create') }}">
+{% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
+{{ form_widget(form) }}
+<input type="submit" value="{{ 'create album' | trans }}"/>
+</form>
 
 {% endblock body %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
+{% endblock javascripts %}

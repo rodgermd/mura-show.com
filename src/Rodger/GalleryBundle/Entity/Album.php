@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation\Timestampable;
 use Rodger\UserBundle\Entity\User;
 use Rodger\GalleryBundle\Entity\Image;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Rodger\GalleryBundle\Entity\Album
@@ -42,7 +43,7 @@ class Album {
    * Created at
    * @var datetime $created_at
    * @Timestampable(on="create")
-   * @ORM\Column(name="created_at",type="datetime", nullable=true) 
+   * @ORM\Column(name="created_at",type="datetime") 
    */
   private $created_at;
 
@@ -66,9 +67,27 @@ class Album {
    * @var integer $user_id
    */
   private $user_id;
+  
+  /**
+   * Related keywords
+   * @var string
+   */
+  public $keywords; 
+  
+  /**
+   * Related Tags
+   * @var array Tags
+   * @ORM\ManyToMany(targetEntity="Tag", inversedBy="Albums")
+   * @ORM\JoinTable(name="album_tags",
+   *      joinColumns={@ORM\JoinColumn(name="album_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="name")}
+   *      ) 
+   */
+  private $Tags;
 
   public function __construct() {
     $this->Images = new ArrayCollection();
+    $this->Tags = new ArrayCollection();
   }
 
   /**
@@ -166,5 +185,22 @@ class Album {
   {
     $this->Images[] = $image;
   }
+  /**
+   * Gets related Images
+   * @return array 
+   */
+  public function getTags() {
+    return $this->Images;
+  }
+  
+  /**
+   * Adds Image
+   * @param Image $image 
+   */
+  public function addTag(Tag $tag)
+  {
+    $this->Tag[] = $tag;
+  }
+  
 
 }

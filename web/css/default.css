@@ -22,6 +22,10 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 }
 input[type=submit] { padding: 4px; cursor: pointer}
 
+::-webkit-input-placeholder  { color:#ccc; }
+input:-moz-placeholder { color:#ccc; }
+
+
 a { color: #666; }
 a:visited, a:hover { color: #333}
 .error { color: #900}
@@ -47,3 +51,11 @@ a:visited, a:hover { color: #333}
 
 #sitelogo { font: normal 18px Serif; text-decoration: none;}
 #sitelogo:hover { color: #000; }
+
+h1 { font: normal 24px Serif, Georgia; color: #000; text-shadow: 1px 1px #ccc; margin-bottom: 1em;}
+
+label.required { border-bottom: 1px #900 solid; }
+.label-required { color: #900; font-size: .8em;}
+
+.fields-table {}
+.fields-table th, .fields-table td { padding: 5px;}

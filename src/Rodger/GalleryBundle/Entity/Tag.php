@@ -24,6 +24,12 @@ class Tag {
    * @var array Images 
    */
   private $Images;
+  
+  /**
+   * @ORM\ManyToMany(targetEntity="Album", mappedBy="Tags")
+   * @var array Albums 
+   */
+  private $Albums;
 
   /**
    * Set name
@@ -67,5 +73,31 @@ class Tag {
   public function addImage(Image $image)
   {
     $this->Images[] = $image;
+  }
+  
+  /**
+   * Gets related Albums
+   * @return array 
+   */
+  public function getAlbums()
+  {
+    return $this->Albums;
+  }
+  
+  /**
+   * Sets related Albums
+   * @param array $albums 
+   */
+  public function setAlbums($albums) {
+    $this->Albums = $albums;
+  }
+  
+  /**
+   * Add Album into collection
+   * @param Album $Album 
+   */
+  public function addAlbum(Album $album)
+  {
+    $this->Albums[] = $album;
   }
 }

@@ -4,6 +4,7 @@
 <!--
     <php>
         <server name="SYMFONY" value="../../../../symfony/src" />
+        <server name="DOCTRINE_COMMON" value="../../../../doctrine-common/lib" />
     </php>
 -->
     <testsuites>
@@ -18,6 +19,7 @@
             <exclude>
                 <directory>./Resources</directory>
                 <directory>./Tests</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

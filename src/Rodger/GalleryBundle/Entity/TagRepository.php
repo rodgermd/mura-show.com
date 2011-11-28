@@ -12,4 +12,33 @@ use Doctrine\ORM\EntityRepository;
  */
 class TagRepository extends EntityRepository
 {
+  /**
+   * Searches Tags like givem
+   * @param string $name
+   * @return array - Tags
+   */
+  public function search($name)
+  {
+    $qb = $this->createQueryBuilder('t');
+    return $qb
+            ->select('t')
+            ->where($qb->expr()->like('u.firstname', $qb->expr()->literal($name . '%')))
+            ->execute()
+            ->getResult();
+  }
+  
+  /**
+   * Gets existing or creates new Tag
+   * @return Tag
+   */
+  public function getOrCreate($name) {
+    $tag = $this->find($name);
+    if (!$tag) {
+      $tag = new Tag();
+      $tag->setName($name);
+      $this->_em->persist($tag);
+    }
+    
+    return $tag;
+  }
 }
