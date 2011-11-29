@@ -1,5 +1,7 @@
 {% block primary_menu %}
 <ul id="primary-menu">
+  {% if app.user %}
   <li><a href="{{ path('albums.create') }}">{{ 'New album' | trans }}</a></li>
+  {% endif %}
 </ul>
 {% endblock primary_menu %}

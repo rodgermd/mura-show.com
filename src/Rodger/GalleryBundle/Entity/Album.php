@@ -4,10 +4,10 @@ namespace Rodger\GalleryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation\Timestampable;
 use Rodger\UserBundle\Entity\User;
 use Rodger\GalleryBundle\Entity\Image;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Rodger\GalleryBundle\Entity\Album
@@ -42,8 +42,7 @@ class Album {
   /**
    * Created at
    * @var datetime $created_at
-   * @Timestampable(on="create")
-   * @ORM\Column(name="created_at",type="datetime") 
+   * @ORM\Column(type="datetime") 
    */
   private $created_at;
 
@@ -69,6 +68,13 @@ class Album {
   private $user_id;
   
   /**
+   * @var string $slug 
+   * @ORM\Column(type="string", nullable=true)
+   * @Gedmo\Slug(fields={"name"})
+   */
+  private $slug;
+  
+  /**
    * Related keywords
    * @var string
    */
@@ -88,6 +94,7 @@ class Album {
   public function __construct() {
     $this->Images = new ArrayCollection();
     $this->Tags = new ArrayCollection();
+    $this->created_at = new \DateTime();
   }
 
   /**
@@ -143,15 +150,6 @@ class Album {
   }
   
   /**
-   * Sets created at
-   * @param datetime $created_at 
-   */
-  public function setCreatedAt($created_at)
-  {
-    $this->created_at = $created_at;
-  }
-  
-  /**
    * Gets uploader User
    * @return User 
    */
@@ -199,8 +197,24 @@ class Album {
    */
   public function addTag(Tag $tag)
   {
-    $this->Tag[] = $tag;
+    $this->Tags[] = $tag;
   }
   
+  /**
+   * Gets slug value
+   * @return string 
+   */
+  public function getSlug() { return $this->slug; }
+  
+  public function getKeywords() {
+    if ($this->keywords) return $this->keywords;
+    $result = array();
+    foreach($this->Tags as $tag) $result[] = (string) $tag;
+    $this->keywords = implode(", ", $result);
+    
+    return $this->keywords;
+  }
+  
+  public function __toString() { return $this->name; }
 
 }

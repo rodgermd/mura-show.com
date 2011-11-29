@@ -22,8 +22,8 @@ class TagRepository extends EntityRepository
     $qb = $this->createQueryBuilder('t');
     return $qb
             ->select('t')
-            ->where($qb->expr()->like('u.firstname', $qb->expr()->literal($name . '%')))
-            ->execute()
+            ->where($qb->expr()->like('t.name', $qb->expr()->literal($name . '%')))
+            ->getQuery()
             ->getResult();
   }
   

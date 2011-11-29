@@ -100,4 +100,6 @@ class Tag {
   {
     $this->Albums[] = $album;
   }
+  
+  public function __toString() { return $this->getName(); }
 }

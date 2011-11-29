@@ -94,7 +94,6 @@ class Swift_ByteStream_FileByteStream
     }
     else
     {
-      $this->_resetReadHandle();
       return false;
     }
   }

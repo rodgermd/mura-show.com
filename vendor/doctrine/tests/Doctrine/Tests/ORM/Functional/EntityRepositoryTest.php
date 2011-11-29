@@ -244,7 +244,7 @@ class EntityRepositoryTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $repos = $this->_em->getRepository('Doctrine\Tests\Models\CMS\CmsAddress');
         $address = $repos->findOneBy(array('user' => $userId));
 
-        $this->assertType('Doctrine\Tests\Models\CMS\CmsAddress', $address);
+        $this->assertInstanceOf('Doctrine\Tests\Models\CMS\CmsAddress', $address);
         $this->assertEquals($addressId, $address->id);
     }
 
@@ -285,7 +285,7 @@ class EntityRepositoryTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $repos = $this->_em->getRepository('Doctrine\Tests\Models\CMS\CmsAddress');
         $address = $repos->findOneByUser($userId);
 
-        $this->assertType('Doctrine\Tests\Models\CMS\CmsAddress', $address);
+        $this->assertInstanceOf('Doctrine\Tests\Models\CMS\CmsAddress', $address);
         $this->assertEquals($addressId, $address->id);
     }
 
@@ -295,7 +295,7 @@ class EntityRepositoryTest extends \Doctrine\Tests\OrmFunctionalTestCase
 
         $query = $repos->createNamedQuery('all');
 
-        $this->assertType('Doctrine\ORM\Query', $query);
+        $this->assertInstanceOf('Doctrine\ORM\Query', $query);
         $this->assertEquals('SELECT u FROM Doctrine\Tests\Models\CMS\CmsUser u', $query->getDQL());
     }
 
@@ -354,6 +354,17 @@ class EntityRepositoryTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $this->assertEquals(2, count($usersDesc), "Pre-condition: only two users in fixture");
         $this->assertSame($usersAsc[0], $usersDesc[1]);
         $this->assertSame($usersAsc[1], $usersDesc[0]);
+    }
+
+    /**
+     * @group DDC-1500
+     */
+    public function testInvalidOrientation()
+    {
+        $this->setExpectedException('Doctrine\ORM\ORMException', 'Invalid order by orientation specified for Doctrine\Tests\Models\CMS\CmsUser#username');
+
+        $repo = $this->_em->getRepository('Doctrine\Tests\Models\CMS\CmsUser');
+        $repo->findBy(array('status' => 'test'), array('username' => 'INVALID'));
     }
 }
 

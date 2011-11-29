@@ -14,7 +14,7 @@ To install the Swiftmailer PEAR package:
 
 * Run the command ``pear channel-discover pear.swiftmailer.org``.
 
-* Then, run the command ``pear install swift/swift``.
+* Then, run the command ``pear install swiftmailer/swiftmailer``.
 
 Installing from a Package
 -------------------------
