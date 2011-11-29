@@ -1,7 +1,7 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 {% block body %}
 <h1>{{ 'Edit %album%' | trans({'%album%' : album}) }}</h1>
-<form method="post" action="{{ path('albums.edit', { 'slug': album.slug }) }}">
+<form method="post" action="{{ path('albums.edit', { 'slug': album.slug }) }}" enctype="multipart/form-data">
 {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
 {{ form_widget(form) }}
 <input type="submit" value="{{ 'update album' | trans }}"/>

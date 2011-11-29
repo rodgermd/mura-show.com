@@ -26,3 +26,15 @@
     {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
 {% endspaceless %}
 {% endblock widget_container_attributes %}    
+    
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ul class="field-errors">
+        {% for error in errors %}
+            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}    

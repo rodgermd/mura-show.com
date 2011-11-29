@@ -81,6 +81,16 @@ class Album {
   public $keywords; 
   
   /**
+   * Uploading file
+   * @var mixed $file
+   * @Assert\File(
+   *     mimeTypes = {"application/zip", "image/jpg"},
+   *     mimeTypesMessage = "Please upload a ZIP or JPG file"
+   * )
+   */
+  public $file;
+  
+  /**
    * Related Tags
    * @var array Tags
    * @ORM\ManyToMany(targetEntity="Tag", inversedBy="Albums")

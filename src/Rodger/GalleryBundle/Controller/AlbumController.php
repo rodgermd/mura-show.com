@@ -9,6 +9,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Rodger\GalleryBundle\Form\AlbumType;
 use Rodger\GalleryBundle\Entity\Album;
+use Rodger\GalleryBundle\Uploader\Uploader;
 
 /**
  * @Route("/album")
@@ -53,6 +54,12 @@ class AlbumController extends CommonController {
         $tags_repository = $this->em->getRepository('RodgerGalleryBundle:Tag');
         $album = $form->getData();
         
+        // process uploads
+        if ($album->file) {
+          $uploader = new Uploader($album->file, $this->get('validator'));
+        }
+        die();
+        // process keywords
         if ($album->keywords) {
           $keywords = explode(',', $album->keywords);
           $keywords = array_filter(array_map('trim', $keywords))  ;

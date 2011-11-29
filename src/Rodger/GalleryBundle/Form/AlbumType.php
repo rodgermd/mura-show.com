@@ -12,7 +12,8 @@ class AlbumType extends AbstractType
             ->add('is_private', 'checkbox', array('required' => false))
             ->add('keywords', 'text', array(
                 'required' => false, 
-                'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')));
+                'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')))
+            ->add('file', 'file', array('required' => false));
   }
   
   public function getName() { return 'album'; }
