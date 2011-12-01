@@ -20,6 +20,12 @@ class ImageExif {
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   private $id;
+  
+  /**
+   * @ORM\Column(type="integer")
+   * @var integer 
+   */
+  private $image_id;
 
   /**
    * @var array $exif_data

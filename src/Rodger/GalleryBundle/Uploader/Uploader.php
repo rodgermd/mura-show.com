@@ -126,7 +126,7 @@ class Uploader {
     
     $image_exif = new Entities\ImageExif();
     $image_exif->setExifData($exif_parsed);
-    $image->setExifs($image_exif);
+    $image_exif->setImage($image);
     
     $iptc = new ExifParsers\IptcDataParser($image->getAbsolutePath());
     $image_exif->setIptcData($iptc->getRaw());

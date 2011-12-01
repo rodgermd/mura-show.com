@@ -58,7 +58,7 @@ class Image implements UploadableInterface {
   /**
    * Related Album
    * @ORM\ManyToOne(targetEntity="Album", inversedBy="Images") 
-   * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="cascade")
+   * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $Album;
 
@@ -74,8 +74,8 @@ class Image implements UploadableInterface {
    * @var array Tags
    * @ORM\ManyToMany(targetEntity="Tag", inversedBy="Images")
    * @ORM\JoinTable(name="image_tags",
-   *      joinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="name")}
+   *      joinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")},
+   *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="name", onDelete="CASCADE")}
    *      ) 
    */
   private $Tags;
