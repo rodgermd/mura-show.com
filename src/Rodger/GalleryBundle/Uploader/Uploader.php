@@ -58,10 +58,22 @@ class Uploader {
     }
   }
   
+  /**
+   * Gets total files processed
+   * @return integer 
+   */
   public function getTotalFiles() { return $this->items_total; }
   
+  /**
+   * Gets validate files
+   * @return array 
+   */
   public function getImages() { return $this->images; }
   
+  /**
+   * Gets upload folder
+   * @return string 
+   */
   public function getUploadedFolder() { return $this->folder; }
   
 }

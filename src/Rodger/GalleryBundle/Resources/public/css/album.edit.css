@@ -1,0 +1,3 @@
+#fields-album { border-bottom: 3px #ccc solid; margin-bottom: 1em;}
+#fields-album .field-row-upload { border-top: 3px #ccc solid; }
+.field-row-upload > th { vertical-align: top; padding-top: 10px; font-weight: bold;}

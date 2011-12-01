@@ -13,5 +13,9 @@ class PrototypeImage
    * )
    */
   public $file;
+  
+  public function getFilename() {
+    return pathinfo($this->file, PATHINFO_FILENAME);
+  }
 }
 ?>

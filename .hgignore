@@ -3,3 +3,4 @@
 ^app/logs$
 ^web/bundles
 \.git
+^uploads/images/

@@ -15,7 +15,7 @@ use Rodger\UserBundle\Entity\User;
  * @ORM\Table(name="images")
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
  */
-class Image {
+class Image implements UploadableInterface {
 
   /**
    * @var integer $id
@@ -257,4 +257,28 @@ class Image {
     $this->user_id = $user->getId();
   }
 
+  public function __toString() {
+    return $this->name;
+  }
+  
+  /* uploadable interface implementation */
+  
+  
+  public function getAbsolutePath() {
+    return null === $this->filename ? null : $this->getUploadRootDir() . '/' . $this->filename;
+  }
+
+  public function getWebPath() {
+    return null === $this->filename ? null : $this->getUploadDir() . '/' . $this->filename;
+  }
+
+  public function getUploadRootDir() {
+    // the absolute directory path where uploaded documents should be saved
+    return __DIR__ . '/../../../../' . $this->getUploadDir();
+  }
+
+  public function getUploadDir() {
+    // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+    return 'uploads/images';
+  }
 }
