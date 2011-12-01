@@ -12,9 +12,6 @@ use Rodger\GalleryBundle\Entity\Album;
 use Rodger\GalleryBundle\Entity\Image;
 use Rodger\GalleryBundle\Uploader\Uploader;
 
-use Rodger\GalleryBundle\Exif\ExifDataParser;
-use Rodger\GalleryBundle\Convert\Converter;
-
 /**
  * @Route("/album")
  */
@@ -55,31 +52,20 @@ class AlbumController extends CommonController {
     if ($this->getRequest()->getMethod() == 'POST') {
       $form->bindRequest($this->getRequest());
       if ($form->isValid()) {
+        
+        $this->em->beginTransaction();
         $tags_repository = $this->em->getRepository('RodgerGalleryBundle:Tag');
         $album = $form->getData();
         
+        $this->em->persist($album);
+        $this->em->flush();
+        
         // process uploads
-        if ($album->file) {
-          $uploader = new Uploader($album->file, $this->get('validator'));
-          foreach($uploader->getImages() as $image_file) {
-            $image = new Image();
-            $image->setFilename(sprintf("%s.%s", md5(uniqid()), strtolower(pathinfo($image_file, PATHINFO_EXTENSION))));
-            $image->setName(pathinfo($image_file, PATHINFO_FILENAME));
-            
-            copy($image_file, $image->getAbsolutePath());
-            $image->setAlbum($album);
-            $image->setUser($this->user);
-            
-            $exif = new ExifDataParser(array('EXIF' => read_exif_data($image->getAbsolutePath())));
-            $exif_parsed = $exif->getParsed();
-            if (isset($exif_parsed['DateTimeOriginal'])) {
-              $image->setTakenAt(new \DateTime($exif_parsed['DateTimeOriginal']));
-            }
-            
-            $this->em->persist($image);
-          }
-          exec(sprintf('rm -rf %s', $uploader->getUploadedFolder()));
+        if ($album->upload['file']) {
+          $uploader = new Uploader($album->upload['file'], $this->get('validator'), $this->em);
+          $uploader->addImagesToAlbum($album, $album->upload, $this->user);
         }
+        
         // process keywords
         if ($album->keywords) {
           $keywords = explode(',', $album->keywords);
@@ -92,6 +78,9 @@ class AlbumController extends CommonController {
         
         $this->em->persist($album);
         $this->em->flush();
+        
+        $this->em->commit();
+        
         return $this->redirect($this->generateUrl('albums.edit', array('slug' => $album->getSlug())));
       }
     }

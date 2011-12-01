@@ -31,7 +31,7 @@ class ExifDataParser {
   public function __construct(array $data)
   {
     $this->data = $data;
-    $this->look_for = array('IFD0' => array('Make', 'Model'), 'EXIF' => array(
+    $this->look_for = array('IFD0' => array('Make', 'Model', 'Orientation'), 'EXIF' => array(
         'ISOSpeedRatings', 
         'Flash', 
         'ExposureTime',
@@ -74,9 +74,9 @@ class ExifDataParser {
   {
     $keys = $this->look_for['EXIF'];
     $prepared = array();
-    $found_keys = array_intersect($keys, array_keys(@$this->data['EXIF'] ?: array()));
+    $found_keys = array_intersect($keys, array_keys(@$this->data ?: array()));
 
-    foreach($found_keys as $key) $prepared[$key] = $this->data['EXIF'][$key];
+    foreach($found_keys as $key) $prepared[$key] = $this->data[$key];
     
     if (array_key_exists('Flash', $prepared)) $prepared['Flash'] = self::$flash_types[$prepared['Flash']];
     if (array_key_exists('ExposureTime', $prepared) && preg_match('/^(\d{2,})\/(\d+)$/', $prepared['ExposureTime'], $matches)) {

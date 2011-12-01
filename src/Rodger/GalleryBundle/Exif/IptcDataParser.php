@@ -34,5 +34,13 @@ class IptcDataParser
   public function getKeywords() {
     return @$this->iptc_app13['2#025'] ?: array();
   }
+  
+  /**
+   * Gets parse RAW data
+   * @return array 
+   */
+  public function getRaw() {
+    return $this->iptc_app13 ? array_filter($this->iptc_app13) : array();
+  }
 }
 ?>

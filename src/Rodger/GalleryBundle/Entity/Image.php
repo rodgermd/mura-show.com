@@ -91,15 +91,21 @@ class Image implements UploadableInterface {
    * Related User
    * @var User $user 
    * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="Images") 
-   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
+   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="set null")
    */
   private $User;
 
   /**
-   * @ORM\Column(name="user_id", type="integer")
+   * @ORM\Column(name="user_id", type="integer", nullable=true)
    * @var integer $user_id
    */
   private $user_id;
+  
+  /**
+   * @var ImageExif $Exifs
+   * @ORM\OneToOne(targetEntity="ImageExif", mappedBy="Image")
+   */
+  private $Exifs;
   
   public function __construct() {
     $this->Tags = new ArrayCollection();
@@ -255,6 +261,22 @@ class Image implements UploadableInterface {
   {
     $this->User = $user;
     $this->user_id = $user->getId();
+  }
+  
+  /**
+   * Sets Exifs
+   * @param ImageExif $image_exif 
+   */
+  public function setExifs(ImageExif $image_exif) {
+    $this->Exifs = $image_exif;
+  }
+  
+  /**
+   * Gets related Exifs
+   * @return ImageExif
+   */
+  public function getExifs() {
+    return $this->Exifs;
   }
 
   public function __toString() {
