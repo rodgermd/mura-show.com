@@ -1,8 +1,19 @@
 <?php
 namespace Rodger\GalleryBundle\Convert;
+use Rodger\ImageSizeBundle\Entity\ImageSize;
 
 class Converter
 {
+  protected $source, $target, $template, $convert;
+  public function __construct($source, $target, ImageSize $template)
+  {
+    $this->source = $source;
+    $this->target = $target;
+    $this->template = $template;
+    
+    $this->convert = self::get_convert();
+  }
+  
   private static function get_convert() {
     // find the convert command
     // you can hard-code it to make the srcipt faster, example:
@@ -63,6 +74,32 @@ class Converter
     endswitch;
 
     if ($command) exec(implode(" ", self::get_convert(), $file, $command, $file));
+  }
+  
+  public function convert()
+  {
+    switch ($this->template->getCrop()):
+      case ImageSize::FITMODE_FIT:
+        $inflate_modifier = ($this->template->getHeight()) ? '>' : '';
+        $command = sprintf('-quality %d -thumbnail "%dx%s%s"', 81, $this->template->getWidth(), $this->template->getHeight(), $inflate_modifier);
+
+        break;
+
+      case ImageSize::FITMODE_CROP:
+        $command = sprintf('-resize %dx%d^ -gravity center -extent %dx%d -quality %d', 
+                $this->template->getWidth(), $this->template->getHeight(),
+                $this->template->getWidth(), $this->template->getHeight(),
+                81);
+        break;
+
+    endswitch;
+    
+    // prepare the command
+    $preparedCommand = implode(" ", array($this->convert, $this->source, $command, $this->target));
+
+    // run the conversion
+    //var_dump($preparedCommand); die();
+    exec($preparedCommand);
   }
   
 }

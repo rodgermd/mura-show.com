@@ -4,3 +4,4 @@
 ^web/bundles
 \.git
 ^uploads/images/
+^web/gallery/

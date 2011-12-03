@@ -6,7 +6,10 @@ require_once __DIR__.'/../../app/AppKernel.php';
 
 use Rodger\ImageSizeBundle\Entity\ImageSize;
 use Rodger\GalleryBundle\Entity\Image;
+use Rodger\GalleryBundle\Convert\Converter;
+
 use Symfony\Component\HttpFoundation\Request;
+
 
 $kernel = new AppKernel('dev', true);
 $kernel->loadClassCache();
@@ -34,6 +37,7 @@ if (!$command = @$match[1]) die('no command');
 // get original filename
 // example: big_green_frog.jpg
 $imgFile = str_replace('.'.$command, '', $img, $replaceCount);
+$filename = pathinfo($imgFile, PATHINFO_BASENAME);
 
 $folder = pathinfo($imgFile, PATHINFO_DIRNAME);
 
@@ -49,34 +53,23 @@ if ($replaceCount > 1)
 
 $em = $kernel->getContainer()->get('doctrine');
 
-$object = null;
-
-try {
-  $object = $em->getRepository('ImageBankGalleryBundle:Image')->findOneBy(array('path' => $imgFile));
-  if (!$object) throw new ImageNotFoundException();
-}
-catch (ImageNotFoundException $e) 
-{
-  $object = $em->getRepository('ImageBankPagesBundle:Page')->findOneBy(array('image_path' => $imgFile));
-}
+$object = $em->getRepository('RodgerGalleryBundle:Image')->findOneByBasename(pathinfo($imgFile, PATHINFO_FILENAME));
+  
 if (!$object) die('nothing found using requested file');
 $original_dir = $object->getUploadRootDir() . '/';
 
 // die if the original file does not exist
-if (!file_exists($original_dir.$imgFile))
+if (!file_exists($original_dir.$object->getFilename()))
   die('original file does not exist');
-
-$filename = $imgFile;
 
 ############################################################################
 
 // find image size template
 $doctrine = $kernel->getContainer()->get('doctrine');
-$image_size = $doctrine->getRepository('ImageBankImageSizeBundle:ImageSize')->findOneByName($command);
+$image_size = $doctrine->getRepository('RodgerImageSizeBundle:ImageSize')->findOneByName($command);
 if (!$image_size) die(sprintf('Template %s not found', $command));
-if ($image_size->isPrivate()) die('Restricted thumbnail template');
 
-$converter = new Converter($original_dir . $imgFile, $thisDir . $img, $image_size);
+$converter = new Converter($original_dir . $object->getFilename(), $thisDir . $img, $image_size);
 $converter->convert();
 
 // redirect the browser to the new image - this is more reliable than fpassthru

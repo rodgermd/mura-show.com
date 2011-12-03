@@ -154,7 +154,7 @@ class Image implements UploadableInterface {
    */
   public function setFilename($filename) {
     $this->filename = $filename;
-    $this->basename = pathinfo($filename, PATHINFO_BASENAME);
+    $this->basename = pathinfo($filename, PATHINFO_FILENAME);
   }
 
   /**
