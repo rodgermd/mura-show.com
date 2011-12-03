@@ -22,7 +22,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Rodger\UserBundle\RodgerUserBundle(),
             new Rodger\GalleryBundle\RodgerGalleryBundle(),
-            
+            new Rodger\ImageSizeBundle\RodgerImageSizeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

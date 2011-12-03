@@ -1,3 +1,8 @@
+RodgerImageSizeBundle:
+    resource: "@RodgerImageSizeBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 login:
     pattern:   /login
     defaults:  { _controller: FOSUserBundle:Security:login }
