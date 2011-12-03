@@ -1,0 +1,14 @@
+{% if album.images | length %}
+<div id="album-edit-images">
+  <form>
+    <ul id="images">
+      {% for image in album.images %}
+        <li>
+          <input type="checkbox" name="images[image][]" value="{{ image.id }}" id="images_image_{{ image.id }}"/>
+          <img src="{{ image.webpath | apply_filter('small_thumb')}}" alt=""/>
+        </li>
+      {% endfor %}
+    </ul>
+  </form>
+</div>
+{% endif %}
