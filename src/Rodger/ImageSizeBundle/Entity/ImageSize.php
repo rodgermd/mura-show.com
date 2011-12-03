@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Rodger\ImageSizeBundle\Entity\ImageSize
  *
- * @ORM\Table()
+ * @ORM\Table(name="image__size")
  * @ORM\Entity
  */
 class ImageSize
@@ -39,7 +39,7 @@ class ImageSize
      *
      * @ORM\Column(name="crop", type="boolean")
      */
-    private $crop;
+    private $crop = false;
 
 
     /**

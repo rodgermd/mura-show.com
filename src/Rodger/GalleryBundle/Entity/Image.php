@@ -12,7 +12,10 @@ use Rodger\UserBundle\Entity\User;
 /**
  * Rodger\GalleryBundle\Entity\Image
  *
- * @ORM\Table(name="images")
+ * @ORM\Table(name="images", uniqueConstraints={
+ *   @ORM\UniqueConstraint(name="filename_unique",columns={"filename"}),
+ *   @ORM\UniqueConstraint(name="basename_unique",columns={"basename"})
+ * })
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
  */
 class Image implements UploadableInterface {
@@ -39,6 +42,12 @@ class Image implements UploadableInterface {
    * @ORM\Column(name="filename", type="string", length=50)
    */
   private $filename;
+  
+  /**
+   * @var string $filename
+   * @ORM\Column(name="basename", type="string", length=50)
+   */
+  private $basename;
 
   /**
    * Uploaded at
@@ -145,6 +154,7 @@ class Image implements UploadableInterface {
    */
   public function setFilename($filename) {
     $this->filename = $filename;
+    $this->basename = pathinfo($filename, PATHINFO_BASENAME);
   }
 
   /**
@@ -302,5 +312,17 @@ class Image implements UploadableInterface {
   public function getUploadDir() {
     // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
     return 'uploads/images';
+  }
+  
+  /**
+   * Gets thumbnail path
+   * @param string $template
+   * @return string 
+   */
+  public function thumbnail($template)
+  {
+    if (!$this->filename) return false;
+    $filename = pathinfo($this->filename, PATHINFO_FILENAME);
+    return sprintf("/gallery/%s/%s.%s.png", $this->Album->getSlug(), $filename, $template);
   }
 }
