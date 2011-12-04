@@ -104,6 +104,7 @@ class Uploader {
    */
   private function addImageToAlbum($image_file, $default_title, Entities\Album $album, array $options = array(), UserInterface $user = null) {
     $image = new Entities\Image();
+    $image->setAlbum($album);
     $image->setFilename(sprintf("%s.%s", md5(uniqid()), strtolower(pathinfo($default_title ?: $image_file, PATHINFO_EXTENSION))));
     
     $name = pathinfo($image_file, PATHINFO_FILENAME);
@@ -111,6 +112,12 @@ class Uploader {
     if (@$options['default_name']) $name = $options['default_name'];
     
     $image->setName($name);
+    
+    // create folder if not exists
+    if (!file_exists($image->getUploadRootDir())) {
+      mkdir ($image->getUploadRootDir(), 0777, true);
+      chmod($image->getUploadRootDir(), 0777);
+    }
 
     copy($image_file, $image->getAbsolutePath());
     $image->setUser($user);
@@ -140,8 +147,6 @@ class Uploader {
     }
     
     if (@$options['is_private']) $image->setIsPrivate(true);
-    
-    $image->setAlbum($album);
     
     $this->em->persist($image);
     $this->em->persist($image_exif);

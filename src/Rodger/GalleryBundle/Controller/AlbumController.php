@@ -92,5 +92,30 @@ class AlbumController extends CommonController {
     
     return $form;
   }
+  
+  /**
+   * @Route("edit/{slug}/bulk-actions", name="album.edit.bulk", requirements={"_method" = "post"})
+   */
+  public function imagesBulkAction(Album $album) {
+    $images_type = new AlbumImagesType();
+    $images_type->setImages($album->getImages());
+    
+    $images_form = $this->createForm($images_type);
+    $images_form->bindRequest($this->getRequest());
+    
+    if ($images_form->isValid()) {
+      $datas = $this->getRequest()->get($images_form->getName());
+      switch($datas['bulk_actions']):
+        case AlbumImagesType::ACTION_DELETE;
+          foreach($this->em->getRepository('RodgerGalleryBundle:Image')->findById($datas['images']) as $image) {
+            $this->em->remove($image);
+          }
+          $this->em->flush();
+          break;
+      endswitch;
+    }
+    
+    return $this->redirect($this->generateUrl('albums.edit', array('slug' => $album->getSlug())));
+  }
 
 }

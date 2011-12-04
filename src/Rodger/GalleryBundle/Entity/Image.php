@@ -17,6 +17,7 @@ use Rodger\UserBundle\Entity\User;
  *   @ORM\UniqueConstraint(name="basename_unique",columns={"basename"})
  * })
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Image implements UploadableInterface {
 
@@ -300,10 +301,6 @@ class Image implements UploadableInterface {
     return null === $this->filename ? null : $this->getUploadRootDir() . '/' . $this->filename;
   }
 
-  public function getWebPath() {
-    return null === $this->filename ? null : $this->getUploadDir() . '/' . $this->filename;
-  }
-
   public function getUploadRootDir() {
     // the absolute directory path where uploaded documents should be saved
     return __DIR__ . '/../../../../' . $this->getUploadDir();
@@ -311,18 +308,29 @@ class Image implements UploadableInterface {
 
   public function getUploadDir() {
     // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-    return 'uploads/images';
+    return sprintf('uploads/images/%s', $this->getAlbum()->getSlug());
   }
   
   /**
    * Gets thumbnail path
    * @param string $template
+   * @param boolean $absolute
    * @return string 
    */
-  public function thumbnail($template)
+  public function thumbnail($template, $absolute = false)
   {
     if (!$this->filename) return false;
     $filename = pathinfo($this->filename, PATHINFO_FILENAME);
-    return sprintf("/gallery/%s/%s.%s.png", $this->Album->getSlug(), $filename, $template);
+    $prefix = $absolute ? __DIR__ . '/../../../../web' : '';
+    return sprintf("%s/gallery/%s/%s.%s.png", $prefix, $this->Album->getSlug(), $filename, $template);
+  }
+  
+  /**
+   * @ORM\PreRemove
+   * Deletes all files related to image
+   */
+  public function deleteFiles() {
+    exec(sprintf('rm -f %s', $this->thumbnail('*', true)));
+    @unlink($this->getAbsolutePath());
   }
 }

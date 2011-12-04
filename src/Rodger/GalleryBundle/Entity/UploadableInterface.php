@@ -6,8 +6,6 @@ interface UploadableInterface {
 
   public function getAbsolutePath();
 
-  public function getWebPath();
-
   public function getUploadRootDir();
 
   public function getUploadDir();

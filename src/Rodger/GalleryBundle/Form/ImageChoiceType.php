@@ -47,11 +47,11 @@ class ImageChoiceType extends AbstractType {
         if ($options['multiple']) {
           $builder->add((string) $choice, 'image_checkbox', array(
               'value' => $choice,
-              'label' => $value,
+              'label' => (string) $value,
               // The user can check 0 or more checkboxes. If required
               // is true, he is required to check all of them.
               'required' => false,
-              'thumbnail' => $value->thumbnail($options['`'])
+              'thumbnail' => $value->thumbnail($options['template'])
           ));
         } else {
           $builder->add((string) $choice, 'radio', array(
