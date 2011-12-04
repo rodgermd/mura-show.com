@@ -12,5 +12,13 @@
     <service id="kernel.listener.pre_execute_listener" class="%gallery.pre_execute_class%">
       <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
     </service>
+    
+    <service id="form.type.image_choice.addmethod" class="Rodger\GalleryBundle\Form\ImageChoiceType">
+      <tag name="form.type" alias="image_choice" />
+    </service>
+    
+    <service id="form.type.image_checkbox.addmethod" class="Rodger\GalleryBundle\Form\ImageCheckboxType">
+      <tag name="form.type" alias="image_checkbox" />
+    </service>
   </services>
 </container>

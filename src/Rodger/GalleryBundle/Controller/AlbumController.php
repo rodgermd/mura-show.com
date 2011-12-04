@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Rodger\GalleryBundle\Form\AlbumType;
+use Rodger\GalleryBundle\Form\AlbumImagesType;
 use Rodger\GalleryBundle\Entity\Album;
 use Rodger\GalleryBundle\Entity\Image;
 use Rodger\GalleryBundle\Uploader\Uploader;
@@ -29,7 +30,7 @@ class AlbumController extends CommonController {
     $form = $this->process_album($album);
     if ($form instanceof \Symfony\Component\HttpFoundation\RedirectResponse) return $form;
     
-    return array('form' => $form->createView());
+    return array('form' => $form->createView() );
   }
   
   /**
@@ -41,7 +42,11 @@ class AlbumController extends CommonController {
     $form = $this->process_album($album);
     if ($form instanceof \Symfony\Component\HttpFoundation\RedirectResponse) return $form;
     
-    return array('form' => $form->createView(), 'album' => $album);
+    $images_type = new AlbumImagesType();
+    $images_type->setImages($album->getImages());
+    
+    $images_form = $this->createForm($images_type);
+    return array('form' => $form->createView(), 'album' => $album, 'images_form' => $images_form->createView());
   }
   
   private function process_album(Album $album) {

@@ -1,3 +1,9 @@
 #fields-album { border-bottom: 3px #ccc solid; margin-bottom: 1em;}
 #fields-album .field-row-upload { border-top: 3px #ccc solid; }
 .field-row-upload > th { vertical-align: top; padding-top: 10px; font-weight: bold;}
+
+#album-images-container { padding: 20px 0 0; margin: 20px 0; border-top: 3px #ccc solid;}
+#album-images-container .field > label { font-weight: bold; margin-right: 2em;}
+
+.image-choice-item { display: inline-block; width: 33%}
+.image-choice-item img { display: inline-block; margin: 3px; vertical-align: middle}

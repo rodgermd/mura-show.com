@@ -1,42 +1,22 @@
-{% block parent_category_widget %}
+{% block image_choice_widget %}
 {% spaceless %}
-    {% if expanded %}
-        <div {{ block('widget_container_attributes') }}>
-        {% for child in form %}
-            {{ form_widget(child) }}
-            {{ form_label(child) }}
-        {% endfor %}
-        </div>
-    {% else %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {% if empty_value is not none %}
-            <option value="">{{ empty_value|trans }}</option>
-        {% endif %}
-        {% if preferred_choices|length > 0 %}
-            {% set options = preferred_choices %}
-            {{ block('widget_choice_options') }}
-            {% if choices|length > 0 and separator is not none %}
-                <option disabled="disabled">{{ separator }}</option>
-            {% endif %}
-        {% endif %}
-        {% set options = choices %}
-        {% for choice, label in options %}
-            {% if _form_is_choice_group(label) %}
-                <optgroup label="{{ choice|trans }}">
-                    {% for nestedChoice, nestedLabel in label %}
-                        <option value="{{ nestedChoice }}"{% if _form_is_choice_selected(form, nestedChoice) %} selected="selected"{% endif %}>{{ nestedLabel|trans }}</option>
-                    {% endfor %}
-                </optgroup>
-            {% else %}
-                <option value="{{ choice }}"
-                  {% if _form_is_choice_selected(form, choice) %} selected="selected" class="active"{% endif %}
-                  {% if choice == unselect %} disabled="disabled"{% endif %}>{{ label|trans }}</option>
-            {% endif %}
-        {% endfor %}
-    </select>
-    {% endif %}
+  <ul {{ block('widget_container_attributes') }}>
+  {% for child in form %}
+      <li class="image-choice-item">
+      {{ form_widget(child) }}
+      {{ form_label(child) }}
+      </li>
+  {% endfor %}
+  </ul>
 {% endspaceless %}
-{% endblock parent_category_widget %}
+{% endblock image_choice_widget %}
+
+{% block image_checkbox_widget %}
+{% spaceless %}
+  <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+  <img src="{{ thumbnail }}" alt=""/>
+{% endspaceless %}
+{% endblock image_checkbox_widget %}
 
 {% block image_field_widget %}
 {% spaceless %}

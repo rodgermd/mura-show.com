@@ -7,7 +7,12 @@
 <input type="submit" value="{{ 'update album' | trans }}"/>
 </form>
 
-{% include "RodgerGalleryBundle:Album:images.html.twig" with {'album' : album} %}
+<div id="album-images-container">
+<form>
+  {% form_theme images_form "RodgerGalleryBundle:Form:div.html.twig" %}
+  {{ form_widget (images_form) }}
+</form>
+</div>
 
 {% endblock body %}
 
