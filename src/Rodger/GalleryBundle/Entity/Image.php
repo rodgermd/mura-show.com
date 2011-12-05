@@ -117,6 +117,12 @@ class Image implements UploadableInterface {
    */
   private $Exifs;
   
+  /**
+   * Related keywords
+   * @var string
+   */
+  public $keywords; 
+  
   public function __construct() {
     $this->Tags = new ArrayCollection();
   }
@@ -332,5 +338,12 @@ class Image implements UploadableInterface {
   public function deleteFiles() {
     exec(sprintf('rm -f %s', $this->thumbnail('*', true)));
     @unlink($this->getAbsolutePath());
+  }
+  
+  public function getKeywords() {
+    $result = array();
+    foreach($this->Tags as $tag) $result[] = (string)$tag;
+    sort($result);
+    return implode(', ', $result);
   }
 }

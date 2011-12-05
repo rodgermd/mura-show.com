@@ -31,7 +31,7 @@ class ImageSize {
   /**
    * @var integer $height
    *
-   * @ORM\Column(name="height", type="integer")
+   * @ORM\Column(name="height", type="integer", nullable=true)
    */
   private $height;
 

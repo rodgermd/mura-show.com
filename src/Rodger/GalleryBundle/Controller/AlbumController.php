@@ -95,6 +95,7 @@ class AlbumController extends CommonController {
   
   /**
    * @Route("edit/{slug}/bulk-actions", name="album.edit.bulk", requirements={"_method" = "post"})
+   * @Secure(roles="ROLE_USER")
    */
   public function imagesBulkAction(Album $album) {
     $images_type = new AlbumImagesType();

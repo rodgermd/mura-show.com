@@ -14,7 +14,7 @@
 {% block image_checkbox_widget %}
 {% spaceless %}
   <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-  <img src="{{ thumbnail }}" alt=""/>
+  <a href="{{ path('image.edit', {'id' : value}) }}" title="{{ 'edit image' | trans }}"><img src="{{ thumbnail }}" alt=""/></a>
 {% endspaceless %}
 {% endblock image_checkbox_widget %}
 
