@@ -74,11 +74,12 @@ class AlbumController extends CommonController {
         // process keywords
         if ($album->keywords) {
           $keywords = explode(',', $album->keywords);
-          $keywords = array_filter(array_map('trim', $keywords))  ;
+          $keywords = array_filter(array_map('trim', $keywords));
+          $tags = array();
           foreach($keywords as $keyword) {
-            $tag = $tags_repository->getOrCreate($keyword);
-            $album->addTag($tag);
+            $tags[] = $tags_repository->getOrCreate($keyword);
           }
+          $album->setTags($tags);
         }
         
         $this->em->persist($album);

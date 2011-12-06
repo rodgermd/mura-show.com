@@ -23,6 +23,14 @@ class LoadImageSizeData extends AbstractFixture implements FixtureInterface
       
       $manager->persist($edit);
       
+      $list = new ImageSize();
+      $list->setName('list');
+      $list->setWidth(75);
+      $list->setHeight(75);
+      $list->setCrop(true);
+      
+      $manager->persist($list);
+      
       $manager->flush();
     }
     

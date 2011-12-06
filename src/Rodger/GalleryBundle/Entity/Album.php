@@ -92,7 +92,7 @@ class Album {
    *      ) 
    */
   private $Tags;
-
+  
   public function __construct() {
     $this->Images = new ArrayCollection();
     $this->Tags = new ArrayCollection();
@@ -186,11 +186,11 @@ class Album {
     $this->Images[] = $image;
   }
   /**
-   * Gets related Images
+   * Gets related Tags
    * @return array 
    */
   public function getTags() {
-    return $this->Images;
+    return $this->Tags;
   }
   
   /**
@@ -200,6 +200,15 @@ class Album {
   public function addTag(Tag $tag)
   {
     $this->Tags[] = $tag;
+  }
+  
+  /**
+   * Sets related Tags
+   * @param array $tags 
+   */
+  public function setTags($tags)
+  {
+    $this->Tags = $tags;
   }
   
   /**

@@ -249,9 +249,13 @@ If you don't want to add your own logic in your user class, you can simply use
 as model class in your configuration (see step 6) and you don't have to create
 another class.
 
-If you want to add your own fields, you can extend the model class. But the
-Form component does not support using `__call` to access properties so you
-will have to extend the proxy class as well to support these fields.
+If you want to add your own fields, you can extend the model class by overriding the database schema.
+Just copy the `Resources/config/propel/schema.xml` file to `app/Resources/FOSUserBundle/config/propel/schema.xml`,
+and customize it to fit your needs.
+Due to an issue with the Form component that does not support using `__call` to
+access properties, you will have to extend the proxy class as well to support these fields. For instance, if you've
+added a `website_url` attribute to the overrided schema, you'll need to declare both `getWebsiteUrl()` and
+`setWebsiteUrl()` methods in your own proxy class (just forward methods to the `user` attribute).
 
 ### Step 5: Configure your application's security.yml
 
@@ -398,7 +402,7 @@ fos_user_resetting:
 
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
-    prefix: /change-password
+    prefix: /profile
 ```
 
 Or if you prefer XML:
@@ -409,7 +413,7 @@ Or if you prefer XML:
 <import resource="@FOSUserBundle/Resources/config/routing/profile.xml" prefix="/profile" />
 <import resource="@FOSUserBundle/Resources/config/routing/registration.xml" prefix="/register" />
 <import resource="@FOSUserBundle/Resources/config/routing/resetting.xml" prefix="/resetting" />
-<import resource="@FOSUserBundle/Resources/config/routing/change_password.xml" prefix="/change-password" />
+<import resource="@FOSUserBundle/Resources/config/routing/change_password.xml" prefix="/profile" />
 ```
 
 **Note:**

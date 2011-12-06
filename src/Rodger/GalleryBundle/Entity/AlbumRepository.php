@@ -12,4 +12,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class AlbumRepository extends EntityRepository
 {
+  /**
+   * Prepares QUeryBuilder to show latest albums
+   * @param boolean $show_private
+   * @return \Doctrine\ORM\QueryBuilder 
+   */
+  public function getLatestQueryBuilder($show_private = false)
+  {
+    $qb = $this->createQueryBuilder('a');
+    $qb->select('a')->innerJoin('a.Images', 'i');
+    if (!$show_private) {
+      $qb->where('a.is_private = false AND i.is_private = false');
+    }
+    $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
+       ->orderBy('sort_date', 'desc');
+    
+    return $qb;
+  }
 }

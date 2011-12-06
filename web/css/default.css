@@ -60,3 +60,5 @@ label.required { border-bottom: 1px #900 solid; }
 
 .fields-table {}
 .fields-table th, .fields-table td { padding: 5px;}
+
+h2 { font: normal 18px serif;}

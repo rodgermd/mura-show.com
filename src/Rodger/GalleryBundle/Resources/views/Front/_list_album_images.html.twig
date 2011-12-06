@@ -1,0 +1,9 @@
+<ul class="album-images">
+  {% for image in images %}
+    <li class="album-image">
+      <a href="{{ path('image.show', {'id': image.id, 'album': album.slug}) }}">
+        <img src="{{ image.thumbnail('list') }}" alt=""/>
+      </a>
+      </li>
+  {% endfor %}
+</ul>

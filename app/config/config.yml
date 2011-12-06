@@ -46,9 +46,15 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
-        mappings:
-          StofDoctrineExtensionsBundle: ~
+        entity_managers:
+          default:
+            auto_mapping: true
+            mappings:
+              StofDoctrineExtensionsBundle: ~
+            dql:
+              string_functions:
+                greatest: \Rodger\GalleryBundle\DoctrineExtension\Greatest
+
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -62,5 +62,13 @@ class ImageController extends CommonController {
 
     return array('form' => $form->createView(), 'image' => $image);
   }
+  
+  /**
+   * @Route("/{album}/{id}", name="image.show")
+   * @Template
+   */
+  public function showActions(Image $image) {
+    return array('image' => $image, 'album' => $image->getAlbum());
+  }
 }
 ?>

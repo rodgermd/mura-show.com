@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class ImageRepository extends EntityRepository
 {
+  public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false) {
+    $qb = $this->createQueryBuilder('i')->where('i.album_id = :album_id');
+    if (!$show_private) {
+      $qb->where('i.is_private = false');
+    }
+    $qb->orderBy('i.taken_at', 'desc')
+       ->addOrderBy('i.uploaded_at', 'desc')
+       ->setParameter('album_id', $album->getId());
+    
+    return $qb;
+  }
 }
