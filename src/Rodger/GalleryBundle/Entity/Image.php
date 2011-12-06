@@ -113,7 +113,7 @@ class Image implements UploadableInterface {
   
   /**
    * @var ImageExif $Exifs
-   * @ORM\OneToOne(targetEntity="ImageExif", mappedBy="Image")
+   * @ORM\OneToOne(targetEntity="ImageExif", mappedBy="Image", fetch="LAZY")
    */
   private $Exifs;
   

@@ -13,7 +13,10 @@ use Doctrine\ORM\EntityRepository;
 class ImageRepository extends EntityRepository
 {
   public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false) {
-    $qb = $this->createQueryBuilder('i')->where('i.album_id = :album_id');
+    $qb = $this->createQueryBuilder('i')
+      ->select('i', 'e')
+      ->innerJoin('i.Exifs', 'e')
+      ->where('i.album_id = :album_id');
     if (!$show_private) {
       $qb->where('i.is_private = false');
     }
