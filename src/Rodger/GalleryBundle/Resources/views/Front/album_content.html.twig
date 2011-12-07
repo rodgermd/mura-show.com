@@ -30,3 +30,10 @@
 {{ parent() }}
 <link media="screen" rel="stylesheet" href="/css/colorbox.css" />
 {% endblock stylesheets %}
+
+{% block primary_menu_items %}
+{% if app.user %}
+{{ parent() }}
+  <li><a href="{{ path('albums.edit', {'slug' : album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
+{% endif %}
+{% endblock primary_menu_items %}
