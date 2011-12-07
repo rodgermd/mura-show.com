@@ -27,12 +27,25 @@ input:-moz-placeholder { color:#ccc; }
 
 
 a { color: #666; }
-a:visited, a:hover { color: #333}
+a:hover { color: #333}
 .error, .field-errors { color: #900}
 
 
-.button { display: inline-block; padding: 4px 6px; border: 1px solid; border-radius: 4px;}
+.button { display: inline-block; padding: 3px 5px; border: 1px solid; border-radius: 4px;}
 .gray-button {
+  background: -moz-linear-gradient(top, #f3f3f3 0%, #d6d6d6 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(100%,#d6d6d6));
+  background: -webkit-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
+  background: -o-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
+  background: -ms-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
+  background: linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#d6d6d6',GradientType=0 );
+  border-color: #ccc;
+  text-shadow: 1px 1px 1px #fff;
+  text-decoration: none;
+}
+.gray-button:hover { 
+  border-color:#999 ;
   background: -moz-linear-gradient(top, #d6d6d6 0%, #c4c4c4 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d6d6d6), color-stop(100%,#c4c4c4));
   background: -webkit-linear-gradient(top, #d6d6d6 0%,#c4c4c4 100%);
@@ -40,12 +53,8 @@ a:visited, a:hover { color: #333}
   background: -ms-linear-gradient(top, #d6d6d6 0%,#c4c4c4 100%);
   background: linear-gradient(top, #d6d6d6 0%,#c4c4c4 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6d6d6', endColorstr='#c4c4c4',GradientType=0 );
-  border-color: #999;
-  color: #666;
-  text-shadow: 1px 1px 1px #fff;
-  text-decoration: none;
+    
 }
-.gray-button:hover { color: #333; border-color:#666 }
 
 #header { position: relative;}
 #user-data { position: absolute; right: 20px; top: 20px;}
@@ -62,3 +71,4 @@ label.required { border-bottom: 1px #900 solid; }
 .fields-table th, .fields-table td { padding: 5px;}
 
 h2 { font: normal 18px serif;}
+img.lazy {display: none}

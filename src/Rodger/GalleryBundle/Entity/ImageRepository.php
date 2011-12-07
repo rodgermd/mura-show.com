@@ -18,8 +18,9 @@ class ImageRepository extends EntityRepository
       ->innerJoin('i.Exifs', 'e')
       ->where('i.album_id = :album_id');
     if (!$show_private) {
-      $qb->where('i.is_private = false');
+      $qb->andWhere('i.is_private = false');
     }
+    
     $qb->orderBy('i.taken_at', 'desc')
        ->addOrderBy('i.uploaded_at', 'desc')
        ->setParameter('album_id', $album->getId());

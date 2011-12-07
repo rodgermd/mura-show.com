@@ -27,6 +27,14 @@ class FrontController extends CommonController {
   }
   
   /**
+   * @Route("{slug}", name="album.show")
+   * @Template("RodgerGalleryBundle:Front:album_content.html.twig")
+   */
+  public function albumContentAction(Album $album) {
+    return array('album' => $album, 'images' => $album->getImages());
+  }
+  
+  /**
    * Renders album last images
    * @Template("RodgerGalleryBundle:Front:_list_album_images.html.twig")
    * @param Album $album

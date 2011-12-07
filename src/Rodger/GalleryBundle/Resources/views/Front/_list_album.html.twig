@@ -1,2 +1,7 @@
-<h2>{{ album }}</h2>
+<h2>
+  {{ album }}
+    <a class="total-images button gray-button" href="{{path('album.show', {'slug' : album.slug}) }}">
+{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
+    | transchoice(total_images, {"%number%" : total_images})  }}</a>
+</h2>
 {% render "RodgerGalleryBundle:Front:album_last_images" with {'album' : album} %}

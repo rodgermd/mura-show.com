@@ -1,9 +1,13 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
+
 {% block body %}
 {% if albums | length %}
 <ul id="albums-list">
 {% for album in albums %}
-<li class="album">{% include "RodgerGalleryBundle:Front:_list_album.html.twig" with { 'album' : album[0], 'sort_date': album.sort_date } %}</li>
+<li class="album">{% include "RodgerGalleryBundle:Front:_list_album.html.twig" with { 
+'album'       : album[0], 
+'sort_date'   : album.sort_date, 
+'total_images': album.album_images_count } %}</li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -14,3 +18,11 @@
 {{ parent() }}
 <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/albums.list.css">
 {% endblock stylesheets %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://raw.github.com/tuupola/jquery_lazyload/master/jquery.lazyload.min.js" type="text/javascript"></script>
+<script src="/js/start_lazy.js" type="text/javascript"></script>
+{% endblock javascripts %}
+
+{% block title %}{{parent() }} • {{ 'Albums' | trans }}{% endblock title %}

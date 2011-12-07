@@ -20,11 +20,12 @@ class AlbumRepository extends EntityRepository
   public function getLatestQueryBuilder($show_private = false)
   {
     $qb = $this->createQueryBuilder('a');
-    $qb->select('a')->innerJoin('a.Images', 'i');
+    $qb->innerJoin('a.Images', 'i');
     if (!$show_private) {
       $qb->where('a.is_private = false AND i.is_private = false');
     }
     $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
+       ->addSelect('(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album_id = a.id) album_images_count')
        ->orderBy('sort_date', 'desc');
     
     return $qb;
