@@ -15,7 +15,9 @@ use Rodger\UserBundle\Entity\User;
  * @ORM\Table(name="images", uniqueConstraints={
  *   @ORM\UniqueConstraint(name="filename_unique",columns={"filename"}),
  *   @ORM\UniqueConstraint(name="basename_unique",columns={"basename"})
- * })
+ * },
+ * indexes={@ORM\Index(name="year_month_idx", columns={"year", "month"})})
+ * )
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
  * @ORM\HasLifecycleCallbacks
  */
@@ -64,6 +66,20 @@ class Image implements UploadableInterface {
    * @ORM\Column(name="taken_at",type="datetime", nullable=true)
    */
   private $taken_at;
+  
+  /**
+   * Year of image taken date
+   * @var integer $year
+   * @ORM\Column(type="integer", nullable=true)
+   */
+  private $year;
+  
+  /**
+   * month of image taken date
+   * @var integer $month
+   * @ORM\Column(type="integer", nullable=true)
+   */
+  private $month;
 
   /**
    * Related Album
@@ -112,10 +128,16 @@ class Image implements UploadableInterface {
   private $user_id;
   
   /**
-   * @var ImageExif $Exifs
-   * @ORM\OneToOne(targetEntity="ImageExif", mappedBy="Image", fetch="LAZY")
+   * @var array $exif_data
+   * @ORM\Column(name="exif_data", type="array")
    */
-  private $Exifs;
+  private $exif_data;
+
+  /**
+   * @var array $iptc_data
+   * @ORM\Column(name="iptc_data", type="array")
+   */
+  private $iptc_data;
   
   /**
    * Related keywords
@@ -220,7 +242,7 @@ class Image implements UploadableInterface {
   public function setTakenAt($taken_at) {
     $this->taken_at = $taken_at;
   }
-
+  
   /**
    * Sets related album
    * @param Album $album 
@@ -280,24 +302,44 @@ class Image implements UploadableInterface {
     $this->user_id = $user->getId();
   }
   
-  /**
-   * Sets Exifs
-   * @param ImageExif $image_exif 
-   */
-  public function setExifs(ImageExif $image_exif) {
-    $this->Exifs = $image_exif;
+  public function __toString() {
+    return $this->name;
   }
   
   /**
-   * Gets related Exifs
-   * @return ImageExif
+   * Set exif data
+   *
+   * @param array $exif_data
    */
-  public function getExifs() {
-    return $this->Exifs;
+  public function setExifData(array $data) {
+    $this->exif_data = $data;
   }
 
-  public function __toString() {
-    return $this->name;
+  /**
+   * Get exif data
+   *
+   * @return array 
+   */
+  public function getExifData() {
+    return $this->exif_data;
+  }
+
+  /**
+   * Set Iptc data
+   *
+   * @param array $Iptc_data
+   */
+  public function setIptcData(array $data) {
+    $this->iptc_data = $data;
+  }
+
+  /**
+   * Get Iptc data
+   *
+   * @return array 
+   */
+  public function getIptcData() {
+    return $this->iptc_data;
   }
   
   /* uploadable interface implementation */
@@ -345,5 +387,17 @@ class Image implements UploadableInterface {
     foreach($this->Tags as $tag) $result[] = (string)$tag;
     sort($result);
     return implode(', ', $result);
+  }
+  
+  /**
+   * Updates year and month fields
+   * @ORM\PrePersist
+   */
+  public function update_taken_related_fields() {
+    if ($this->taken_at)
+    {
+      $this->year = $this->taken_at->format('Y');
+      $this->month = $this->taken_at->format('m');
+    }
   }
 }

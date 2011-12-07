@@ -10,6 +10,13 @@ class LoadImageSizeData extends AbstractFixture implements FixtureInterface
 {
     public function load($manager)
     {
+      $resource = new ImageSize();
+      $resource->setName('resource');
+      $resource->setWidth(1000);
+      $resource->setHeight(1000);
+      
+      $manager->persist($resource);
+      
       $small = new ImageSize();
       $small->setName('small');
       $small->setWidth(50);
@@ -37,7 +44,7 @@ class LoadImageSizeData extends AbstractFixture implements FixtureInterface
       $list_medium->setHeight(200);
       $list_medium->setCrop(true);
       
-      $manager->persist($list);
+      $manager->persist($list_medium);
       
       $showcase = new ImageSize();
       $showcase->setName('showcase');

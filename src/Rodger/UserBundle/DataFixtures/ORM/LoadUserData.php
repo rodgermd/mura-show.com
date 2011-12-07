@@ -10,7 +10,6 @@ class LoadUserData extends AbstractFixture implements FixtureInterface
 {
     public function load($manager)
     {
-
       $rodger = new User();
       $rodger->setEmail('rodger@mura-show.com');
       $rodger->setUsername('rodger');

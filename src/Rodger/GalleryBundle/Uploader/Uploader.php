@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
      Symfony\Component\Validator\ConstraintViolationList,
      Doctrine\ORM\EntityManager,
      Rodger\GalleryBundle\Entity as Entities,
+     Rodger\ImageSizeBundle\Entity\ImageSize,
      FOS\UserBundle\Model\UserInterface;
 
 use Rodger\GalleryBundle\Exif as ExifParsers;
@@ -126,17 +127,14 @@ class Uploader {
     $exif_parsed = $exif->getParsed();
     if (isset($exif_parsed['DateTimeOriginal'])) {
       $image->setTakenAt(new \DateTime($exif_parsed['DateTimeOriginal']));
-      $image->addTag($this->tag($image->getTakenAt()->format('Y')));
     }
     
     Converter::exif_rotate($image->getAbsolutePath(), @$exif_parsed['IFD0']['Orientation']);
     
-    $image_exif = new Entities\ImageExif();
-    $image_exif->setExifData($exif_parsed);
-    $image_exif->setImage($image);
-    
     $iptc = new ExifParsers\IptcDataParser($image->getAbsolutePath());
-    $image_exif->setIptcData($iptc->getRaw());
+    
+    $image->setExifData($exif_parsed);
+    $image->setIptcData($iptc->getRaw());
     
     if (@$options['keywords']) {
       $keywords = array_filter(array_map('trim', explode(',', $options['keywords'])));
@@ -149,7 +147,14 @@ class Uploader {
     if (@$options['is_private']) $image->setIsPrivate(true);
     
     $this->em->persist($image);
-    $this->em->persist($image_exif);
+    
+    // prepare base thumbnail for faster thumbnailing later
+    $converter = new Converter(
+            $image->getAbsolutePath(), 
+            $image->thumbnail(ImageSize::BASE_THUMBNAIL, true),
+            $this->em->getRepository('RodgerImageSizeBundle:ImageSize')->find(ImageSize::BASE_THUMBNAIL)
+    );
+    $converter->convert();
   }
   
   /**

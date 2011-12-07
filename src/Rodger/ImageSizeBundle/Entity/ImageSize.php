@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class ImageSize {
   const FITMODE_FIT = false;
   const FITMODE_CROP = true;
+  
+  const BASE_THUMBNAIL = 'resource';
 
   /**
    * @var string $name

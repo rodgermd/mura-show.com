@@ -14,8 +14,7 @@ class ImageRepository extends EntityRepository
 {
   public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false) {
     $qb = $this->createQueryBuilder('i')
-      ->select('i', 'e')
-      ->innerJoin('i.Exifs', 'e')
+      ->select('partial i.{id, filename}')
       ->where('i.album_id = :album_id');
     if (!$show_private) {
       $qb->andWhere('i.is_private = false');

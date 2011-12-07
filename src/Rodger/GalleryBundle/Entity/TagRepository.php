@@ -19,6 +19,7 @@ class TagRepository extends EntityRepository
    */
   public function search($name)
   {
+    $name = strotolower($name);
     $qb = $this->createQueryBuilder('t');
     return $qb
             ->select('t')
@@ -32,6 +33,7 @@ class TagRepository extends EntityRepository
    * @return Tag
    */
   public function getOrCreate($name) {
+    $name = trim(strtolower($name));
     $tag = $this->find($name);
     if (!$tag) {
       $tag = new Tag();
