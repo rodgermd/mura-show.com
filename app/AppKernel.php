@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Rodger\UserBundle\RodgerUserBundle(),
             new Rodger\GalleryBundle\RodgerGalleryBundle(),
             new Rodger\ImageSizeBundle\RodgerImageSizeBundle(),
+            new BCC\ExtraToolsBundle\BCCExtraToolsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

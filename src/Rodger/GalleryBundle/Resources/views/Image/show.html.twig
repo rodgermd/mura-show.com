@@ -3,7 +3,9 @@
 <h1>{{ image }}
   <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug })}}" title="{{ image.album }}">[{{ image.album }}]</a>
 </h1>
-<img src="{{ image.thumbnail('showcase') }}" alt=""/>
+<img src="{{ image.thumbnail('showcase') }}" alt="" id="main-image"/>
+
+<p>{% if image.takenAt  %} {{ image.takenAt | localeDate('long') }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
 
 {% if image.tags | length %}
 <h4>{{ 'Tags' | trans }}:</h4>
@@ -25,3 +27,8 @@
 {% endblock primary_menu_items %}
   
 {% block title %}{{ parent() }} • {{ image.album }} • {{ image }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/image.show.css">
+{% endblock stylesheets %}

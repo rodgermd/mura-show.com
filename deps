@@ -88,6 +88,10 @@
     git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
     target=bundles/FOS/UserBundle
 
+[BCCExtraToolsBundle] 
+    git=http://github.com/michelsalib/BCCExtraToolsBundle.git 
+    target=/bundles/BCC/ExtraToolsBundle
+
 [BehatBundle]
     git=https://github.com/Behat/BehatBundle.git
     target=/bundles/Behat/BehatBundle

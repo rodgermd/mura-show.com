@@ -21,6 +21,7 @@ $loader->registerNamespaces(array(
     'WhiteOctober\PagerfantaBundle' => __DIR__.'/../vendor/bundles',
     'Pagerfanta'                    => __DIR__.'/../vendor/bundles/pagerfanta/src',
     'FOS'              => __DIR__.'/../vendor/bundles',
+    'BCC' => __DIR__.'/../vendor/bundles',
     
     'Behat\\BehatBundle' => __DIR__.'/../vendor/bundles',
     'Behat\\MinkBundle'  => __DIR__.'/../vendor/bundles',

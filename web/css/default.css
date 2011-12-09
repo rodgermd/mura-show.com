@@ -71,6 +71,7 @@ label.required { border-bottom: 1px #900 solid; }
 .fields-table th, .fields-table td { padding: 5px;}
 
 h2 { font: normal 18px serif;}
+h4 { font: bold 12px serif;}
 img.lazy {display: none}
 
 #primary-menu li { display: inline-block; }
