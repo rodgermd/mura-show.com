@@ -15,3 +15,16 @@ useful if you use the ``strict_variables`` option:
     {% if foo.bar is defined %}
         ...
     {% endif %}
+
+    {% if foo['bar'] is defined %}
+        ...
+    {% endif %}
+
+When using the ``defined`` test on an expression that uses variables in some
+method calls, be sure that they are all defined first:
+
+.. code-block:: jinja
+
+    {% if var is defined and foo.method(var) is defined %}
+        ...
+    {% endif %}

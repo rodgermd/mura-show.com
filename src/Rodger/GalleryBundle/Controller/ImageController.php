@@ -67,7 +67,7 @@ class ImageController extends CommonController {
    * @Route("/{album}/{id}", name="image.show")
    * @Template
    */
-  public function showActions(Image $image) {
+  public function showAction(Image $image) {
     return array('image' => $image, 'album' => $image->getAlbum());
   }
 }

@@ -58,4 +58,40 @@ class Twig_Tests_Loader_ArrayTest extends PHPUnit_Framework_TestCase
         $loader = new Twig_Loader_Array(array('foo' => 'bar'));
         $this->assertTrue($loader->isFresh('foo', time()));
     }
+
+    /**
+     * @expectedException Twig_Error_Loader
+     */
+    public function testIsFreshWhenTemplateDoesNotExist()
+    {
+        $loader = new Twig_Loader_Array(array());
+
+        $loader->isFresh('foo', time());
+    }
+
+    public function testTemplateReference()
+    {
+        $name = new Twig_Test_Loader_TemplateReference('foo');
+        $loader = new Twig_Loader_Array(array('foo' => 'bar'));
+
+        $loader->getCacheKey($name);
+        $loader->getSource($name);
+        $loader->isFresh($name, time());
+        $loader->setTemplate($name, 'foobar');
+    }
+}
+
+class Twig_Test_Loader_TemplateReference
+{
+    private $name;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

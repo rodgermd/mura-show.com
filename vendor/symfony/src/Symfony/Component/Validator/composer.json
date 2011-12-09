@@ -4,7 +4,7 @@
     "description": "Symfony Validator Component",
     "keywords": [],
     "homepage": "http://symfony.com",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "license": "MIT",
     "authors": [
         {
@@ -21,8 +21,8 @@
         "doctrine/common": ">=2.1"
     },
     "suggest": {
-        "symfony/http-foundation": ">=2.0",
-        "symfony/yaml": ">=2.0"
+        "symfony/http-foundation": "self.version",
+        "symfony/yaml": "self.version"
     },
     "autoload": {
         "psr-0": { "Symfony\\Component\\Validator": "" }

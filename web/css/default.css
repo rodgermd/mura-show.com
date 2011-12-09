@@ -76,3 +76,5 @@ img.lazy {display: none}
 #primary-menu li { display: inline-block; }
 #primary-menu li:not(:last-child):after { content: '  |  ';}
 #primary-menu li a { display: inline-block; padding: 2px 4px; text-decoration: none;}
+
+.link-in-title { font-size: .7em; text-decoration: none;}

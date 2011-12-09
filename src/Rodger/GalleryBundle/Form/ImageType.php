@@ -9,6 +9,7 @@ class ImageType extends AbstractType
   public function buildForm(FormBuilder $builder, array $options)
   {
     $builder->add('name')
+            ->add('album', 'entity', array('class' => 'RodgerGalleryBundle:Album'))
             ->add('is_private', 'checkbox', array('required' => false))
             ->add('keywords', 'text', array(
                 'required' => false, 

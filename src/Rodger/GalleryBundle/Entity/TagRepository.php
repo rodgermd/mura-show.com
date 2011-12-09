@@ -19,7 +19,7 @@ class TagRepository extends EntityRepository
    */
   public function search($name)
   {
-    $name = strotolower($name);
+    $name = strtolower($name);
     $qb = $this->createQueryBuilder('t');
     return $qb
             ->select('t')

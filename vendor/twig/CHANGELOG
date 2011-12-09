@@ -1,3 +1,33 @@
+* 1.4.0 (2011-12-07)
+
+ * fixed lexer when using big numbers (> PHP_INT_MAX)
+ * added missing preserveKeys argument to the reverse filter
+ * fixed macros containing filter tag calls
+
+* 1.4.0-RC2 (2011-11-27)
+
+ * removed usage of Reflection in Twig_Template::getAttribute()
+ * added a C extension that can optionally replace Twig_Template::getAttribute()
+ * added negative timestamp support to the date filter
+
+* 1.4.0-RC1 (2011-11-20)
+
+ * optimized variable access when using PHP 5.4
+ * changed the precedence of the .. operator to be more consistent with languages that implements such a feature like Ruby
+ * added an Exception to Twig_Loader_Array::isFresh() method when the template does not exist to be consistent with other loaders
+ * added Twig_Function_Node to allow more complex functions to have their own Node class
+ * added Twig_Filter_Node to allow more complex filters to have their own Node class
+ * added Twig_Test_Node to allow more complex tests to have their own Node class
+ * added a better error message when a template is empty but contain a BOM
+ * fixed "in" operator for empty strings
+ * fixed the "defined" test and the "default" filter (now works with more than one call (foo.bar.foo) and for both values of the strict_variables option)
+ * changed the way extensions are loaded (addFilter/addFunction/addGlobal/addTest/addNodeVisitor/addTokenParser/addExtension can now be called in any order)
+ * added Twig_Environment::display()
+ * made the escape filter smarter when the encoding is not supported by PHP
+ * added a convert_encoding filter
+ * moved all node manipulations outside the compile() Node method
+ * made several speed optimizations
+
 * 1.3.0 (2011-10-08)
 
 no changes

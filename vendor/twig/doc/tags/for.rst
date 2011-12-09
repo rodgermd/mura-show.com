@@ -50,6 +50,9 @@ The ``..`` operator can take any expression at both sides:
     If you need a step different from 1, you can use the ``range`` function
     instead.
 
+The `loop` variable
+-------------------
+
 Inside of a ``for`` loop block you can access some special variables:
 
 ===================== =============================================================
@@ -74,6 +77,9 @@ Variable              Description
 .. versionadded:: 1.2
     The ``if`` modifier support has been added in Twig 1.2.
 
+Adding a condition
+------------------
+
 Unlike in PHP, it's not possible to ``break`` or ``continue`` in a loop. You
 can however filter the sequence during iteration which allows you to skip
 items. The following example skips all the users which are not active:
@@ -89,6 +95,17 @@ items. The following example skips all the users which are not active:
 The advantage is that the special loop variable will count correctly thus not
 counting the users not iterated over.
 
+.. note::
+
+    Using the ``loop`` variable within the condition is not recommended as it
+    will probably not be doing what you expect it to. For instance, adding a
+    condition like ``loop.index > 4`` won't work as the index is only
+    incremented when the condition is true (so the condition will never
+    match).
+
+The `else` Clause
+-----------------
+
 If no iteration took place because the sequence was empty, you can render a
 replacement block by using ``else``:
 
@@ -102,6 +119,9 @@ replacement block by using ``else``:
         {% endfor %}
     </ul>
 
+Iterating over Keys
+-------------------
+
 By default, a loop iterates over the values of the sequence. You can iterate
 on keys by using the ``keys`` filter:
 
@@ -113,6 +133,9 @@ on keys by using the ``keys`` filter:
             <li>{{ key }}</li>
         {% endfor %}
     </ul>
+
+Iterating over Keys and Values
+------------------------------
 
 You can also access both keys and values:
 
