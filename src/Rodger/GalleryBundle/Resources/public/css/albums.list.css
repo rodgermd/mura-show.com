@@ -10,7 +10,7 @@ li.album { margin-bottom: 20px; }
 
 .album-image { display: inline-block; }
 .album-image a { display: block; border: 1px #ccc solid;}
-.album-image img { display: block;}
+.album-image img { display: block; min-width: 50px; min-height: 50px}
 .album-image a:hover { border-color: #999; box-shadow: 0 0 4px #999;}
 
 a.total-images { vertical-align: 3px; }

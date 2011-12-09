@@ -12,8 +12,8 @@ class LoadImageSizeData extends AbstractFixture implements FixtureInterface
     {
       $resource = new ImageSize();
       $resource->setName('resource');
-      $resource->setWidth(1000);
-      $resource->setHeight(1000);
+      $resource->setWidth(800);
+      $resource->setHeight(600);
       
       $manager->persist($resource);
       
