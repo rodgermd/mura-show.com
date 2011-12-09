@@ -36,6 +36,7 @@ class Album {
   /**
    * related images
    * @ORM\OneToMany(targetEntity="Image", mappedBy="Album")
+   * @ORM\OrderBy({"taken_at" = "ASC", "uploaded_at" = "ASC"})
    */
   private $Images;
   
