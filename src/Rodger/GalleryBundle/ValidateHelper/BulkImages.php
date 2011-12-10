@@ -2,6 +2,7 @@
 namespace Rodger\GalleryBundle\ValidateHelper;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContext;
+use Rodger\GalleryBundle\Convert\Converter;
 
 /**
  * @Assert\Callback(methods={"areImagesValid"})
@@ -29,10 +30,14 @@ class BulkImages {
    * @var \Doctrine\ORM\QueryBuilder $query_builder
    */
   protected $query_builder;
+  protected $resource_template;
+  protected $em;
   
-  public function __construct($query) {
+  public function __construct($query, \Doctrine\ORM\EntityManager $em) {
+    $this->em = $em;
     $this->images = new \Doctrine\Common\Collections\ArrayCollection();
     $this->query_builder = $query;
+    $this->resource_template = $this->em->getRepository('RodgerImageSizeBundle:ImageSize')->find('resource');
   }
   
   public static function getActions() {
@@ -69,17 +74,27 @@ class BulkImages {
     if (!$count) $context->addViolation('Please select images from the list!', array(), null);
   }
   
-  public function process(\Doctrine\ORM\EntityManager $em) {
+  public function process() {
     foreach($this->images as $image) {
       switch($this->action) {
         case self::ACTION_DELETE: $em->remove($image); break;
         case self::ACTION_SET_PRIVATE:
           $image->setIsPrivate(true);
-          $em->persist($image);
+          $this->em->persist($image);
           break;
         case self::ACTION_UNSET_PRIVATE:
           $image->setIsPrivate(false);
-          $em->persist($image);
+          $this->em->persist($image);
+          break;
+        case self::ACTION_ROTATE_PLUS90:
+          Converter::rotate_image($image, 90);
+          $converter = new Converter($image->getAbsolutePath(), $image->thumbnail('resource', true), $this->resource_template);
+          $converter->convert();
+          break;
+        case self::ACTION_ROTATE_MINUS90:
+          Converter::rotate_image($image, -90);
+          $converter = new Converter($image->getAbsolutePath(), $image->thumbnail('resource', true), $this->resource_template);
+          $converter->convert();
           break;
       }
     }

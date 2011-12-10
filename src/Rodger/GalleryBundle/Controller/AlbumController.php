@@ -110,7 +110,8 @@ protected $bulk_form, $validating_object, $paginator;
     return array('form' => $this->bulk_form->createView(), 
                  'paginator' => $this->paginator, 
                  'form_name' => $this->bulk_form->getName(),
-                 'album' => $album
+                 'album' => $album,
+                 'nocache' => uniqid()
         
         );
   }
@@ -126,7 +127,7 @@ protected $bulk_form, $validating_object, $paginator;
 
     $this->bulk_form->bindRequest($this->getRequest());
     if ($this->bulk_form->isValid()) {
-      $this->bulk_form->getData()->process($this->em);
+      $this->bulk_form->getData()->process();
       $this->em->flush();
       $number_processed = $this->bulk_form->getData()->images->count();
       $this->session->setFlash('success', $this->get('translator')->transChoice(
@@ -142,7 +143,7 @@ protected $bulk_form, $validating_object, $paginator;
         'form'      => $this->bulk_form->createView(), 
         'paginator' => $this->paginator, 
         'form_name' => $this->bulk_form->getName(),
-        'album'     => $album
+        'album'     => $album,
         );
   }
   
@@ -162,7 +163,10 @@ protected $bulk_form, $validating_object, $paginator;
 
     $ids = array_map(function($image) {return $image->getId();}, $this->paginator->getCurrentPageResults());
 
-    $this->validating_object = new ValidateHelpers\BulkImages($query_builder->andWhere($query_builder->expr()->in('i.id', $ids)));
+    $this->validating_object = new ValidateHelpers\BulkImages(
+            $query_builder->andWhere($query_builder->expr()->in('i.id', $ids)),
+            $this->em
+            );
     $this->bulk_form = $this->createForm(new Forms\BulkImages(), $this->validating_object);
   }
 

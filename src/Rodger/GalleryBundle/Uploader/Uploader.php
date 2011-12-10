@@ -148,13 +148,6 @@ class Uploader {
     
     $this->em->persist($image);
     
-    // prepare base thumbnail for faster thumbnailing later
-    $converter = new Converter(
-            $image->getAbsolutePath(), 
-            $image->thumbnail(ImageSize::BASE_THUMBNAIL, true),
-            $this->em->getRepository('RodgerImageSizeBundle:ImageSize')->find(ImageSize::BASE_THUMBNAIL)
-    );
-    $converter->convert();
   }
   
   /**

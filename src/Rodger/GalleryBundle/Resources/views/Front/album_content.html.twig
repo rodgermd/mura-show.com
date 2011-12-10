@@ -10,7 +10,7 @@
 <ul class="album-images">
 {% for image in album.Images %}
 <li class="album-image">
-  <a href="{{ image.thumbnail('showcase') }}" title="{{ image }}" class="show-in-colorbox">
+  <a href="{{ image.thumbnail('resource') }}" title="{{ image }}" class="show-in-colorbox">
     <img src="{{ image.thumbnail( (album.Images | length) > 10 ? 'list' : 'list_medium')}}" class="lazy" alt=""/>
   </a>
 </li>

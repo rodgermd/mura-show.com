@@ -69,8 +69,19 @@ $doctrine = $kernel->getContainer()->get('doctrine');
 $image_size = $doctrine->getRepository('RodgerImageSizeBundle:ImageSize')->findOneByName($command);
 if (!$image_size) die(sprintf('Template %s not found', $command));
 
-$converter = new Converter($original_dir . $object->getFilename(), $thisDir . $img, $image_size);
-$converter->convert();
+$resource_filename = $object->thumbnail(ImageSize::BASE_THUMBNAIL, true);
+if (!file_exists($resource_filename)) {
+  $converter = new Converter(
+          $original_dir . $object->getFilename(), 
+          $resource_filename, 
+          $doctrine->getRepository('RodgerImageSizeBundle:ImageSize')->find(ImageSize::BASE_THUMBNAIL));
+  $converter->convert();
+}
+
+if ($command != ImageSize::BASE_THUMBNAIL) {
+  $converter = new Converter($resource_filename, $thisDir . $img, $image_size);
+  $converter->convert();
+}
 
 // redirect the browser to the new image - this is more reliable than fpassthru
 header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/'.$img);

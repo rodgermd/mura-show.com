@@ -1,6 +1,8 @@
 <?php
 namespace Rodger\GalleryBundle\Convert;
+
 use Rodger\ImageSizeBundle\Entity\ImageSize;
+use Rodger\GalleryBundle\Entity\Image;
 
 class Converter
 {
@@ -74,6 +76,13 @@ class Converter
     endswitch;
 
     if ($command) exec(implode(" ", self::get_convert(), $file, $command, $file));
+  }
+  
+  public static function rotate_image(Image $image, $degrees) {
+    if (!$image->getAbsolutePath()) return false;
+    $command = implode(" ", array(self::get_convert(), $image->getAbsolutePath(), sprintf('-rotate %d', $degrees), $image->getAbsolutePath()));
+    $result = exec($command);
+    exec(sprintf("rm -f %s", $image->thumbnail('*', true)));
   }
   
   public function convert()
