@@ -4,6 +4,8 @@ body { font: 12px Arial; color: #444;}
 #header { height: 60px; padding: 20px; background-color: #f3f3f3; border-bottom: 2px #ddd solid;}
 #content-wrapper { padding: 20px;}
 
+.hidden { display: none}
+
 
 input[type=text], input[type=password], textarea {
   padding: 3px; border: 1px #ccc solid; border-radius: 5px;
@@ -44,7 +46,7 @@ a:hover { color: #333}
   text-shadow: 1px 1px 1px #fff;
   text-decoration: none;
 }
-.gray-button:hover { 
+.gray-button:hover, #navigation a:hover { 
   border-color:#999 ;
   background: -moz-linear-gradient(top, #d6d6d6 0%, #c4c4c4 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d6d6d6), color-stop(100%,#c4c4c4));
@@ -79,3 +81,9 @@ img.lazy {display: none}
 #primary-menu li a { display: inline-block; padding: 2px 4px; text-decoration: none;}
 
 .link-in-title { font-size: .7em; text-decoration: none;}
+
+#navigation { margin: 1em 0;}
+#navigation nav * { display: inline-block; padding: 3px 5px; border-radius: 4px; text-decoration: none;}
+#navigation a:hover { border: 1px #999 solid; padding: 2px 4px;}
+#navigation .current { font-weight: bold; background: #555; color: #fff; margin: 0 5px;}
+#navigation .disabled { opacity: .3}

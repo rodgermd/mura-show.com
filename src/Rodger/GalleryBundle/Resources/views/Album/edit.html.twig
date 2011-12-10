@@ -7,12 +7,8 @@
 <input type="submit" value="{{ 'update album' | trans }}"/>
 </form>
 
-<div id="album-images-container">
-  <form action="{{ path('album.edit.bulk', {'slug' : album.slug}) }}" method="post">
-  {% form_theme images_form "RodgerGalleryBundle:Form:div.html.twig" %}
-  {{ form_widget (images_form) }}
-    <input type="submit" value="{{ 'run bulk action' | trans }}" onclick="javasript: return confirm('{{ 'Are you sure to run selected bulk action?' | trans }}')"/>
-</form>
+<div id="images-list-holder">
+  {% render "RodgerGalleryBundle:Album:adminList" with {'slug' : album.slug} %}
 </div>
 
 {% endblock body %}
@@ -20,6 +16,8 @@
 {% block javascripts %}
 {{ parent() }}
 <script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
+<script type="text/javascript" src="/js/use_select_all.js"></script>
+<script type="text/javascript" src="/bundles/rodgergallery/js/album.edit.js"></script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
