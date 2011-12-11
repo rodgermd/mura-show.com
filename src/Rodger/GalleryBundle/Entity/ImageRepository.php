@@ -13,17 +13,31 @@ use Doctrine\ORM\EntityRepository;
 class ImageRepository extends EntityRepository
 {
   public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false) {
+    $qb = $this->getAccessibleImagesBuilder($album, $show_private);
+    $qb->select('partial i.{id, filename}')
+          ->orderBy('i.taken_at', 'desc')
+          ->addOrderBy('i.uploaded_at', 'desc');
+    
+    return $qb;
+  }
+  
+  /**
+   * Gets asccessible image QueryBuilder
+   * @param Album $album
+   * @param type $user
+   * @return \Doctrine\ORM\QueryBuilder 
+   */
+  public function getAccessibleImagesBuilder(Album $album, $user = null)
+  {
     $qb = $this->createQueryBuilder('i')
-      ->select('partial i.{id, filename}')
-      ->where('i.album_id = :album_id');
-    if (!$show_private) {
+          ->where('i.album_id = :album_id')
+          ->setParameter('album_id', $album->getId())
+          ->orderBy('i.taken_at', 'asc')
+          ->addOrderBy('i.uploaded_at', 'asc');
+    
+    if (!$user) {
       $qb->andWhere('i.is_private = false');
     }
-    
-    $qb->orderBy('i.taken_at', 'desc')
-       ->addOrderBy('i.uploaded_at', 'desc')
-       ->setParameter('album_id', $album->getId());
-    
     return $qb;
   }
 }

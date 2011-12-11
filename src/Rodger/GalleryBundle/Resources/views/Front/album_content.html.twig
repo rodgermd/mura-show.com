@@ -6,9 +6,9 @@
     <span class="total-images">{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
     | transchoice(album.Images | length, {"%number%" : album.Images | length})  }}</span>
 </h1>
-{% if album.Images | length %}
+{% if images | length %}
 <ul class="album-images">
-{% for image in album.Images %}
+{% for image in images %}
 <li class="album-image">
   <a href="{{ image.thumbnail('resource') }}" title="{{ image }}" class="show-in-colorbox">
     <img src="{{ image.thumbnail( (album.Images | length) > 10 ? 'list' : 'list_medium')}}" class="lazy" alt=""/>
