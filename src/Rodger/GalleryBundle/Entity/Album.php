@@ -16,7 +16,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\AlbumRepository")
  */
 class Album {
-
+  
+  const STORE_FOLDER = 'uploads/images/';
+ 
   /**
    * @var integer $id
    *
@@ -228,5 +230,20 @@ class Album {
   }
   
   public function __toString() { return $this->name; }
+  
+  public function getUploadDir() {
+    // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+    return sprintf('%s/%s', self::STORE_FOLDER, $this->getSlug());
+  }
+  
+  public function getUploadRootDir() {
+    // the absolute directory path where uploaded documents should be saved
+    return __DIR__ . '/../../../../' . $this->getUploadDir();
+  }
+  
+  public function getThumbnailsFolder($absolute = false) {
+    $prefix = $absolute ? __DIR__ . '/../../../../web' : '';
+    return sprintf("%s/gallery/%s", $prefix, $this->getSlug());
+  }
 
 }

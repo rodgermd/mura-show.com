@@ -351,12 +351,12 @@ class Image implements UploadableInterface {
 
   public function getUploadRootDir() {
     // the absolute directory path where uploaded documents should be saved
-    return __DIR__ . '/../../../../' . $this->getUploadDir();
+    return $this->Album->getUploadRootDir();
   }
 
   public function getUploadDir() {
     // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-    return sprintf('uploads/images/%s', $this->getAlbum()->getSlug());
+    return $this->Album->getUploadDir();
   }
   
   /**
@@ -369,8 +369,7 @@ class Image implements UploadableInterface {
   {
     if (!$this->filename) return false;
     $filename = pathinfo($this->filename, PATHINFO_FILENAME);
-    $prefix = $absolute ? __DIR__ . '/../../../../web' : '';
-    return sprintf("%s/gallery/%s/%s.%s.png", $prefix, $this->Album->getSlug(), $filename, $template);
+    return sprintf("%s/%s.%s.png", $this->Album->getThumbnailsFolder($absolute), $filename, $template);
   }
   
   /**

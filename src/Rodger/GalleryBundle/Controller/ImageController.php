@@ -41,6 +41,8 @@ class ImageController extends CommonController {
     $type->setKeywordsAutocompleteSource($this->generateUrl('keywords.autocomplete'));
     $form = $this->createForm($type, $image);
     
+    $old_image = clone $image;
+    
     $form->bindRequest($this->getRequest());
     
     if ($form->isValid()) {
@@ -53,6 +55,12 @@ class ImageController extends CommonController {
       }
       
       $image->setTags($tags);
+      
+      if ($image->getUploadRootDir() != $old_image->getUploadRootDir())
+      {
+        //rename ($old_image->getAbsolutePath(), $image->getAbsolutePath());
+        exec(sprintf("mv %s %s/", $old_image->thumbnail('*', true), $image->getAlbum()->getThumbnailsFolder(true)));
+      }
       
       $this->em->persist($image);
       $this->em->flush();

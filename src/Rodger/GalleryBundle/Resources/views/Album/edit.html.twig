@@ -24,3 +24,8 @@
 {{ parent() }}
 <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/album.edit.css">
 {% endblock stylesheets %}
+
+{% block primary_menu_items %}
+{{ parent() }}
+  <li><a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ 'Show album' | trans }}</a></li>
+{% endblock primary_menu_items %}

@@ -56,15 +56,23 @@ protected $bulk_form, $validating_object, $paginator;
     $form = $this->createForm($type, $album);
     
     if ($this->getRequest()->getMethod() == 'POST') {
+      
+      $old_album = clone $album;
+      
       $form->bindRequest($this->getRequest());
       if ($form->isValid()) {
         
         $this->em->beginTransaction();
         $tags_repository = $this->em->getRepository('RodgerGalleryBundle:Tag');
-        $album = $form->getData();
         
         $this->em->persist($album);
+        
         $this->em->flush();
+        
+        if ($old_album->getSlug() != $album->getSlug()) {
+          $result = rename($old_album->getUploadRootDir(), $album->getUploadRootDir());
+          $result = rename($old_album->getThumbnailsFolder(true), $album->getThumbnailsFolder(true));
+        }
         
         // process uploads
         if ($album->upload['file']) {
