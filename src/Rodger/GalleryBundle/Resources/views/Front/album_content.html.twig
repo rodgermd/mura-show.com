@@ -4,14 +4,14 @@
 {% block body %}
 <h1>{{ album }}
     <span class="total-images">{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
-    | transchoice(album.Images | length, {"%number%" : album.Images | length})  }}</span>
+    | transchoice(images | length, {"%number%" : images | length})  }}</span>
 </h1>
 {% if images | length %}
 <ul class="album-images">
 {% for image in images %}
 <li class="album-image">
   <a href="{{ image.thumbnail('resource') }}" title="{{ image }}" class="show-in-colorbox">
-    <img src="{{ image.thumbnail( (album.Images | length) > 10 ? 'list' : 'list_medium')}}" class="lazy" alt=""/>
+    <img src="{{ image.thumbnail( (images | length) > 30 ? 'list' : 'list_medium')}}" class="lazy" alt=""/>
   </a>
 </li>
 {% endfor %}
