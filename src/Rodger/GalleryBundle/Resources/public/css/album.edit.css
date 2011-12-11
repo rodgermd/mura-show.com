@@ -21,6 +21,7 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#d6d6d6',GradientType=0 );
   font-weight: bold;
 }
+.items-list tbody td { border-bottom: 1px #ccc solid}
 
 #list-actions {margin:10px 0}
 #list-actions label { margin-right: 1em;}
