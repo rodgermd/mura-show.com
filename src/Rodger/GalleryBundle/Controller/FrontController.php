@@ -67,7 +67,7 @@ class FrontController extends CommonController {
    */
   public function filterYearAction($year) {
     $this->set_selected_year($year);
-    return $this->redirect($this->getRequest()->headers->get('referer'));
+    return $this->redirect($this->generateUrl('albums'));
   }
   
   private function get_filters() {
