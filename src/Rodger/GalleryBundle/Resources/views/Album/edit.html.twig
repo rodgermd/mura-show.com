@@ -27,5 +27,7 @@
 
 {% block primary_menu_items %}
 {{ parent() }}
+{% if album is defined %}
   <li><a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ 'Show album' | trans }}</a></li>
+{% endif %}
 {% endblock primary_menu_items %}

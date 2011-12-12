@@ -47,7 +47,7 @@ class ImageRepository extends EntityRepository
     if (!$show_private) {
       $qb->where('i.is_private = false');
     }
-    $qb->select('DISTINCT i.year')->orderBy('i.year', 'asc');
+    $qb->select('DISTINCT i.year')->orderBy('i.year', 'desc');
    
     $result = $qb->getQuery()->getResult();
     return array_map(function($item){ return $item['year']; }, $result);

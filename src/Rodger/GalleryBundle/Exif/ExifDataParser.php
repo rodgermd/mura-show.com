@@ -78,7 +78,7 @@ class ExifDataParser {
 
     foreach($found_keys as $key) $prepared[$key] = $this->data[$key];
     
-    if (array_key_exists('Flash', $prepared)) $prepared['Flash'] = self::$flash_types[$prepared['Flash']];
+    if (array_key_exists('Flash', $prepared) && @self::$flash_types[$prepared['Flash']]) $prepared['Flash'] = self::$flash_types[$prepared['Flash']];
     if (array_key_exists('ExposureTime', $prepared) && preg_match('/^(\d{2,})\/(\d+)$/', $prepared['ExposureTime'], $matches)) {
       $value = $matches[1] / $matches[2];
       $prepared['ExposureTime'] = $value >= 1 ? sprintf("%ss", $value) : sprintf("1/%ss", floor(1/$value));

@@ -69,7 +69,7 @@ protected $bulk_form, $validating_object, $paginator;
         
         $this->em->flush();
         
-        if ($old_album->getSlug() != $album->getSlug()) {
+        if ($old_album->getId() && $old_album->getSlug() != $album->getSlug()) {
           $result = rename($old_album->getUploadRootDir(), $album->getUploadRootDir());
           $result = rename($old_album->getThumbnailsFolder(true), $album->getThumbnailsFolder(true));
         }
