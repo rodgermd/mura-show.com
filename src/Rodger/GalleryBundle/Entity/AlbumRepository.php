@@ -14,16 +14,21 @@ class AlbumRepository extends EntityRepository
 {
   /**
    * Prepares QUeryBuilder to show latest albums
-   * @param boolean $show_private
+   * @param mixed $user
+   * @param array $filters
    * @return \Doctrine\ORM\QueryBuilder 
    */
-  public function getLatestQueryBuilder($show_private = false)
+  public function getLatestQueryBuilder($user, array $filters)
   {
     $qb = $this->createQueryBuilder('a');
     $qb->innerJoin('a.Images', 'i');
-    if (!$show_private) {
+    if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
       $qb->where('a.is_private = false AND i.is_private = false');
     }
+    if (@$filters['year']) {
+      $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
+    }
+    
     $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
        ->addSelect('(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album_id = a.id) album_images_count')
        ->orderBy('sort_date', 'desc');

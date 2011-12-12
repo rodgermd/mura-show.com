@@ -26,3 +26,7 @@
 {% endblock javascripts %}
 
 {% block title %}{{parent() }} • {{ 'Albums' | trans }}{% endblock title %}
+
+{% block secondary_menu %}
+{% render "RodgerGalleryBundle:Front:yearsMenu" %}
+{% endblock secondary_menu %}

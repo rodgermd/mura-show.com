@@ -20,7 +20,7 @@ class FrontController extends CommonController {
    * @Template()
    */
   public function albumsAction() {
-    $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder((bool)$this->user)
+    $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder($this->user, $this->get_filters())
             ->getQuery()->execute();
     
     return array('albums' => $albums);
@@ -50,6 +50,39 @@ class FrontController extends CommonController {
     return array('album' => $album, 'images' => $images);
   }
   
+  /**
+   * Renders years menu
+   * @Template("RodgerGalleryBundle:Front:_years_menu.html.twig")
+   */
+  public function yearsMenuAction() {
+    $this->preExecute();
+    $years = $this->em->getRepository('RodgerGalleryBundle:Image')->getYears($this->user);
+    return array('years' => $years, 'selected' => $this->get_selected_year());
+  }
   
+  /**
+   * Filters years
+   * @Route("/filter/{year}", name="filter.year", requirements={"year"="20\d{2}"})
+   * @param type $year 
+   */
+  public function filterYearAction($year) {
+    $this->set_selected_year($year);
+    return $this->redirect($this->getRequest()->headers->get('referer'));
+  }
+  
+  private function get_filters() {
+    return $this->session->get('filters', array());
+  }
+  
+  private function get_selected_year() {
+    $filters = $this->session->get('filters', array());
+    return @$filters['year'];
+  }
+  
+  private function set_selected_year($year) {
+    $filters = $this->session->get('filters', array());
+    $filters['year'] = ($year == @$filters['year']) ? null : $year;
+    $this->session->set('filters', $filters);
+  }
 
 }

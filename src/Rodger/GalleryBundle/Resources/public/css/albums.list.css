@@ -5,7 +5,7 @@ h2 {
 }
 
 li.album { margin-bottom: 20px; }
-.album .album-images {opacity: .4 }
+.album .album-images {opacity: .6 }
 .album:hover .album-images{ opacity: 1}
 
 .album-image { display: inline-block; }
@@ -16,3 +16,23 @@ li.album { margin-bottom: 20px; }
 a.total-images { vertical-align: 3px; }
 .total-images {margin-left: 5px;font-size: .7em}
 span.total-images { color: #666}
+
+#years-menu-holder {
+  position: absolute; 
+  bottom: 0;
+  left: 0; right: 0;
+}
+#years-menu { 
+  text-align: center; 
+  width: 100%;
+}
+#years-menu a { 
+  display: block; 
+  padding: 5px; 
+  border-top: 3px #ccc solid; 
+  text-decoration: none;
+  font-weight: bold;
+}
+#years-menu a:hover {border-top-color: #aaa}
+#years-menu a.selected { border-top-color: #888;}
+#years-menu a.selected:hover { border-top-color: #666}

@@ -40,4 +40,17 @@ class ImageRepository extends EntityRepository
     }
     return $qb;
   }
+  
+  public function getYears($user) {
+    $show_private = ($user instanceof \FOS\UserBundle\Model\UserInterface);
+    $qb = $this->createQueryBuilder('i');
+    if (!$show_private) {
+      $qb->where('i.is_private = false');
+    }
+    $qb->select('DISTINCT i.year')->orderBy('i.year', 'asc');
+   
+    $result = $qb->getQuery()->getResult();
+    return array_map(function($item){ return $item['year']; }, $result);
+            
+  }
 }
