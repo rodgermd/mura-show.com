@@ -83,7 +83,7 @@ if ($command != ImageSize::BASE_THUMBNAIL) {
   $converter->convert();
 }
 
-// redirect the browser to the new image - this is more reliable than fpassthru
-header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/'.$img);
+header('Content-type: image/png');
+echo file_get_contents($thisDir . $img);
 exit;
 ?>
