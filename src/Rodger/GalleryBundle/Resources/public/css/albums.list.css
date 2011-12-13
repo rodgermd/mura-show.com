@@ -36,3 +36,15 @@ span.total-images { color: #666}
 #years-menu a:hover {border-top-color: #aaa}
 #years-menu a.selected { border-top-color: #888;}
 #years-menu a.selected:hover { border-top-color: #666}
+
+img.thumbnails { 
+  background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f0f0f0));
+  background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 100%);
+  background: -o-linear-gradient(top, #ffffff 0%,#f0f0f0 100%);
+  background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 100%);
+  background: linear-gradient(top, #ffffff 0%,#f0f0f0 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f0f0f0',GradientType=0 );
+}
+img.thumbnails-list { width: 75px; height: 75px;}
+img.thumbnails-list-medium { width: 200px; height: 200px;}
