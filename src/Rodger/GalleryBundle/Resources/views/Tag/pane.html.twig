@@ -1,5 +1,5 @@
-<div id="tags-pane">
 {% if tags | length %}
+<div id="tags-pane">
   <h4>{{ 'Tags' | trans }}:</h4>
   <ul id="tags-list">
   {% for tag in tags %}
@@ -15,7 +15,6 @@
   {% endif %}
   
   </ul>
-{% else %}
-{{ 'There are no tags available' | trans }}
-{% endif %}
 </div>
+{% endif %}
+

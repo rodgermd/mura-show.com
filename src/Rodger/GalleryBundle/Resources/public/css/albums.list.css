@@ -4,6 +4,8 @@ h2 {
   border-bottom: 2px #eee solid;
 }
 
+h2 a {text-decoration: none}
+
 li.album { margin-bottom: 20px; }
 .album .album-images {opacity: .6 }
 .album:hover .album-images{ opacity: 1}
