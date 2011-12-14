@@ -2,6 +2,7 @@
 {% block title %}{{ parent() }} • {{ album }}{% endblock title %}
 
 {% block body %}
+{% render "RodgerGalleryBundle:Tag:albumImages" with { 'album' : album } %}
 <h1>{{ album }}
     <span class="total-images">{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
     | transchoice(images | length, {"%number%" : images | length})  }}</span>

@@ -12,11 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class ImageRepository extends EntityRepository
 {
-  public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false) {
+  public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false, array $filters = array()) {
     $qb = $this->getAccessibleImagesBuilder($album, $show_private);
     $qb->select('partial i.{id, filename}')
           ->orderBy('i.taken_at', 'desc')
           ->addOrderBy('i.uploaded_at', 'desc');
+    
+    if (count($filters)) {
+      if ($filters['year']) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
+      if (count($filters['tags'])) $qb->innerJoin ('i.Tags', 't', 'WITH', $qb->expr()->in('t.name', $filters['tags']));
+    }
     
     return $qb;
   }
@@ -52,5 +57,23 @@ class ImageRepository extends EntityRepository
     $result = $qb->getQuery()->getResult();
     return array_map(function($item){ return $item['year']; }, $result);
             
+  }
+  
+  public function getFilteredAlbumImages(Album $album, array $filters, $user)
+  {
+    $qb = $this->getAccessibleImagesBuilder($album, $user);
+    if ($filters['year']) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
+    if (count($filters['tags'])) {
+      $qb->innerJoin('i.Album', 'a')
+         ->leftJoin('a.Tags', 'at')
+         ->leftJoin('i.Tags', 'it')
+         ->andWhere($qb->expr()->orX(
+           $qb->expr()->in('it.name', $filters['tags']),
+           $qb->expr()->in('at.name', $filters['tags'])
+         ));
+      
+    }
+    
+    return $qb->getQuery()->execute();
   }
 }

@@ -6,7 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
-use Rodger\GalleryBundle\Entity\Tag;
+use Rodger\GalleryBundle\Entity\Tag,
+    Rodger\GalleryBundle\Entity\Album;
 
 /**
  * @Route("/tags")
@@ -17,11 +18,28 @@ class TagController extends CommonController {
    * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
    * @return type 
    */
-  public function albumListTagsAction() {
+  public function albumsListAction() {
     $this->preExecute();
     return array(
         'filtered_tags' => $this->get_filter_tags(), 
-        'tags' => $this->em->getRepository('RodgerGalleryBundle:Tag')->getFilteredAlbumsTags($this->user, $this->get_selected_year(), $this->get_filter_tags())
+        'tags' => $this->em->getRepository('RodgerGalleryBundle:Tag')->getFilteredAlbumsTags($this->user, $this->get_selected_year())
+    );
+  }
+  
+  /**
+   * Renders album images tags
+   * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
+   * @param Album $album 
+   */
+  public function albumImagesAction(Album $album) {
+    $this->preExecute();
+    $tags = $this->em->getRepository('RodgerGalleryBundle:Tag')->getFilteredAlbumImagesTags(
+            $album, 
+            $this->user, 
+            $this->get_filters());
+    return array(
+        'filtered_tags' => $this->get_filter_tags(), 
+        'tags' => $tags
     );
   }
   
@@ -39,7 +57,7 @@ class TagController extends CommonController {
    * @param Tag $tag 
    * @Route("/{name}", name="filter.use")
    */
-  public function albumsListProcessTagAction(Tag $tag)
+  public function processTagAction(Tag $tag)
   {
     $this->add_remove_filter_tag($tag);
     return $this->redirect($this->getRequest()->headers->get('referer'));
