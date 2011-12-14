@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 class CommonController extends Controller
 {
   public $user, $em, $session;
+  const FILTER_TAGS_KEY = 'filter.tags';
+  const FILTER_YEAR_KEY = 'filter.year';
 
   public function preExecute()
   {
@@ -41,4 +43,40 @@ class CommonController extends Controller
     return $response;
   }
   
+  /**
+   * Sets filter tags
+   * @param array $tags
+   */
+  public function set_filter_tags(array $tags)
+  {
+    $this->session->set(self::FILTER_TAGS_KEY, $tags);
+  }
+  
+  /**
+   * Gets filter tags
+   * @return array 
+   */
+  public function get_filter_tags() {
+    return $this->session->get(self::FILTER_TAGS_KEY, array());
+  }
+  
+  
+  public function get_filters() {
+    return array('year' => $this->get_selected_year(), 'tags' => $this->get_filter_tags());
+  }
+  
+  /**
+   * Gets filter year
+   * @return type 
+   */
+  public function get_selected_year() {
+    return $this->session->get(self::FILTER_YEAR_KEY);
+  }
+  
+  /**
+   * Sets filter year
+   */
+  public function set_selected_year($year) {
+    $this->session->set(self::FILTER_YEAR_KEY, $year);
+  }
 }

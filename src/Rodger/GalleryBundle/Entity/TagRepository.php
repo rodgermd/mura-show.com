@@ -3,6 +3,7 @@
 namespace Rodger\GalleryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use FOS\UserBundle\Model\UserInterface;
 
 /**
  * TagRepository
@@ -42,5 +43,35 @@ class TagRepository extends EntityRepository
     }
     
     return $tag;
+  }
+  
+  /**
+   * Gets Tags using filtes
+   * @param integer $year
+   * @param array $use_tags
+   * @param UserInterface $user
+   * @return array 
+   */
+  public function getFilteredAlbumsTags($user, $year = null, array $use_tags = array()) {
+    $qb = $this->createQueryBuilder('t')
+            ->select('t')
+            ->innerJoin('t.Albums', 'a')
+            ->innerJoin('a.Images', 'i')
+            ->orderBy('t.name');
+    if (count($use_tags))
+    {
+      $albums = $this->_em->getRepository('RodgerGalleryBundle:Album')->getAlbumsIdUsingTags($user, $use_tags, $year);
+      if ($albums) $qb->where($qb->expr()->in('a.id', $albums));
+    }
+    
+    if ($year) {
+      $qb->andWhere($qb->expr()->eq('i.year', $year));
+    }
+    
+    if (!$user) {
+      $qb->andWhere('i.is_private = false AND a.is_private = false');
+    }
+    
+    return $qb->getQuery()->execute();
   }
 }

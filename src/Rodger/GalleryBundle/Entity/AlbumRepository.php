@@ -2,7 +2,9 @@
 
 namespace Rodger\GalleryBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository,
+    Doctrine\ORM\Query,
+    FOS\UserBundle\Model\UserInterface;
 
 /**
  * AlbumRepository
@@ -25,8 +27,12 @@ class AlbumRepository extends EntityRepository
     if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
       $qb->where('a.is_private = false AND i.is_private = false');
     }
-    if (@$filters['year']) {
+    if ($filters['year']) {
       $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
+    }
+    if (count($filters['tags'])) {
+      $album_ids = $this->getAlbumsIdUsingTags($user, $filters['tags'], $filters['year']);
+      $qb->andWhere($qb->expr()->in('a.id', $album_ids + array(0)));
     }
     
     $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
@@ -35,4 +41,33 @@ class AlbumRepository extends EntityRepository
     
     return $qb;
   }
+  
+  /**
+   * Gets id of Albums matching filters
+   * @param mixed $user
+   * @param array $tags
+   * @param integer $year
+   * @return array 
+   */
+  public function getAlbumsIdUsingTags($user, array $tags = array(), $year = null)
+  {
+    $qb = $this->createQueryBuilder('a')->select('a.id');
+    $qb->innerJoin('a.Images', 'i')
+       ->leftJoin('a.Tags', 'at')
+       ->leftJoin('i.Tags', 'it');
+    
+    if (count($tags)) {
+      $qb->andWhere($qb->expr()->orX($qb->expr()->in('at.name', $tags), $qb->expr()->in('it.name', $tags)));
+    }
+    if ($year)
+    {
+      $qb->andWhere($qb->expr()->eq('i.year', $year));
+    }
+    if (!$user instanceof UserInterface) {
+      $qb->andWhere('a.is_private = false and i.is_private = false');
+    }
+    $result = array_unique(array_map(function($r) {return $r['id'];}, $qb->getQuery()->execute(array(), Query::HYDRATE_ARRAY)));
+    return $result;
+  }
+  
 }

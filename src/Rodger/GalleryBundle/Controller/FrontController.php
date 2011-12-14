@@ -62,7 +62,7 @@ class FrontController extends CommonController {
   
   /**
    * Filters years
-   * @Route("/filter/{year}", name="filter.year", requirements={"year"="20\d{2}"})
+   * @Route("/year/{year}", name="filter.year", requirements={"year"="20\d{2}"})
    * @param type $year 
    */
   public function filterYearAction($year) {
@@ -70,19 +70,4 @@ class FrontController extends CommonController {
     return $this->redirect($this->generateUrl('albums'));
   }
   
-  private function get_filters() {
-    return $this->session->get('filters', array());
-  }
-  
-  private function get_selected_year() {
-    $filters = $this->session->get('filters', array());
-    return @$filters['year'];
-  }
-  
-  private function set_selected_year($year) {
-    $filters = $this->session->get('filters', array());
-    $filters['year'] = ($year == @$filters['year']) ? null : $year;
-    $this->session->set('filters', $filters);
-  }
-
 }

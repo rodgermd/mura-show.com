@@ -1,6 +1,7 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 
 {% block body %}
+{% render "RodgerGalleryBundle:Tag:albumListTags" %}
 {% if albums | length %}
 <ul id="albums-list">
 {% for album in albums %}

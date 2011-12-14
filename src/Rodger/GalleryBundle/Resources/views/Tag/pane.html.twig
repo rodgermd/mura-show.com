@@ -1,0 +1,21 @@
+<div id="tags-pane">
+{% if tags | length %}
+  <h4>{{ 'Tags' | trans }}:</h4>
+  <ul id="tags-list">
+  {% for tag in tags %}
+  <li>
+    <a href="{{ path('filter.use', { 'name' : tag }) }}"{% if tag.name in filtered_tags %} class="selected"{% endif %}>
+    {{ tag.name }}
+    </a>
+  </li>
+  {% endfor %}
+  
+  {% if filtered_tags | length %}
+  <li><a href="{{ path('filter.clear') }}" id="tags-clear">{{ 'clear filters' }}</a></li>
+  {% endif %}
+  
+  </ul>
+{% else %}
+{{ 'There are no tags available' | trans }}
+{% endif %}
+</div>
