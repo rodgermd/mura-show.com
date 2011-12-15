@@ -134,7 +134,6 @@ class Uploader {
     $iptc = new ExifParsers\IptcDataParser($image->getAbsolutePath());
     
     $image->setExifData($exif_parsed);
-    $image->setIptcData($iptc->getRaw());
     
     if (@$options['keywords']) {
       $keywords = array_filter(array_map('trim', explode(',', $options['keywords'])));

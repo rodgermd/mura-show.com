@@ -172,7 +172,7 @@ protected $bulk_form, $validating_object, $paginator;
     $ids = array_map(function($image) {return $image->getId();}, $this->paginator->getCurrentPageResults());
 
     $this->validating_object = new ValidateHelpers\BulkImages(
-            $query_builder->andWhere($query_builder->expr()->in('i.id', $ids)),
+            $query_builder->andWhere($query_builder->expr()->in('i.id', count($ids) ? $ids : array(0))),
             $this->em
             );
     $this->bulk_form = $this->createForm(new Forms\BulkImages(), $this->validating_object);

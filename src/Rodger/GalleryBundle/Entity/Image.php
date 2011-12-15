@@ -133,11 +133,6 @@ class Image implements UploadableInterface {
    */
   private $exif_data;
 
-  /**
-   * @var array $iptc_data
-   * @ORM\Column(name="iptc_data", type="array")
-   */
-  private $iptc_data;
   
   /**
    * Related keywords
