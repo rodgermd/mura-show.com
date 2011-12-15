@@ -26,13 +26,13 @@ use Pagerfanta\Exception\OutOfRangeCurrentPageException;
  *
  * @api
  */
-class Pagerfanta implements PagerfantaInterface, \Countable, \IteratorAggregate
+class Pagerfanta implements PagerfantaInterface
 {
     private $adapter;
     private $maxPerPage;
     private $currentPage;
-    private $currentPageResults;
     private $nbResults;
+    private $currentPageResults;
     private $nbPages;
 
     /**
@@ -251,6 +251,16 @@ class Pagerfanta implements PagerfantaInterface, \Countable, \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->getCurrentPageResults());
+        $currentPageResults = $this->getCurrentPageResults();
+
+        if ($currentPageResults instanceof \Iterator) {
+            return $currentPageResults;
+        }
+
+        if ($currentPageResults instanceof \IteratorAggregate) {
+            return $currentPageResults->getIterator();
+        }
+
+        return new \ArrayIterator($currentPageResults);
     }
 }

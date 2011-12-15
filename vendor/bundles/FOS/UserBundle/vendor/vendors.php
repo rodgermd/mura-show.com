@@ -12,6 +12,10 @@
 
 set_time_limit(0);
 
+if (isset($argv[1])) {
+    $_SERVER['SYMFONY_VERSION'] = $argv[1];
+}
+
 $vendorDir = __DIR__;
 $deps = array(
     array('symfony', 'http://github.com/symfony/symfony', isset($_SERVER['SYMFONY_VERSION']) ? $_SERVER['SYMFONY_VERSION'] : 'origin/master'),
@@ -21,6 +25,9 @@ $deps = array(
     array('doctrine-mongodb-odm', 'http://github.com/doctrine/mongodb-odm.git', 'origin/master'),
     array('doctrine-mongodb', 'http://github.com/doctrine/mongodb.git', 'origin/master'),
     array('doctrine-couchdb', 'http://github.com/doctrine/couchdb-odm.git', 'origin/master'),
+    array('propel', 'http://github.com/propelorm/Propel.git', 'origin/master'),
+    array('propel-behavior', 'http://github.com/willdurand/TypehintableBehavior.git', 'origin/master'),
+    array('phing', 'http://github.com/Xosofox/phing.git', 'origin/master'),
 );
 
 foreach ($deps as $dep) {
