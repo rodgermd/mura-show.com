@@ -23,6 +23,7 @@ class FrontController extends CommonController {
     if (!$this->get_selected_year()) {
       $this->set_selected_year(max($this->em->getRepository('RodgerGalleryBundle:Image')->getYears($this->user)));
     }
+    
     $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder($this->user, $this->get_filters())
             ->getQuery()->execute();
     

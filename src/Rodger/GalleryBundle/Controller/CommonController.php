@@ -62,7 +62,12 @@ class CommonController extends Controller
   
   
   public function get_filters() {
-    return array('year' => $this->get_selected_year(), 'tags' => $this->get_filter_tags());
+    $this_year_tags = array_map(function($t){ return $t->getName(); }, 
+            $this->getDoctrine()
+                 ->getRepository('RodgerGalleryBundle:Tag')
+                 ->getFilteredAlbumsTags($this->user, $this->get_selected_year()));
+    return array('year' => $this->get_selected_year(), 
+                 'tags' => array_intersect($this_year_tags, $this->get_filter_tags()));
   }
   
   /**
