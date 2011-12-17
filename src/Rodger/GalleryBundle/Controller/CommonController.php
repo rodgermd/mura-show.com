@@ -12,7 +12,7 @@ class CommonController extends Controller
   public $user, $em, $session;
   const FILTER_TAGS_KEY = 'filter.tags';
   const FILTER_YEAR_KEY = 'filter.year';
-
+  
   public function preExecute()
   {
     $token = $this->get('security.context')->getToken();

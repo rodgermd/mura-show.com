@@ -1,14 +1,16 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 
 {% block body %}
-{% render "RodgerGalleryBundle:Tag:albumsList" %}
+{% render "RodgerGalleryBundle:Tag:albumsList" with {'filters' : filters} %}
 {% if albums | length %}
 <ul id="albums-list">
 {% for album in albums %}
 <li class="album">{% include "RodgerGalleryBundle:Front:_list_album.html.twig" with { 
 'album'       : album[0], 
 'sort_date'   : album.sort_date, 
-'total_images': album.album_images_count } %}</li>
+'total_images': album.album_images_count,
+'filters'     : filters
+} %}</li>
 {% endfor %}
 </ul>
 {% endif %}

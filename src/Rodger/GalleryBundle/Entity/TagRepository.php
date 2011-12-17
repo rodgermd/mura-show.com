@@ -59,7 +59,8 @@ class TagRepository extends EntityRepository
       $qb1 = $this->createQueryBuilder('t');
           $qb1->select('t')
               ->innerJoin('t.Images', 'i', 'WITH', $qb1->expr()->eq('i.year', $year))
-              ->innerJoin('i.Album', 'a');
+              ->innerJoin('i.Album', 'a')
+              ->groupBy('t.name');
       if (!$user) $qb1->andWhere('i.is_private = false AND a.is_private = false');
               
       $result1 = array_unique(array_map(function($t){ return $t['name'];}, $qb1->getQuery()->execute(array(), Query::HYDRATE_ARRAY)));
@@ -67,7 +68,8 @@ class TagRepository extends EntityRepository
       $qb2 = $this->createQueryBuilder('t');
           $qb2->select('t')
               ->innerJoin('t.Albums', 'a')
-              ->innerJoin('a.Images', 'i', 'WITH', $qb2->expr()->eq('i.year', $year));
+              ->innerJoin('a.Images', 'i', 'WITH', $qb2->expr()->eq('i.year', $year))
+              ->groupBy('t.name');
       if (!$user) $qb2->andWhere('i.is_private = false AND a.is_private = false');
       $result2 = array_unique(array_map(function($t){ return $t['name'];}, $qb2->getQuery()->execute(array(), Query::HYDRATE_ARRAY)));
       
@@ -90,6 +92,7 @@ class TagRepository extends EntityRepository
     $qb = $this->createQueryBuilder('t')
             ->select('t')
             ->innerJoin('t.Images', 'i')
+            ->groupBy('t.name')
             ->orderBy('t.name');
     $qb->andWhere($qb->expr()->eq('i.album_id', $album->getId()));
     

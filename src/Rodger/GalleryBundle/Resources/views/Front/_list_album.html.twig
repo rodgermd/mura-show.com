@@ -4,4 +4,4 @@
 {{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
     | transchoice(total_images, {"%number%" : total_images})  }}</a>
 </h2>
-{% render "RodgerGalleryBundle:Front:album_last_images" with {'album' : album} %}
+{% render "RodgerGalleryBundle:Front:album_last_images" with {'album' : album, 'filters' : filters } %}

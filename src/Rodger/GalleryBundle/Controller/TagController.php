@@ -18,7 +18,7 @@ class TagController extends CommonController {
    * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
    * @return type 
    */
-  public function albumsListAction() {
+  public function albumsListAction($filters) {
     $this->preExecute();
     return array(
         'filtered_tags' => $this->get_filter_tags(), 

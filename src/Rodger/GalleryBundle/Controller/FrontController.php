@@ -27,7 +27,7 @@ class FrontController extends CommonController {
     $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder($this->user, $this->get_filters())
             ->getQuery()->execute();
     
-    return array('albums' => $albums);
+    return array('albums' => $albums, 'filters' => $this->get_filters());
   }
   
   /**
@@ -47,9 +47,9 @@ class FrontController extends CommonController {
    * @param Album $album
    * @return array 
    */
-  public function album_last_imagesAction(Album $album) {
+  public function album_last_imagesAction(Album $album, $filters) {
     $this->preExecute();
-    $images = $this->em->getRepository('RodgerGalleryBundle:Image')->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $this->get_filters())
+    $images = $this->em->getRepository('RodgerGalleryBundle:Image')->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $filters)
             ->setMaxResults(15)
             ->getQuery()->execute();
     if (!count($images) && ($this->get_selected_year() || count($this->get_filter_tags()))) {
