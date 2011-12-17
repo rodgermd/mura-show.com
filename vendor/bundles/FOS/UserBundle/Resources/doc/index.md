@@ -273,6 +273,9 @@ security:
         fos_userbundle:
             id: fos_user.user_manager
 
+    encoders:
+        "FOS\UserBundle\Model\UserInterface": sha512
+
     firewalls:
         main:
             pattern: ^/
@@ -458,7 +461,7 @@ $ git submodule add http://github.com/willdurand/TypehintableBehavior.git vendor
 By using the Symfony2 vendor management:
 
 ```
-[PropelBundle]
+[TypehintableBehavior]
     git=http://github.com/willdurand/TypehintableBehavior.git
     target=/propel-behaviors/TypehintableBehavior
 ```
