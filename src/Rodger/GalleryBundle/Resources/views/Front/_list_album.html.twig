@@ -2,6 +2,15 @@
   <a href="{{path('album.show', {'slug' : album.slug}) }}">{{ album }}</a>
   <a class="total-images button gray-button" href="{{path('album.show', {'slug' : album.slug}) }}">
 {{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
-    | transchoice(total_images, {"%number%" : total_images})  }}</a>
+    | transchoice(album_options.album_images_count, {"%number%" : album_options.album_images_count})  }}</a>
 </h2>
-{% render "RodgerGalleryBundle:Front:album_last_images" with {'album' : album, 'filters' : filters } %}
+
+<ul class="album-images">
+  {% for image in images %}
+    <li class="album-image">
+      <a href="{{ path('image.show', {'id': image.id, 'album': album.slug}) }}">
+        <img data-original="{{ image.thumbnail('list') }}" src="" alt="" class="lazy thumbnails thumbnails-list"/>
+      </a>
+      </li>
+  {% endfor %}
+</ul>

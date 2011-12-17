@@ -22,12 +22,22 @@ class FrontController extends CommonController {
   public function albumsAction() {
     if (!$this->get_selected_year()) {
       $this->set_selected_year(max($this->em->getRepository('RodgerGalleryBundle:Image')->getYears($this->user)));
-    }
+    };
+    $filters = $this->get_filters();
     
-    $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder($this->user, $this->get_filters())
+    $albums = $this->em->getRepository('RodgerGalleryBundle:Album')->getLatestQueryBuilder($this->user, $filters)
             ->getQuery()->execute();
     
-    return array('albums' => $albums, 'filters' => $this->get_filters());
+    $images_holder = array();
+    $images_manager = $this->em->getRepository('RodgerGalleryBundle:Image');
+    foreach($albums as $album) {
+      $album = $album[0];
+      $images_holder[$album->getSlug()] = $images_manager->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $filters)
+            ->setMaxResults(15)
+            ->getQuery()->execute();
+    }
+    
+    return array('albums' => $albums, 'images' => $images_holder, 'filters' => $filters);
   }
   
   /**
@@ -39,25 +49,6 @@ class FrontController extends CommonController {
         'images' => $this->em
             ->getRepository("RodgerGalleryBundle:Image")
             ->getFilteredAlbumImages($album, $this->get_filters(), $this->user));
-  }
-  
-  /**
-   * Renders album last images
-   * @Template("RodgerGalleryBundle:Front:_list_album_images.html.twig")
-   * @param Album $album
-   * @return array 
-   */
-  public function album_last_imagesAction(Album $album, $filters) {
-    $this->preExecute();
-    $images = $this->em->getRepository('RodgerGalleryBundle:Image')->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $filters)
-            ->setMaxResults(15)
-            ->getQuery()->execute();
-    if (!count($images) && ($this->get_selected_year() || count($this->get_filter_tags()))) {
-      $images = $this->em->getRepository('RodgerGalleryBundle:Image')->getLatestInAlbumQueryBuilder($album, (bool)$this->user)
-            ->setMaxResults(15)
-            ->getQuery()->execute();
-    }
-    return array('album' => $album, 'images' => $images);
   }
   
   /**

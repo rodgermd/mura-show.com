@@ -5,11 +5,11 @@
 {% if albums | length %}
 <ul id="albums-list">
 {% for album in albums %}
-<li class="album">{% include "RodgerGalleryBundle:Front:_list_album.html.twig" with { 
-'album'       : album[0], 
-'sort_date'   : album.sort_date, 
-'total_images': album.album_images_count,
-'filters'     : filters
+<li class="album">
+{% include "RodgerGalleryBundle:Front:_list_album.html.twig" with { 
+  'album_options' : album,
+  'album'         : album[0],
+  'images'        : images[album[0].slug]
 } %}</li>
 {% endfor %}
 </ul>
