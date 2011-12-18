@@ -77,7 +77,7 @@ class BulkImages {
   public function process() {
     foreach($this->images as $image) {
       switch($this->action) {
-        case self::ACTION_DELETE: $em->remove($image); break;
+        case self::ACTION_DELETE: $this->em->remove($image); break;
         case self::ACTION_SET_PRIVATE:
           $image->setIsPrivate(true);
           $this->em->persist($image);
