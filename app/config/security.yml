@@ -1,10 +1,10 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: 
+        FOS\UserBundle\Model\UserInterface: 
           algorithm:   sha1
           iterations:  84
-          encode_as_base64: true
-
+          encode_as_base64: false
+          
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
