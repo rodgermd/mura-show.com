@@ -9,7 +9,6 @@ use Doctrine\Common\Annotations\Reader;
 use Gedmo\Mapping\ExtensionMetadataFactory;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\EventArgs;
 
 /**
@@ -165,10 +164,10 @@ abstract class MappedEventSubscriber implements EventSubscriber
      * event subscribers must subscribe to loadClassMetadata event
      *
      * @param ObjectManager $objectManager
-     * @param ClassMetadata $metadata
+     * @param object $metadata
      * @return void
      */
-    public function loadMetadataForObjectClass(ObjectManager $objectManager, ClassMetadata $metadata)
+    public function loadMetadataForObjectClass(ObjectManager $objectManager, $metadata)
     {
         $factory = $this->getExtensionMetadataFactory($objectManager);
         $config = $factory->getExtensionMetadata($metadata);

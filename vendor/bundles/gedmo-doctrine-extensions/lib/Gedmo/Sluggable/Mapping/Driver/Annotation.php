@@ -6,7 +6,6 @@ use Gedmo\Mapping\Annotation\SlugHandler;
 use Gedmo\Mapping\Annotation\SlugHandlerOption;
 use Gedmo\Mapping\Driver\AnnotationDriverInterface,
     Doctrine\Common\Annotations\AnnotationReader,
-    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Gedmo\Exception\InvalidMappingException;
 
 /**
@@ -73,7 +72,7 @@ class Annotation implements AnnotationDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function readExtendedMetadata(ClassMetadata $meta, array &$config) {
+    public function readExtendedMetadata($meta, array &$config) {
         $class = $meta->getReflectionClass();
         // property annotations
         foreach ($class->getProperties() as $property) {
@@ -128,6 +127,12 @@ class Annotation implements AnnotationDriverInterface
                         throw new InvalidMappingException("Cannot use field - [{$slugField}] for slug storage, type is not valid and must be 'string' or 'text' in class - {$meta->name}");
                     }
                 }
+                if (!is_bool($slug->updatable)) {
+                    throw new InvalidMappingException("Slug annotation [updatable], type is not valid and must be 'boolean' in class - {$meta->name}");
+                }
+                if (!is_bool($slug->unique)) {
+                    throw new InvalidMappingException("Slug annotation [unique], type is not valid and must be 'boolean' in class - {$meta->name}");
+                }
                 // set all options
                 $config['slugs'][$field] = array(
                     'fields' => $slug->fields,
@@ -145,11 +150,11 @@ class Annotation implements AnnotationDriverInterface
     /**
      * Checks if $field type is valid as Sluggable field
      *
-     * @param ClassMetadata $meta
+     * @param object $meta
      * @param string $field
      * @return boolean
      */
-    protected function isValidField(ClassMetadata $meta, $field)
+    protected function isValidField($meta, $field)
     {
         $mapping = $meta->getFieldMapping($field);
         return $mapping && in_array($mapping['type'], $this->validTypes);

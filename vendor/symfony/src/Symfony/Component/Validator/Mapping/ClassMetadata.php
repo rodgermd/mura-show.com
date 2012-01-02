@@ -186,7 +186,7 @@ class ClassMetadata extends ElementMetadata
 
                     if ($member instanceof PropertyMetadata && !isset($this->properties[$property])) {
                         $this->properties[$property] = $member;
-                    } else if ($member instanceof GetterMetadata && !isset($this->getters[$property])) {
+                    } elseif ($member instanceof GetterMetadata && !isset($this->getters[$property])) {
                         $this->getters[$property] = $member;
                     }
                 }
@@ -222,7 +222,8 @@ class ClassMetadata extends ElementMetadata
      * Returns all metadatas of members describing the given property
      *
      * @param string $property The name of the property
-     * @array of MemberMetadata
+     *
+     * @return array An array of MemberMetadata
      */
     public function getMemberMetadatas($property)
     {

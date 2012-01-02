@@ -8,6 +8,10 @@ abstract class DoctrineORMTestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        if (!class_exists('Doctrine\ORM\EntityManager')) {
+            $this->markTestSkipped('Doctrine ORM is not available');
+        }
+
         $config = new \Doctrine\ORM\Configuration();
         $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache);
         $config->setQueryCacheImpl(new \Doctrine\Common\Cache\ArrayCache);
@@ -94,6 +98,21 @@ class Author
     public $id;
     /** @Column(type="string") */
     public $name;
+
+}
+
+/**
+ * @Entity
+ */
+class Person
+{
+
+    /** @Id @column(type="integer") @generatedValue */
+    public $id;
+    /** @Column(type="string") */
+    public $name;
+    /** @Column(type="string") */
+    public $biography;
 
 }
 

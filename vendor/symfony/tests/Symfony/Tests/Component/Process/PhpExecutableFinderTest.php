@@ -23,6 +23,10 @@ class PhpExecutableFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindWithPHP_PATH()
     {
+        if (defined('PHP_BINARY')) {
+            $this->markTestSkipped('The PHP binary is easily available as of PHP 5.4');
+        }
+
         $f = new PhpExecutableFinder();
 
         $current = $f->find();
@@ -41,6 +45,10 @@ class PhpExecutableFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindWithSuffix()
     {
+        if (defined('PHP_BINARY')) {
+            $this->markTestSkipped('The PHP binary is easily available as of PHP 5.4');
+        }
+
         putenv('PHP_PATH=');
         putenv('PHP_PEAR_PHP_BIN=');
         $f = new PhpExecutableFinder();
@@ -48,8 +56,9 @@ class PhpExecutableFinderTest extends \PHPUnit_Framework_TestCase
         $current = $f->find();
 
         //TODO maybe php executable is custom or even windows
-        if (false !== strstr(PHP_OS, 'WIN')) {
-            $this->assertEquals($current, PHP_BINDIR.DIRECTORY_SEPARATOR.'php', '::find() returns the executable php with suffixes');
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $this->assertTrue(is_executable($current));
+            $this->assertTrue((bool)preg_match('/'.addSlashes(DIRECTORY_SEPARATOR).'php\.(exe|bat|cmd|com)$/i', $current), '::find() returns the executable php with suffixes');
         }
     }
 }
