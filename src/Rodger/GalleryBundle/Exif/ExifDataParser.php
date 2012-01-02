@@ -37,6 +37,7 @@ class ExifDataParser {
         'ExposureTime',
         "FNumber",
         "ExposureProgram",
+        "DateTime",
         "DateTimeOriginal",
         "ShutterSpeedValue",
         "ApertureValue",
@@ -59,7 +60,7 @@ class ExifDataParser {
     $keys = $this->look_for['IFD0'];
     $prepared = array();
     $found_keys = array_intersect($keys, array_keys(@$this->data['IFD0'] ?: array()));
-    foreach($found_keys as $key) $prepared[$key] = $this->data['IFD0'][$key];
+    foreach($found_keys as $key) $prepared[$key] = trim($this->data['IFD0'][$key]);
     
     if (@$prepared['Make'] || @$prepared['Model'])
     {
@@ -82,6 +83,15 @@ class ExifDataParser {
     if (array_key_exists('ExposureTime', $prepared) && preg_match('/^(\d{2,})\/(\d+)$/', $prepared['ExposureTime'], $matches)) {
       $value = $matches[1] / $matches[2];
       $prepared['ExposureTime'] = $value >= 1 ? sprintf("%ss", $value) : sprintf("1/%ss", floor(1/$value));
+    }
+    
+    if(@$prepared['DateTimeOriginal']) {
+      try {
+        $d = new \DateTime($prepared['DateTimeOriginal']);
+      }
+      catch (\Exception $e) {
+        unset($prepared['DateTimeOriginal']);
+      }
     }
     
     $this->parsed = $this->parsed + $prepared;

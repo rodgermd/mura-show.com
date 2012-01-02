@@ -123,11 +123,17 @@ class Uploader {
     copy($image_file, $image->getAbsolutePath());
     $image->setUser($user);
 
-    $exif = new ExifParsers\ExifDataParser(read_exif_data($image->getAbsolutePath()));
+    $exif = new ExifParsers\ExifDataParser(@read_exif_data($image->getAbsolutePath()));
     $exif_parsed = $exif->getParsed();
-    if (isset($exif_parsed['DateTimeOriginal'])) {
-      $image->setTakenAt(new \DateTime($exif_parsed['DateTimeOriginal']));
+    $datetime = null;
+    try {
+      $datetime = new \DateTime(@$exif_parsed['DateTimeOriginal']);
     }
+    catch (\Exception $e) {
+      $datetime = new \DateTime($exif_parsed['DateTime']);
+    }
+    
+    $image->setTakenAt($datetime);
     
     Converter::exif_rotate($image->getAbsolutePath(), @$exif_parsed['IFD0']['Orientation']);
     
