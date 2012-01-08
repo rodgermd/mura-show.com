@@ -8,7 +8,7 @@
 <ul class="album-images">
   {% for image in images %}
     <li class="album-image">
-      <a href="{{ path('image.show', {'id': image.id, 'album': album.slug}) }}">
+      <a href="{{ path('album.show', {'slug' : album.slug}) }}#image-{{ image.id }}">
         <img data-original="{{ image.thumbnail('list') }}" src="" alt="" class="lazy thumbnails thumbnails-list"/>
       </a>
       </li>
