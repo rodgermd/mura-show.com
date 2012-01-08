@@ -15,6 +15,7 @@ class AnnotationDriverTest extends AbstractMappingDriverTest
     public function testLoadMetadataForNonEntityThrowsException()
     {
         $cm = new ClassMetadata('stdClass');
+        $cm->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $reader = new \Doctrine\Common\Annotations\AnnotationReader(new \Doctrine\Common\Cache\ArrayCache());
         $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader);
 
@@ -28,6 +29,7 @@ class AnnotationDriverTest extends AbstractMappingDriverTest
     public function testColumnWithMissingTypeDefaultsToString()
     {
         $cm = new ClassMetadata('Doctrine\Tests\ORM\Mapping\ColumnWithoutType');
+        $cm->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $annotationDriver = $this->_loadDriver();
 
         $annotationDriver->loadMetadataForClass('Doctrine\Tests\ORM\Mapping\InvalidColumn', $cm);
@@ -146,7 +148,7 @@ class AnnotationDriverTest extends AbstractMappingDriverTest
             "mapped superclass 'Doctrine\Tests\ORM\Mapping\InvalidMappedSuperClass#users'");
         $usingInvalidMsc = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\UsingInvalidMappedSuperClass');
     }
-    
+
     /**
      * @group DDC-1050
      */
@@ -164,40 +166,54 @@ class AnnotationDriverTest extends AbstractMappingDriverTest
             "superclass 'Doctrine\Tests\ORM\Mapping\MappedSuperClassInheritence'.");
         $usingInvalidMsc = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\MappedSuperClassInheritence');
     }
-    
+
     /**
      * @group DDC-1034
      */
     public function testInheritanceSkipsParentLifecycleCallbacks()
     {
         $annotationDriver = $this->_loadDriver();
-        
+
         $cm = new ClassMetadata('Doctrine\Tests\ORM\Mapping\AnnotationChild');
         $em = $this->_getTestEntityManager();
         $em->getConfiguration()->setMetadataDriverImpl($annotationDriver);
         $factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $factory->setEntityManager($em);
-        
+
         $cm = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\AnnotationChild');
         $this->assertEquals(array("postLoad" => array("postLoad"), "preUpdate" => array("preUpdate")), $cm->lifecycleCallbacks);
-        
+
         $cm = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\AnnotationParent');
         $this->assertEquals(array("postLoad" => array("postLoad"), "preUpdate" => array("preUpdate")), $cm->lifecycleCallbacks);
     }
-    
+
     /**
      * @group DDC-1156
      */
     public function testMappedSuperclassInMiddleOfInheritanceHierachy()
     {
         $annotationDriver = $this->_loadDriver();
-        
+
         $em = $this->_getTestEntityManager();
         $em->getConfiguration()->setMetadataDriverImpl($annotationDriver);
         $factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $factory->setEntityManager($em);
-        
+
         $cm = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\ChildEntity');
+    }
+
+    public function testInvalidFetchOptionThrowsException()
+    {
+        $annotationDriver = $this->_loadDriver();
+
+        $em = $this->_getTestEntityManager();
+        $em->getConfiguration()->setMetadataDriverImpl($annotationDriver);
+        $factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
+        $factory->setEntityManager($em);
+
+        $this->setExpectedException('Doctrine\ORM\Mapping\MappingException',
+            "Entity 'Doctrine\Tests\ORM\Mapping\InvalidFetchOption' has a mapping with invalid fetch mode 'eager");
+        $cm = $factory->getMetadataFor('Doctrine\Tests\ORM\Mapping\InvalidFetchOption');
     }
 }
 
@@ -239,7 +255,7 @@ class UsingInvalidMappedSuperClass extends InvalidMappedSuperClass
  */
 class MappedSuperClassInheritence
 {
-    
+
 }
 
 /**
@@ -254,21 +270,21 @@ class AnnotationParent
      * @Id @Column(type="integer") @GeneratedValue
      */
     private $id;
-    
+
     /**
      * @PostLoad
      */
     public function postLoad()
     {
-        
+
     }
-    
+
     /**
      * @PreUpdate
      */
     public function preUpdate()
     {
-        
+
     }
 }
 
@@ -278,7 +294,7 @@ class AnnotationParent
  */
 class AnnotationChild extends AnnotationParent
 {
-    
+
 }
 
 /**
@@ -310,4 +326,15 @@ class ChildEntity extends MiddleMappedSuperclass
      * @Column(type="string")
      */
     private $text;
+}
+
+/**
+ * @Entity
+ */
+class InvalidFetchOption
+{
+    /**
+     * @OneToMany(targetEntity="Doctrine\Tests\Models\CMS\CmsUser", fetch="eager")
+     */
+    private $collection;
 }

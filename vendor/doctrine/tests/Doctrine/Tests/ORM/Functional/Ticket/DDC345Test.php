@@ -45,10 +45,10 @@ class DDC345Test extends \Doctrine\Tests\OrmFunctionalTestCase
         $group->Memberships->add($membership);
 
         $this->_em->flush();
-        
+
         $this->assertEquals(1, $membership->prePersistCallCount);
         $this->assertEquals(0, $membership->preUpdateCallCount);
-        $this->assertTrue($membership->updated instanceof \DateTime);
+        $this->assertInstanceOf('DateTime', $membership->updated);
     }
 }
 

@@ -9,10 +9,6 @@ include __DIR__ .'/DCOM58Entity.php';
  */
 class DCOM58Test extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Class "xxx" is not a valid entity or mapped super class.
-     */
     public function testIssue()
     {
         $reader     = new \Doctrine\Common\Annotations\AnnotationReader();
@@ -21,10 +17,8 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         foreach ($result as $annot) {
             $classAnnotations[get_class($annot)] = $annot;
         }
-        // Evaluate Entity annotation
-        if (!isset($classAnnotations['Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity'])) {
-            throw new \RuntimeException('Class "xxx" is not a valid entity or mapped super class.');
-        }
+
+        $this->assertTrue(!isset($classAnnotations['']), 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
     public function testIssueGlobalNamespace()
@@ -40,6 +34,54 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($annots));
         $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
+
+    public function testIssueNamespaces()
+    {
+        $docblock   = "@Entity";
+        $parser     = new \Doctrine\Common\Annotations\DocParser();
+        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+
+        $annots     = $parser->parse($docblock);
+
+        $this->assertEquals(1, count($annots));
+        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Entity", $annots[0]);
+    }
+
+    public function testIssueMultipleNamespaces()
+    {
+        $docblock   = "@Entity";
+        $parser     = new \Doctrine\Common\Annotations\DocParser();
+        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping");
+        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+
+        $annots     = $parser->parse($docblock);
+
+        $this->assertEquals(1, count($annots));
+        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+    }
+
+    public function testIssueWithNamespacesOrImports()
+    {
+        $docblock   = "@Entity";
+        $parser     = new \Doctrine\Common\Annotations\DocParser();
+        $annots     = $parser->parse($docblock);
+
+        $this->assertEquals(1, count($annots));
+        $this->assertInstanceOf("Entity", $annots[0]);
+        $this->assertEquals(1, count($annots));
+    }
+
+
+    public function testIssueSimpleAnnotationReader()
+    {
+        $reader     = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
+        $reader->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping');
+        $annots     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
+
+        $this->assertEquals(1, count($annots));
+        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+    }
+
 }
 
 /**

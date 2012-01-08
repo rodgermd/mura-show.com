@@ -14,6 +14,58 @@ if (!defined('ENT_SUBSTITUTE')) {
  */
 class Twig_Extension_Core extends Twig_Extension
 {
+    protected $dateFormats = array('F j, Y H:i', '%d days');
+    protected $numberFormat = array(0, '.', ',');
+
+    /**
+     * Sets the default format to be used by the date filter.
+     *
+     * @param string $format             The default date format string
+     * @param string $dateIntervalFormat The default date interval format string
+     */
+    public function setDateFormat($format = null, $dateIntervalFormat = null)
+    {
+        if (null !== $format) {
+            $this->dateFormats[0] = $format;
+        }
+
+        if (null !== $dateIntervalFormat) {
+            $this->dateFormats[1] = $dateIntervalFormat;
+        }
+    }
+
+    /**
+     * Gets the default format to be used by the date filter.
+     *
+     * @return array The default date format string and the default date interval format string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormats;
+    }
+
+    /**
+     * Sets the default format to be used by the number_format filter.
+     *
+     * @param integer $decimal The number of decimal places to use.
+     * @param string $decimalPoint The character(s) to use for the decimal point.
+     * @param string $thousandSep The character(s) to use for the thousands separator.
+     */
+    public function setNumberFormat($decimal, $decimalPoint, $thousandSep)
+    {
+        $this->numberFormat = array($decimal, $decimalPoint, $thousandSep);
+    }
+
+    /**
+     * Get the default format used by the number_format filter.
+     *
+     * @return array The arguments for number_format()
+     */
+    public function getNumberFormat()
+    {
+        return $this->numberFormat;
+    }
+
     /**
      * Returns the token parser instance to add to the existing list.
      *
@@ -34,6 +86,8 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_TokenParser_From(),
             new Twig_TokenParser_Set(),
             new Twig_TokenParser_Spaceless(),
+            new Twig_TokenParser_Flush(),
+            new Twig_TokenParser_Do(),
         );
     }
 
@@ -46,9 +100,10 @@ class Twig_Extension_Core extends Twig_Extension
     {
         $filters = array(
             // formatting filters
-            'date'    => new Twig_Filter_Function('twig_date_format_filter'),
-            'format'  => new Twig_Filter_Function('sprintf'),
-            'replace' => new Twig_Filter_Function('strtr'),
+            'date'          => new Twig_Filter_Function('twig_date_format_filter', array('needs_environment' => true)),
+            'format'        => new Twig_Filter_Function('sprintf'),
+            'replace'       => new Twig_Filter_Function('strtr'),
+            'number_format' => new Twig_Filter_Function('twig_number_format_filter', array('needs_environment' => true)),
 
             // encoding
             'url_encode'       => new Twig_Filter_Function('twig_urlencode_filter'),
@@ -61,6 +116,7 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
+            'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
             'join'    => new Twig_Filter_Function('twig_join_filter'),
@@ -99,6 +155,7 @@ class Twig_Extension_Core extends Twig_Extension
             'range'    => new Twig_Function_Function('range'),
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
+            'random'   => new Twig_Function_Function('twig_random'),
         );
     }
 
@@ -222,30 +279,62 @@ function twig_cycle($values, $i)
 }
 
 /**
+ * Returns a random item from sequence.
+ *
+ * @param Iterator|array $values An array or an ArrayAccess instance
+ *
+ * @return mixed A random value from the given sequence
+ */
+function twig_random($values)
+{
+    if (!is_array($values) && !$values instanceof Traversable) {
+        return $values;
+    }
+
+    if (is_object($values)) {
+        $values = iterator_to_array($values);
+    }
+
+    $keys = array_keys($values);
+
+    return $values[$keys[mt_rand(0, count($values) - 1)]];
+}
+
+/**
  * Converts a date to the given format.
  *
  * <pre>
  *   {{ post.published_at|date("m/d/Y") }}
  * </pre>
  *
- * @param DateTime|string     $date     A date
- * @param string              $format   A format
- * @param DateTimeZone|string $timezone A timezone
+ * @param Twig_Environment             $env      A Twig_Environment instance
+ * @param DateTime|DateInterval|string $date     A date
+ * @param string                       $format   A format
+ * @param DateTimeZone|string          $timezone A timezone
  *
  * @return string The formatter date
  */
-function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null)
+function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
-    if (!$date instanceof DateTime && !$date instanceof DateInterval) {
-        $asString = (string) $date;
-        if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@'.$date);
-            $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        } else {
-            $date = new DateTime($date);
-        }
+    if (null === $format) {
+        $formats = $env->getExtension('core')->getDateFormat();
+        $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
     }
 
+    if ($date instanceof DateInterval || $date instanceof DateTime) {
+        return $date->format($format);
+    }
+
+    // convert to a DateTime
+    $asString = (string) $date;
+    if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
+        $date = new DateTime('@'.$date);
+        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+    } else {
+        $date = new DateTime($date);
+    }
+
+    // set Timezone
     if (null !== $timezone) {
         if (!$timezone instanceof DateTimeZone) {
             $timezone = new DateTimeZone($timezone);
@@ -255,6 +344,39 @@ function twig_date_format_filter($date, $format = 'F j, Y H:i', $timezone = null
     }
 
     return $date->format($format);
+}
+
+/**
+ * Number format filter.
+ *
+ * All of the formatting options can be left null, in that case the defaults will
+ * be used.  Supplying any of the parameters will override the defaults set in the
+ * environment object.
+ *
+ * @param Twig_Environment    $env          A Twig_Environment instance
+ * @param mixed               $number       A float/int/string of the number to format
+ * @param int                 $decimal      The number of decimal points to display.
+ * @param string              $decimalPoint The character(s) to use for the decimal point.
+ * @param string              $thousandSep  The character(s) to use for the thousands separator.
+ *
+ * @return string The formatted number
+ */
+function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
+{
+    $defaults = $env->getExtension('core')->getNumberFormat();
+    if (null === $decimal) {
+        $decimal = $defaults[0];
+    }
+
+    if (null === $decimalPoint) {
+        $decimalPoint = $defaults[1];
+    }
+
+    if (null === $thousandSep) {
+        $thousandSep = $defaults[2];
+    }
+
+    return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);
 }
 
 /**
@@ -366,6 +488,10 @@ function twig_array_merge($arr1, $arr2)
  */
 function twig_join_filter($value, $glue = '')
 {
+    if ($value instanceof Traversable) {
+        $value = iterator_to_array($value, false);
+    }
+
     return implode($glue, (array) $value);
 }
 
@@ -582,7 +708,7 @@ function _twig_escape_js_callback($matches)
     }
 
     // \uHHHH
-    $char = _twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+    $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
 
     return '\\u'.substr('0000'.bin2hex($char), -4);
 }

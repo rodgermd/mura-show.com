@@ -4,15 +4,18 @@
 .. versionadded:: 1.1
     The timezone support has been added in Twig 1.1.
 
+.. versionadded:: 1.5
+    The default date format support has been added in Twig 1.5.
+
 The ``date`` filter formats a date to a given format:
 
 .. code-block:: jinja
 
     {{ post.published_at|date("m/d/Y") }}
 
-The ``date`` filter accepts any date format supported by `date`_ and
-`DateTime`_ instances. For instance, to display the current date, filter the
-word "now":
+The ``date`` filter accepts strings (it must be in a format supported by the
+`date`_ function), `DateTime`_ instances, or `DateInterval`_ instances. For
+instance, to display the current date, filter the word "now":
 
 .. code-block:: jinja
 
@@ -30,5 +33,16 @@ You can also specify a timezone:
 
     {{ post.published_at|date("m/d/Y", "Europe/Paris") }}
 
-.. _`date`:     http://www.php.net/date
-.. _`DateTime`: http://www.php.net/manual/en/datetime.construct.php
+If no format is provided, Twig will use the default one: ``F j, Y H:i``. This
+default can be easily changed by calling the `setDateFormat()` method on the
+`core` extension instance. The first argument is the default format for dates
+and the second one is the default format for date intervals:
+
+.. code-block:: php
+
+    $twig = new Twig_Environment($loader);
+    $twig->getExtension('core')->setDateFormat('d/m/Y', '%d days');
+
+.. _`date`:         http://www.php.net/date
+.. _`DateTime`:     http://www.php.net/DateTime
+.. _`DateInterval`: http://www.php.net/DateInterval

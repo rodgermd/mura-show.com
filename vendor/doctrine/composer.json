@@ -1,6 +1,6 @@
 {
     "name": "doctrine/orm",
-    "type": "library",
+    "type": "library","version":"2.2.0-BETA2",
     "description": "Object-Relational-Mapper for PHP",
     "keywords": ["orm", "database"],
     "homepage": "http://www.doctrine-project.org",
@@ -14,8 +14,8 @@
     "require": {
         "php": ">=5.3.2",
         "ext-pdo": "*",
-        "doctrine/common": "2.1.*",
-        "doctrine/dbal": "2.1.*"
+        "doctrine/common": "master-dev",
+        "doctrine/dbal": "master-dev"
     },
     "autoload": {
         "psr-0": { "Doctrine\\ORM": "lib/" }

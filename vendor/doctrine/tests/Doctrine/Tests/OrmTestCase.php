@@ -3,8 +3,6 @@
 namespace Doctrine\Tests;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
 /**
  * Base testcase class for all ORM testcases.
@@ -13,6 +11,7 @@ abstract class OrmTestCase extends DoctrineTestCase
 {
     /** The metadata cache that is shared between all ORM tests (except functional tests). */
     private static $_metadataCacheImpl = null;
+
     /** The query cache that is shared between all ORM tests (except functional tests). */
     private static $_queryCacheImpl = null;
 
@@ -22,14 +21,18 @@ abstract class OrmTestCase extends DoctrineTestCase
      */
     protected function createAnnotationDriver($paths = array(), $alias = null)
     {
-        if (version_compare(\Doctrine\Common\Version::VERSION, '2.2.0-DEV', '>=')) {
+        if (version_compare(\Doctrine\Common\Version::VERSION, '3.0.0', '>=')) {
+            $reader = new \Doctrine\Common\Annotations\CachedReader(
+                new \Doctrine\Common\Annotations\AnnotationReader(), new ArrayCache()
+            );
+        }
+        else if (version_compare(\Doctrine\Common\Version::VERSION, '2.2.0-DEV', '>=')) {
             // Register the ORM Annotations in the AnnotationRegistry
-            AnnotationRegistry::registerFile(__DIR__ . '/../../../lib/Doctrine/ORM//Mapping/Driver/DoctrineAnnotations.php');
-
-            $reader = new SimpleAnnotationReader();
+            $reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
             $reader->addNamespace('Doctrine\ORM\Mapping');
             $reader = new \Doctrine\Common\Annotations\CachedReader($reader, new ArrayCache());
-        } else if (version_compare(\Doctrine\Common\Version::VERSION, '2.1.0-BETA3-DEV', '>=')) {
+        }
+        else if (version_compare(\Doctrine\Common\Version::VERSION, '2.1.0-BETA3-DEV', '>=')) {
             $reader = new \Doctrine\Common\Annotations\AnnotationReader();
             $reader->setIgnoreNotImportedAnnotations(true);
             $reader->setEnableParsePhpImports(false);
@@ -49,6 +52,8 @@ abstract class OrmTestCase extends DoctrineTestCase
                 $reader->setDefaultAnnotationNamespace('Doctrine\ORM\Mapping\\');
             }
         }
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
+            __DIR__ . "/../../../lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php");
         return new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, (array)$paths);
     }
 
@@ -64,30 +69,31 @@ abstract class OrmTestCase extends DoctrineTestCase
      */
     protected function _getTestEntityManager($conn = null, $conf = null, $eventManager = null, $withSharedMetadata = true)
     {
+        $metadataCache = $withSharedMetadata
+            ? self::getSharedMetadataCacheImpl()
+            : new \Doctrine\Common\Cache\ArrayCache;
+
         $config = new \Doctrine\ORM\Configuration();
-        if($withSharedMetadata) {
-            $config->setMetadataCacheImpl(self::getSharedMetadataCacheImpl());
-        } else {
-            $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache);
-        }
 
+        $config->setMetadataCacheImpl($metadataCache);
         $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver());
-
         $config->setQueryCacheImpl(self::getSharedQueryCacheImpl());
         $config->setProxyDir(__DIR__ . '/Proxies');
         $config->setProxyNamespace('Doctrine\Tests\Proxies');
-        $eventManager = new \Doctrine\Common\EventManager();
+
         if ($conn === null) {
             $conn = array(
-                'driverClass' => 'Doctrine\Tests\Mocks\DriverMock',
+                'driverClass'  => 'Doctrine\Tests\Mocks\DriverMock',
                 'wrapperClass' => 'Doctrine\Tests\Mocks\ConnectionMock',
-                'user' => 'john',
-                'password' => 'wayne'
+                'user'         => 'john',
+                'password'     => 'wayne'
             );
         }
+
         if (is_array($conn)) {
             $conn = \Doctrine\DBAL\DriverManager::getConnection($conn, $config, $eventManager);
         }
+
         return \Doctrine\Tests\Mocks\EntityManagerMock::create($conn, $config, $eventManager);
     }
 
@@ -96,6 +102,7 @@ abstract class OrmTestCase extends DoctrineTestCase
         if (self::$_metadataCacheImpl === null) {
             self::$_metadataCacheImpl = new \Doctrine\Common\Cache\ArrayCache;
         }
+
         return self::$_metadataCacheImpl;
     }
 
@@ -104,6 +111,7 @@ abstract class OrmTestCase extends DoctrineTestCase
         if (self::$_queryCacheImpl === null) {
             self::$_queryCacheImpl = new \Doctrine\Common\Cache\ArrayCache;
         }
+
         return self::$_queryCacheImpl;
     }
 }

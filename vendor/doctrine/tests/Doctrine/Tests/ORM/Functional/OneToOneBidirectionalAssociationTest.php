@@ -31,7 +31,7 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $this->customer->setCart($this->cart);
         $this->_em->persist($this->customer);
         $this->_em->flush();
-        
+
         $this->assertCartForeignKeyIs($this->customer->getId());
     }
 
@@ -39,7 +39,7 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $this->customer->brokenSetCart($this->cart);
         $this->_em->persist($this->customer);
         $this->_em->flush();
-        
+
         $this->assertCartForeignKeyIs(null);
     }
 
@@ -61,11 +61,11 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $query = $this->_em->createQuery('select c, ca from Doctrine\Tests\Models\ECommerce\ECommerceCustomer c join c.cart ca');
         $result = $query->getResult();
         $customer = $result[0];
-        
-        $this->assertTrue($customer->getCart() instanceof ECommerceCart);
+
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceCart', $customer->getCart());
         $this->assertEquals('paypal', $customer->getCart()->getPayment());
     }
-    
+
     public function testLazyLoadsObjectsOnTheOwningSide() {
         $this->_createFixture();
         $metadata = $this->_em->getClassMetadata('Doctrine\Tests\Models\ECommerce\ECommerceCart');
@@ -74,8 +74,8 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $query = $this->_em->createQuery('select c from Doctrine\Tests\Models\ECommerce\ECommerceCart c');
         $result = $query->getResult();
         $cart = $result[0];
-        
-        $this->assertTrue($cart->getCustomer() instanceof ECommerceCustomer);
+
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceCustomer', $cart->getCustomer());
         $this->assertEquals('Giorgio', $cart->getCustomer()->getName());
     }
 
@@ -88,45 +88,45 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $query = $this->_em->createQuery('select c from Doctrine\Tests\Models\ECommerce\ECommerceCustomer c');
         $result = $query->getResult();
         $customer = $result[0];
-        
+
         $this->assertNull($customer->getMentor());
-        $this->assertTrue($customer->getCart() instanceof ECommerceCart);
-        $this->assertFalse($customer->getCart() instanceof \Doctrine\ORM\Proxy\Proxy);
+        $this->assertInstanceOF('Doctrine\Tests\Models\ECommerce\ECommerceCart', $customer->getCart());
+        $this->assertNotInstanceOf('Doctrine\ORM\Proxy\Proxy', $customer->getCart());
         $this->assertEquals('paypal', $customer->getCart()->getPayment());
     }
-    
+
     public function testUpdateWithProxyObject()
-    {        
+    {
         $cust = new ECommerceCustomer;
         $cust->setName('Roman');
         $cart = new ECommerceCart;
         $cart->setPayment('CARD');
         $cust->setCart($cart);
-        
+
         $this->_em->persist($cust);
         $this->_em->flush();
         $this->_em->clear();
-        
-        $this->assertTrue($cust->getCart() instanceof ECommerceCart);
+
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceCart', $cust->getCart());
         $this->assertEquals('Roman', $cust->getName());
         $this->assertSame($cust, $cart->getCustomer());
-        
+
         $query = $this->_em->createQuery('select ca from Doctrine\Tests\Models\ECommerce\ECommerceCart ca where ca.id =?1');
         $query->setParameter(1, $cart->getId());
-        
+
         $cart2 = $query->getSingleResult();
-        
+
         $cart2->setPayment('CHEQUE');
 
         $this->_em->flush();
         $this->_em->clear();
-        
+
         $query2 = $this->_em->createQuery('select ca, c from Doctrine\Tests\Models\ECommerce\ECommerceCart ca left join ca.customer c where ca.id =?1');
         $query2->setParameter(1, $cart->getId());
-        
+
         $cart3 = $query2->getSingleResult();
-        
-        $this->assertTrue($cart3->getCustomer() instanceof ECommerceCustomer);
+
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceCustomer', $cart3->getCustomer());
         $this->assertEquals('Roman', $cart3->getCustomer()->getName());
     }
 
@@ -137,9 +137,9 @@ class OneToOneBidirectionalAssociationTest extends \Doctrine\Tests\OrmFunctional
         $cart = new ECommerceCart;
         $cart->setPayment('paypal');
         $customer->setCart($cart);
-        
+
         $this->_em->persist($customer);
-        
+
         $this->_em->flush();
         $this->_em->clear();
     }

@@ -17,11 +17,21 @@ class CompanyEmployee extends CompanyPerson
      * @Column(type="string", length=255)
      */
     private $department;
-    
+
     /**
      * @Column(type="datetime", nullable=true)
      */
     private $startDate;
+
+    /**
+     * @ManyToMany(targetEntity="CompanyContract", mappedBy="engineers", fetch="EXTRA_LAZY")
+     */
+    public $contracts;
+
+    /**
+     * @OneToMany(targetEntity="CompanyFlexUltraContract", mappedBy="salesPerson", fetch="EXTRA_LAZY")
+     */
+    public $soldContracts;
 
     public function getSalary() {
         return $this->salary;

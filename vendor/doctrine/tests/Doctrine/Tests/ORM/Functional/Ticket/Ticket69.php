@@ -58,7 +58,7 @@ class AdvancedAssociationTest extends \Doctrine\Tests\OrmFunctionalTestCase {
         $relation2->setParent($lemma1);
         $relation2->setChild($lemma3);
         $relation2->setType($type1);
-    
+
         $relation3 = new Relation;
         $relation3->setParent($lemma1);
         $relation3->setChild($lemma4);
@@ -85,11 +85,11 @@ class AdvancedAssociationTest extends \Doctrine\Tests\OrmFunctionalTestCase {
         $lemma = $res[0];
 
         $this->assertEquals('foo', $lemma->getLemma());
-        $this->assertTrue($lemma instanceof Lemma);
+        $this->assertInstanceOf('Doctrine\Tests\ORM\Functional\Ticket\Lemma', $lemma);
         $relations = $lemma->getRelations();
 
         foreach($relations as $relation) {
-            $this->assertTrue($relation instanceof Relation);
+            $this->assertInstanceOf('Doctrine\Tests\ORM\Functional\Ticket\Relation', $relation);
             $this->assertTrue($relation->getType()->getType() != '');
         }
 

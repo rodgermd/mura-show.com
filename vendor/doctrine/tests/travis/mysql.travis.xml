@@ -17,8 +17,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="Doctrine Test Suite">
-            <directory>./../Doctrine/Tests</directory>
+        <testsuite name="Doctrine ORM Test Suite">
+            <directory>./../Doctrine/Tests/ORM</directory>
         </testsuite>
     </testsuites>
     <groups>

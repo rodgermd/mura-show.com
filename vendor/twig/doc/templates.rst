@@ -53,6 +53,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Eclipse* via the `Twig plugin`_
 * *Sublime Text* via the `Twig bundle`_
 * *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
+* *Coda* and *SubEthaEdit* via the `Twig syntax mode`_
 
 Variables
 ---------
@@ -457,6 +458,9 @@ even if you're not working with PHP you should feel comfortable with it.
 Literals
 ~~~~~~~~
 
+.. versionadded:: 1.5
+    Support for hash keys as names and expressions was added in Twig 1.5.
+
 The simplest form of expressions are literals. Literals are representations
 for PHP types such as strings, numbers, and arrays. The following literals
 exist:
@@ -474,8 +478,21 @@ exist:
   separated by a comma (``,``) and wrapped with squared brackets (``[]``).
 
 * ``{"foo": "bar"}``: Hashes are defined by a list of keys and values
-  separated by a comma (``,``) and wrapped with curly braces (``{}``). A value
-  can be any valid expression.
+  separated by a comma (``,``) and wrapped with curly braces (``{}``):
+
+  .. code-block:: jinja
+
+    {# keys as string #}
+    { 'foo': 'foo', 'bar': 'bar' }
+
+    {# keys as names (equivalent to the previous hash) -- as of Twig 1.5 #}
+    { foo: 'foo', bar: 'bar' }
+
+    {# keys as integer #}
+    { 2: 'foo', 4: 'bar' }
+
+    {# keys as expressions (the expression must be enclosed into parentheses) -- as of Twig 1.5 #}
+    { (1 + 1): 'foo', (a ~ 'b'): 'bar' }
 
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
@@ -614,6 +631,21 @@ categories:
 
 * ``?:``: The PHP ternary operator: ``{{ foo ? 'yes' : 'no' }}``
 
+String Interpolation
+~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.5
+    String interpolation was added in Twig 1.5.
+
+String interpolation (`#{expression}`) allows any valid expression to appear
+within a string. The result of evaluating that expression is inserted into the
+string:
+
+.. code-block:: jinja
+
+    {{ "foo #{bar} baz" }}
+    {{ "foo #{1 + 2} baz" }}
+
 Whitespace Control
 ------------------
 
@@ -674,7 +706,8 @@ If you want to create your own, read :doc:`extensions`.
 
 .. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
-.. _`Twig syntax plugin`:       https://github.com/blogsh/Twig-netbeans
+.. _`Twig syntax plugin`:       http://plugins.netbeans.org/plugin/37069/php-twig
 .. _`Twig plugin`:              https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
 .. _`extension repository`:     http://github.com/fabpot/Twig-extensions
+.. _`Twig syntax mode`:         https://github.com/bobthecow/Twig-HTML.mode

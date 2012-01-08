@@ -18,6 +18,7 @@ abstract class AbstractMappingDriverTest extends \Doctrine\Tests\OrmTestCase
         $mappingDriver = $this->_loadDriver();
 
         $class = new ClassMetadata($entityClassName);
+        $class->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $mappingDriver->loadMetadataForClass($entityClassName, $class);
 
         return $class;
@@ -64,7 +65,7 @@ abstract class AbstractMappingDriverTest extends \Doctrine\Tests\OrmTestCase
     {
         $this->assertArrayHasKey('uniqueConstraints', $class->table,
             'ClassMetadata should have uniqueConstraints key in table property when Unique Constraints are set.');
-        
+
         $this->assertEquals(array(
             "search_idx" => array("columns" => array("name", "user_email"))
         ), $class->table['uniqueConstraints']);
@@ -138,6 +139,7 @@ abstract class AbstractMappingDriverTest extends \Doctrine\Tests\OrmTestCase
     public function testIdentifier($class)
     {
         $this->assertEquals(array('id'), $class->identifier);
+        $this->assertEquals('integer', $class->fieldMappings['id']['type']);
         $this->assertEquals(ClassMetadata::GENERATOR_TYPE_AUTO, $class->generatorType, "ID-Generator is not ClassMetadata::GENERATOR_TYPE_AUTO");
 
         return $class;
@@ -268,10 +270,9 @@ abstract class AbstractMappingDriverTest extends \Doctrine\Tests\OrmTestCase
      * @depends testColumnDefinition
      * @param ClassMetadata $class
      */
-    public function testJoinColumnOnDeleteAndOnUpdate($class)
+    public function testJoinColumnOnDelete($class)
     {
         $this->assertEquals('CASCADE', $class->associationMappings['address']['joinColumns'][0]['onDelete']);
-        $this->assertEquals('CASCADE', $class->associationMappings['address']['joinColumns'][0]['onUpdate']);
 
         return $class;
     }
@@ -291,6 +292,106 @@ abstract class AbstractMappingDriverTest extends \Doctrine\Tests\OrmTestCase
             array('name' => 'dtype', 'type' => 'string', 'length' => 255, 'fieldName' => 'dtype'),
             $class->discriminatorColumn
         );
+    }
+
+    /**
+     * @group DDC-869
+     */
+    public function testMappedSuperclassWithRepository()
+    {
+        $driver     = $this->_loadDriver();
+        $em         = $this->_getTestEntityManager();
+        $factory    = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
+
+        $em->getConfiguration()->setMetadataDriverImpl($driver);
+        $factory->setEntityManager($em);
+
+
+        $class = $factory->getMetadataFor('Doctrine\Tests\Models\DDC869\DDC869CreditCardPayment');
+
+        $this->assertTrue(isset($class->fieldMappings['id']));
+        $this->assertTrue(isset($class->fieldMappings['value']));
+        $this->assertTrue(isset($class->fieldMappings['creditCardNumber']));
+        $this->assertEquals($class->customRepositoryClassName, "Doctrine\Tests\Models\DDC869\DDC869PaymentRepository");
+        $this->assertInstanceOf("Doctrine\Tests\Models\DDC869\DDC869PaymentRepository",
+             $em->getRepository("Doctrine\Tests\Models\DDC869\DDC869CreditCardPayment"));
+        $this->assertTrue($em->getRepository("Doctrine\Tests\Models\DDC869\DDC869ChequePayment")->isTrue());
+
+
+
+        $class = $factory->getMetadataFor('Doctrine\Tests\Models\DDC869\DDC869ChequePayment');
+
+        $this->assertTrue(isset($class->fieldMappings['id']));
+        $this->assertTrue(isset($class->fieldMappings['value']));
+        $this->assertTrue(isset($class->fieldMappings['serialNumber']));
+        $this->assertEquals($class->customRepositoryClassName, "Doctrine\Tests\Models\DDC869\DDC869PaymentRepository");
+        $this->assertInstanceOf("Doctrine\Tests\Models\DDC869\DDC869PaymentRepository",
+             $em->getRepository("Doctrine\Tests\Models\DDC869\DDC869ChequePayment"));
+        $this->assertTrue($em->getRepository("Doctrine\Tests\Models\DDC869\DDC869ChequePayment")->isTrue());
+    }
+
+    /**
+     * @group DDC-1476
+     */
+    public function testDefaultFieldType()
+    {
+        $driver     = $this->_loadDriver();
+        $em         = $this->_getTestEntityManager();
+        $factory    = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
+
+        $em->getConfiguration()->setMetadataDriverImpl($driver);
+        $factory->setEntityManager($em);
+
+
+        $class = $factory->getMetadataFor('Doctrine\Tests\Models\DDC1476\DDC1476EntityWithDefaultFieldType');
+
+
+        $this->assertArrayHasKey('id', $class->fieldMappings);
+        $this->assertArrayHasKey('name', $class->fieldMappings);
+
+
+        $this->assertArrayHasKey('type', $class->fieldMappings['id']);
+        $this->assertArrayHasKey('type', $class->fieldMappings['name']);
+
+        $this->assertEquals('string', $class->fieldMappings['id']['type']);
+        $this->assertEquals('string', $class->fieldMappings['name']['type']);
+
+
+
+        $this->assertArrayHasKey('fieldName', $class->fieldMappings['id']);
+        $this->assertArrayHasKey('fieldName', $class->fieldMappings['name']);
+
+        $this->assertEquals('id', $class->fieldMappings['id']['fieldName']);
+        $this->assertEquals('name', $class->fieldMappings['name']['fieldName']);
+
+
+
+        $this->assertArrayHasKey('columnName', $class->fieldMappings['id']);
+        $this->assertArrayHasKey('columnName', $class->fieldMappings['name']);
+
+        $this->assertEquals('id', $class->fieldMappings['id']['columnName']);
+        $this->assertEquals('name', $class->fieldMappings['name']['columnName']);
+
+        $this->assertEquals(ClassMetadataInfo::GENERATOR_TYPE_NONE, $class->generatorType);
+    }
+
+    /**
+     * @group DDC-1170
+     */
+    public function testIdentifierColumnDefinition()
+    {
+
+        $class = $this->createClassMetadata(__NAMESPACE__ . '\DDC1170Entity');
+
+
+        $this->assertArrayHasKey('id', $class->fieldMappings);
+        $this->assertArrayHasKey('value', $class->fieldMappings);
+
+        $this->assertArrayHasKey('columnDefinition', $class->fieldMappings['id']);
+        $this->assertArrayHasKey('columnDefinition', $class->fieldMappings['value']);
+
+        $this->assertEquals("INT unsigned NOT NULL", $class->fieldMappings['id']['columnDefinition']);
+        $this->assertEquals("VARCHAR(255) NOT NULL", $class->fieldMappings['value']['columnDefinition']);
     }
 }
 
@@ -325,7 +426,7 @@ class User
 
     /**
      * @OneToOne(targetEntity="Address", cascade={"remove"}, inversedBy="user")
-     * @JoinColumn(onDelete="CASCADE", onUpdate="CASCADE")
+     * @JoinColumn(onDelete="CASCADE")
      */
     public $address;
 
@@ -400,20 +501,19 @@ class User
         $metadata->mapOneToOne(array(
            'fieldName' => 'address',
            'targetEntity' => 'Doctrine\\Tests\\ORM\\Mapping\\Address',
-           'cascade' => 
+           'cascade' =>
            array(
            0 => 'remove',
            ),
            'mappedBy' => NULL,
            'inversedBy' => 'user',
-           'joinColumns' => 
+           'joinColumns' =>
            array(
-           0 => 
+           0 =>
            array(
             'name' => 'address_id',
             'referencedColumnName' => 'id',
             'onDelete' => 'CASCADE',
-            'onUpdate' => 'CASCADE'
            ),
            ),
            'orphanRemoval' => false,
@@ -421,13 +521,13 @@ class User
         $metadata->mapOneToMany(array(
            'fieldName' => 'phonenumbers',
            'targetEntity' => 'Doctrine\\Tests\\ORM\\Mapping\\Phonenumber',
-           'cascade' => 
+           'cascade' =>
            array(
            1 => 'persist',
            ),
            'mappedBy' => 'user',
            'orphanRemoval' => true,
-           'orderBy' => 
+           'orderBy' =>
            array(
            'number' => 'ASC',
            ),
@@ -435,7 +535,7 @@ class User
         $metadata->mapManyToMany(array(
            'fieldName' => 'groups',
            'targetEntity' => 'Doctrine\\Tests\\ORM\\Mapping\\Group',
-           'cascade' => 
+           'cascade' =>
            array(
            0 => 'remove',
            1 => 'persist',
@@ -444,12 +544,12 @@ class User
            4 => 'detach',
            ),
            'mappedBy' => NULL,
-           'joinTable' => 
+           'joinTable' =>
            array(
            'name' => 'cms_users_groups',
-           'joinColumns' => 
+           'joinColumns' =>
            array(
-            0 => 
+            0 =>
             array(
             'name' => 'user_id',
             'referencedColumnName' => 'id',
@@ -457,9 +557,9 @@ class User
             'nullable' => false,
             ),
            ),
-           'inverseJoinColumns' => 
+           'inverseJoinColumns' =>
            array(
-            0 => 
+            0 =>
             array(
             'name' => 'group_id',
             'referencedColumnName' => 'id',
@@ -497,7 +597,7 @@ abstract class Animal
 
     public static function loadMetadata(ClassMetadataInfo $metadata)
     {
-        
+
     }
 }
 
@@ -506,7 +606,7 @@ class Cat extends Animal
 {
     public static function loadMetadata(ClassMetadataInfo $metadata)
     {
-        
+
     }
 }
 
@@ -515,6 +615,71 @@ class Dog extends Animal
 {
     public static function loadMetadata(ClassMetadataInfo $metadata)
     {
-        
+
     }
 }
+
+
+/**
+ * @Entity
+ */
+class DDC1170Entity
+{
+
+    /**
+     * @param string $value
+     */
+    function __construct($value = null)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @Id
+     * @GeneratedValue(strategy="NONE")
+     * @Column(type="integer", columnDefinition = "INT unsigned NOT NULL")
+     **/
+    private $id;
+
+    /**
+     * @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+     */
+    private $value;
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public static function loadMetadata(ClassMetadataInfo $metadata)
+    {
+        $metadata->mapField(array(
+           'id'                 => true,
+           'fieldName'          => 'id',
+           'columnDefinition'   => 'INT unsigned NOT NULL',
+        ));
+
+        $metadata->mapField(array(
+            'fieldName'         => 'value',
+            'columnDefinition'  => 'VARCHAR(255) NOT NULL'
+        ));
+
+        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
+    }
+
+}
+
+class Address {}
+class Phonenumber {}
+class Group {}

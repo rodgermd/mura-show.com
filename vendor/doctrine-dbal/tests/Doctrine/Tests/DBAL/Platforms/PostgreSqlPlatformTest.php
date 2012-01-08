@@ -6,7 +6,7 @@ use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Types\Type;
 
 require_once __DIR__ . '/../../TestInit.php';
- 
+
 class PostgreSqlPlatformTest extends AbstractPlatformTestCase
 {
     public function createPlatform()
@@ -46,7 +46,7 @@ class PostgreSqlPlatformTest extends AbstractPlatformTestCase
 
     public function getGenerateForeignKeySql()
     {
-        return 'ALTER TABLE test ADD FOREIGN KEY (fk_name_id) REFERENCES other_table(id) NOT DEFERRABLE INITIALLY IMMEDIATE';
+        return 'ALTER TABLE test ADD FOREIGN KEY (fk_name_id) REFERENCES other_table (id) NOT DEFERRABLE INITIALLY IMMEDIATE';
     }
 
     public function testGeneratesForeignKeySqlForNonStandardOptions()
@@ -55,7 +55,7 @@ class PostgreSqlPlatformTest extends AbstractPlatformTestCase
                 array('foreign_id'), 'my_table', array('id'), 'my_fk', array('onDelete' => 'CASCADE')
         );
         $this->assertEquals(
-            "CONSTRAINT my_fk FOREIGN KEY (foreign_id) REFERENCES my_table(id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE",
+            "CONSTRAINT my_fk FOREIGN KEY (foreign_id) REFERENCES my_table (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE",
             $this->_platform->getForeignKeyDeclarationSQL($foreignKey)
         );
     }
@@ -214,6 +214,14 @@ class PostgreSqlPlatformTest extends AbstractPlatformTestCase
             "ALTER TABLE mytable ADD quota INT NOT NULL",
             "COMMENT ON COLUMN mytable.quota IS 'A comment'",
             "COMMENT ON COLUMN mytable.baz IS 'B comment'",
+        );
+    }
+
+    public function getCreateTableColumnTypeCommentsSQL()
+    {
+        return array(
+            "CREATE TABLE test (id INT NOT NULL, data TEXT NOT NULL, PRIMARY KEY(id))",
+            "COMMENT ON COLUMN test.data IS '(DC2Type:array)'"
         );
     }
 }

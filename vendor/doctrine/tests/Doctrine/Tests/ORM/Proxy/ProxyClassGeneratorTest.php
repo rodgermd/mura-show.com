@@ -73,12 +73,13 @@ class ProxyClassGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $persister = $this->_getMockPersister();
         $this->_uowMock->setEntityPersister('Doctrine\Tests\Models\ECommerce\ECommerceFeature', $persister);
         $proxy = $this->_proxyFactory->getProxy('Doctrine\Tests\Models\ECommerce\ECommerceFeature', $identifier);
+
         $persister->expects($this->atLeastOnce())
                   ->method('load')
                   ->with($this->equalTo($identifier), $this->isInstanceOf($proxyClass))
                   ->will($this->returnValue(new \stdClass())); // fake return of entity instance
-        $proxy->getId();
         $proxy->getDescription();
+        $proxy->getProduct();
     }
 
     public function testReferenceProxyRespectsMethodsParametersTypeHinting()
@@ -126,6 +127,7 @@ class ProxyClassGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $className = "\DoctrineOrmTestEntity";
         $proxyName = "DoctrineOrmTestEntityProxy";
         $classMetadata = new \Doctrine\ORM\Mapping\ClassMetadata($className);
+        $classMetadata->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $classMetadata->mapField(array('fieldName' => 'id', 'type' => 'integer'));
         $classMetadata->setIdentifier(array('id'));
 
@@ -142,6 +144,7 @@ class ProxyClassGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $className = "\Doctrine\Tests\ORM\Proxy\SleepClass";
         $proxyName = "DoctrineTestsORMProxySleepClassProxy";
         $classMetadata = new \Doctrine\ORM\Mapping\ClassMetadata($className);
+        $classMetadata->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $classMetadata->mapField(array('fieldName' => 'id', 'type' => 'integer'));
         $classMetadata->setIdentifier(array('id'));
 

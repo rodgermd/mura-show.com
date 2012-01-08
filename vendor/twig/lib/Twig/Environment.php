@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.4.0';
+    const VERSION = '1.5.1';
 
     protected $charset;
     protected $loader;
@@ -695,6 +695,25 @@ class Twig_Environment
     }
 
     /**
+     * Gets registered tags.
+     *
+     * Be warned that this method cannot return tags defined by Twig_TokenParserBrokerInterface classes.
+     *
+     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     */
+    public function getTags()
+    {
+        $tags = array();
+        foreach ($this->getTokenParsers()->getParsers() as $parser) {
+            if ($parser instanceof Twig_TokenParserInterface) {
+                $tags[$parser->getTag()] = $parser;
+            }
+        }
+
+        return $tags;
+    }
+
+    /**
      * Registers a Node Visitor.
      *
      * @param Twig_NodeVisitorInterface $visitor A Twig_NodeVisitorInterface instance
@@ -752,6 +771,19 @@ class Twig_Environment
             return $this->filters[$name];
         }
 
+        foreach ($this->filters as $pattern => $filter) {
+            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+
+            if ($count) {
+                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
+                    array_shift($matches);
+                    $filter->setArguments($matches);
+
+                    return $filter;
+                }
+            }
+        }
+
         foreach ($this->filterCallbacks as $callback) {
             if (false !== $filter = call_user_func($callback, $name)) {
                 return $filter;
@@ -769,7 +801,11 @@ class Twig_Environment
     /**
      * Gets the registered Filters.
      *
+     * Be warned that this method cannot return filters defined with registerUndefinedFunctionCallback.
+     *
      * @return Twig_FilterInterface[] An array of Twig_FilterInterface instances
+     *
+     * @see registerUndefinedFilterCallback
      */
     public function getFilters()
     {
@@ -842,6 +878,19 @@ class Twig_Environment
             return $this->functions[$name];
         }
 
+        foreach ($this->functions as $pattern => $function) {
+            $pattern = str_replace('\\*', '(.*?)', preg_quote($pattern, '#'), $count);
+
+            if ($count) {
+                if (preg_match('#^'.$pattern.'$#', $name, $matches)) {
+                    array_shift($matches);
+                    $function->setArguments($matches);
+
+                    return $function;
+                }
+            }
+        }
+
         foreach ($this->functionCallbacks as $callback) {
             if (false !== $function = call_user_func($callback, $name)) {
                 return $function;
@@ -856,6 +905,15 @@ class Twig_Environment
         $this->functionCallbacks[] = $callable;
     }
 
+    /**
+     * Gets registered functions.
+     *
+     * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
+     *
+     * @return Twig_FunctionInterface[] An array of Twig_FunctionInterface instances
+     *
+     * @see registerUndefinedFunctionCallback
+     */
     public function getFunctions()
     {
         if (null === $this->functions) {
@@ -922,6 +980,20 @@ class Twig_Environment
         }
 
         return $this->binaryOperators;
+    }
+
+    public function computeAlternatives($name, $items)
+    {
+        $alternatives = array();
+        foreach ($items as $item) {
+            $lev = levenshtein($name, $item);
+            if ($lev <= strlen($name) / 3 || false !== strpos($item, $name)) {
+                $alternatives[$item] = $lev;
+            }
+        }
+        asort($alternatives);
+
+        return array_keys($alternatives);
     }
 
     protected function initOperators()

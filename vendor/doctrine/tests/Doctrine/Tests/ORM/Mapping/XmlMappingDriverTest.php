@@ -21,6 +21,7 @@ class XmlMappingDriverTest extends AbstractMappingDriverTest
         $mappingDriver = $this->_loadDriver();
 
         $class = new ClassMetadata($className);
+        $class->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $mappingDriver->loadMetadataForClass($className, $class);
 
         $expectedMap = array(
@@ -31,6 +32,35 @@ class XmlMappingDriverTest extends AbstractMappingDriverTest
 
         $this->assertEquals(3, count($class->discriminatorMap));
         $this->assertEquals($expectedMap, $class->discriminatorMap);
+    }
+
+    public function testIdentifierWithAssociationKey()
+    {
+        $driver  = $this->_loadDriver();
+        $em      = $this->_getTestEntityManager();
+        $factory = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
+
+        $em->getConfiguration()->setMetadataDriverImpl($driver);
+        $factory->setEntityManager($em);
+
+        $class = $factory->getMetadataFor('Doctrine\Tests\Models\DDC117\DDC117Translation');
+
+        $this->assertEquals(array('language', 'article'), $class->identifier);
+        $this->assertArrayHasKey('article', $class->associationMappings);
+
+        $this->assertArrayHasKey('id', $class->associationMappings['article']);
+        $this->assertTrue($class->associationMappings['article']['id']);
+    }
+
+    /**
+     * @group DDC-1468
+     *
+     * @expectedException Doctrine\ORM\Mapping\MappingException
+     * @expectedExceptionMessage Invalid mapping file 'Doctrine.Tests.Models.Generic.SerializationModel.dcm.xml' for class 'Doctrine\Tests\Models\Generic\SerializationModel'.
+     */
+    public function testInvalidMappingFileException()
+    {
+        $this->createClassMetadata('Doctrine\Tests\Models\Generic\SerializationModel');
     }
 
     /**

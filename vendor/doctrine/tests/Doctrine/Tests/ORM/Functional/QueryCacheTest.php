@@ -14,14 +14,27 @@ require_once __DIR__ . '/../../TestInit.php';
  */
 class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
 {
-    protected function setUp() {
-        if (version_compare(\Doctrine\Common\Version::VERSION, '2.2.0-DEV', '>=')) {
-            $this->markTestSkipped('Test not compatible with 2.2 common');
-        }
+    /**
+     * @var \ReflectionProperty
+     */
+    private $cacheDataReflection;
 
+    protected function setUp() {
+        $this->cacheDataReflection = new \ReflectionProperty("Doctrine\Common\Cache\ArrayCache", "data");
+        $this->cacheDataReflection->setAccessible(true);
         $this->useModelSet('cms');
         parent::setUp();
     }
+
+    /**
+     * @param   ArrayCache $cache
+     * @return  integer
+     */
+    private function getCacheSize(ArrayCache $cache)
+    {
+        return sizeof($this->cacheDataReflection->getValue($cache));
+    }
+
 
     public function testQueryCache_DependsOnHints()
     {
@@ -31,12 +44,12 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $query->setQueryCacheDriver($cache);
 
         $query->getResult();
-        $this->assertEquals(1, count($cache->getIds()));
+        $this->assertEquals(1, $this->getCacheSize($cache));
 
         $query->setHint('foo', 'bar');
 
         $query->getResult();
-        $this->assertEquals(2, count($cache->getIds()));
+        $this->assertEquals(2, $this->getCacheSize($cache));
 
         return $query;
     }
@@ -48,13 +61,13 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testQueryCache_DependsOnFirstResult($query)
     {
         $cache = $query->getQueryCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $query->setFirstResult(10);
         $query->setMaxResults(9999);
 
         $query->getResult();
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount + 1, $this->getCacheSize($cache));
     }
 
     /**
@@ -64,12 +77,12 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testQueryCache_DependsOnMaxResults($query)
     {
         $cache = $query->getQueryCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $query->setMaxResults(10);
 
         $query->getResult();
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount + 1, $this->getCacheSize($cache));
     }
 
     /**
@@ -79,10 +92,10 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testQueryCache_DependsOnHydrationMode($query)
     {
         $cache = $query->getQueryCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $query->getArrayResult();
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount + 1, $this->getCacheSize($cache));
     }
 
     public function testQueryCache_NoHitSaveParserResult()
@@ -91,13 +104,13 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
 
         $query = $this->_em->createQuery('select ux from Doctrine\Tests\Models\CMS\CmsUser ux');
 
-        $cache = $this->getMock('Doctrine\Common\Cache\AbstractCache', array('_doFetch', '_doContains', '_doSave', '_doDelete', 'getIds'));
+        $cache = $this->getMock('Doctrine\Common\Cache\ArrayCache', array('doFetch', 'doSave', 'doGetStats'));
         $cache->expects($this->at(0))
-              ->method('_doFetch')
+              ->method('doFetch')
               ->with($this->isType('string'))
               ->will($this->returnValue(false));
         $cache->expects($this->at(1))
-              ->method('_doSave')
+              ->method('doSave')
               ->with($this->isType('string'), $this->isInstanceOf('Doctrine\ORM\Query\ParserResult'), $this->equalTo(null));
 
         $query->setQueryCacheDriver($cache);
@@ -121,13 +134,14 @@ class QueryCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
                          ->method('getSqlExecutor')
                          ->will($this->returnValue($sqlExecMock));
 
-        $cache = $this->getMock('Doctrine\Common\Cache\AbstractCache', array('_doFetch', '_doContains', '_doSave', '_doDelete', 'getIds'));
+        $cache = $this->getMock('Doctrine\Common\Cache\CacheProvider',
+                array('doFetch', 'doContains', 'doSave', 'doDelete', 'doFlush', 'doGetStats'));
         $cache->expects($this->once())
-              ->method('_doFetch')
+              ->method('doFetch')
               ->with($this->isType('string'))
               ->will($this->returnValue($parserResultMock));
         $cache->expects($this->never())
-              ->method('_doSave');
+              ->method('doSave');
 
         $query->setQueryCacheDriver($cache);
 

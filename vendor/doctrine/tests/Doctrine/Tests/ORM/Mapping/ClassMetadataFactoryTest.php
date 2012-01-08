@@ -9,6 +9,7 @@ use Doctrine\Tests\Mocks\ConnectionMock;
 use Doctrine\Tests\Mocks\DriverMock;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Common\EventManager;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
 require_once __DIR__ . '/../../TestInit.php';
 
@@ -26,25 +27,26 @@ class ClassMetadataFactoryTest extends \Doctrine\Tests\OrmTestCase
 
         // Self-made metadata
         $cm1 = new ClassMetadata('Doctrine\Tests\ORM\Mapping\TestEntity1');
+        $cm1->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
         $cm1->setPrimaryTable(array('name' => '`group`'));
         // Add a mapped field
         $cm1->mapField(array('fieldName' => 'name', 'type' => 'varchar'));
         // Add a mapped field
         $cm1->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true));
         // and a mapped association
-        $cm1->mapOneToOne(array('fieldName' => 'other', 'targetEntity' => 'Other', 'mappedBy' => 'this'));
+        $cm1->mapOneToOne(array('fieldName' => 'other', 'targetEntity' => 'TestEntity1', 'mappedBy' => 'this'));
         // and an association on the owning side
         $joinColumns = array(
             array('name' => 'other_id', 'referencedColumnName' => 'id')
         );
-        $cm1->mapOneToOne(array('fieldName' => 'association', 'targetEntity' => 'Other', 'joinColumns' => $joinColumns));
+        $cm1->mapOneToOne(array('fieldName' => 'association', 'targetEntity' => 'TestEntity1', 'joinColumns' => $joinColumns));
         // and an id generator type
         $cm1->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_AUTO);
 
         // SUT
-        $cmf = new ClassMetadataFactoryTestSubject();
+        $cmf = new \Doctrine\ORM\Mapping\ClassMetadataFactory();
         $cmf->setEntityManager($entityManager);
-        $cmf->setMetadataForClass('Doctrine\Tests\ORM\Mapping\TestEntity1', $cm1);
+        $cmf->setMetadataFor('Doctrine\Tests\ORM\Mapping\TestEntity1', $cm1);
 
         // Prechecks
         $this->assertEquals(array(), $cm1->parentClasses);
@@ -52,15 +54,16 @@ class ClassMetadataFactoryTest extends \Doctrine\Tests\OrmTestCase
         $this->assertTrue($cm1->hasField('name'));
         $this->assertEquals(2, count($cm1->associationMappings));
         $this->assertEquals(ClassMetadata::GENERATOR_TYPE_AUTO, $cm1->generatorType);
+        $this->assertEquals('group', $cm1->table['name']);
 
         // Go
-        $cm1 = $cmf->getMetadataFor('Doctrine\Tests\ORM\Mapping\TestEntity1');
+        $cmMap1 = $cmf->getMetadataFor('Doctrine\Tests\ORM\Mapping\TestEntity1');
 
-        $this->assertEquals('group', $cm1->table['name']);
-        $this->assertTrue($cm1->table['quoted']);
-        $this->assertEquals(array(), $cm1->parentClasses);
-        $this->assertTrue($cm1->hasField('name'));
-        $this->assertEquals(ClassMetadata::GENERATOR_TYPE_SEQUENCE, $cm1->generatorType);
+        $this->assertSame($cm1, $cmMap1);
+        $this->assertEquals('group', $cmMap1->table['name']);
+        $this->assertTrue($cmMap1->table['quoted']);
+        $this->assertEquals(array(), $cmMap1->parentClasses);
+        $this->assertTrue($cmMap1->hasField('name'));
     }
 
     public function testHasGetMetadata_NamespaceSeperatorIsNotNormalized()
@@ -80,6 +83,51 @@ class ClassMetadataFactoryTest extends \Doctrine\Tests\OrmTestCase
         $this->assertNotSame($m1, $m2);
         $this->assertFalse($h2);
         $this->assertTrue($h1);
+    }
+
+    /**
+     * @group DDC-1512
+     */
+    public function testIsTransient()
+    {
+        $cmf = new ClassMetadataFactory();
+        $driver = $this->getMock('Doctrine\ORM\Mapping\Driver\Driver');
+        $driver->expects($this->at(0))
+               ->method('isTransient')
+               ->with($this->equalTo('Doctrine\Tests\Models\CMS\CmsUser'))
+               ->will($this->returnValue(true));
+        $driver->expects($this->at(1))
+               ->method('isTransient')
+               ->with($this->equalTo('Doctrine\Tests\Models\CMS\CmsArticle'))
+               ->will($this->returnValue(false));
+
+        $em = $this->_createEntityManager($driver);
+
+        $this->assertTrue($em->getMetadataFactory()->isTransient('Doctrine\Tests\Models\CMS\CmsUser'));
+        $this->assertFalse($em->getMetadataFactory()->isTransient('Doctrine\Tests\Models\CMS\CmsArticle'));
+    }
+
+    /**
+     * @group DDC-1512
+     */
+    public function testIsTransientEntityNamespace()
+    {
+        $cmf = new ClassMetadataFactory();
+        $driver = $this->getMock('Doctrine\ORM\Mapping\Driver\Driver');
+        $driver->expects($this->at(0))
+               ->method('isTransient')
+               ->with($this->equalTo('Doctrine\Tests\Models\CMS\CmsUser'))
+               ->will($this->returnValue(true));
+        $driver->expects($this->at(1))
+               ->method('isTransient')
+               ->with($this->equalTo('Doctrine\Tests\Models\CMS\CmsArticle'))
+               ->will($this->returnValue(false));
+
+        $em = $this->_createEntityManager($driver);
+        $em->getConfiguration()->addEntityNamespace('CMS', 'Doctrine\Tests\Models\CMS');
+
+        $this->assertTrue($em->getMetadataFactory()->isTransient('CMS:CmsUser'));
+        $this->assertFalse($em->getMetadataFactory()->isTransient('CMS:CmsArticle'));
     }
 
     protected function _createEntityManager($metadataDriver)

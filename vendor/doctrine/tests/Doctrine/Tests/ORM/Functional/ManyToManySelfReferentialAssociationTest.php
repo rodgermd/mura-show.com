@@ -41,7 +41,7 @@ class ManyToManySelfReferentialAssociationTest extends AbstractManyToManyAssocia
         $this->firstProduct->addRelated($this->secondRelated);
         $this->_em->persist($this->firstProduct);
         $this->_em->flush();
-        
+
         $this->assertForeignKeysContain($this->firstProduct->getId(),
                                    $this->firstRelated->getId());
         $this->assertForeignKeysContain($this->firstProduct->getId(),
@@ -67,7 +67,7 @@ class ManyToManySelfReferentialAssociationTest extends AbstractManyToManyAssocia
     {
         $this->_createLoadingFixture();
         $products = $this->_findProducts();
-        $this->assertLoadingOfOwningSide($products); 
+        $this->assertLoadingOfOwningSide($products);
     }
 
     public function testLazyLoadsOwningSide()
@@ -79,7 +79,7 @@ class ManyToManySelfReferentialAssociationTest extends AbstractManyToManyAssocia
 
         $query = $this->_em->createQuery('SELECT p FROM Doctrine\Tests\Models\ECommerce\ECommerceProduct p');
         $products = $query->getResult();
-        $this->assertLoadingOfOwningSide($products); 
+        $this->assertLoadingOfOwningSide($products);
     }
 
     public function assertLoadingOfOwningSide($products)
@@ -87,19 +87,19 @@ class ManyToManySelfReferentialAssociationTest extends AbstractManyToManyAssocia
         list ($firstProduct, $secondProduct) = $products;
         $this->assertEquals(2, count($firstProduct->getRelated()));
         $this->assertEquals(2, count($secondProduct->getRelated()));
-        
-        $categories = $firstProduct->getRelated();        
+
+        $categories = $firstProduct->getRelated();
         $firstRelatedBy = $categories[0]->getRelated();
         $secondRelatedBy = $categories[1]->getRelated();
-        
+
         $this->assertEquals(2, count($firstRelatedBy));
         $this->assertEquals(2, count($secondRelatedBy));
 
-        $this->assertTrue($firstRelatedBy[0] instanceof ECommerceProduct);
-        $this->assertTrue($firstRelatedBy[1] instanceof ECommerceProduct);
-        $this->assertTrue($secondRelatedBy[0] instanceof ECommerceProduct);
-        $this->assertTrue($secondRelatedBy[1] instanceof ECommerceProduct);
-        
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceProduct', $firstRelatedBy[0]);
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceProduct', $firstRelatedBy[1]);
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceProduct', $secondRelatedBy[0]);
+        $this->assertInstanceOf('Doctrine\Tests\Models\ECommerce\ECommerceProduct', $secondRelatedBy[1]);
+
         $this->assertCollectionEquals($firstRelatedBy, $secondRelatedBy);
     }
 
@@ -111,7 +111,7 @@ class ManyToManySelfReferentialAssociationTest extends AbstractManyToManyAssocia
         $this->secondProduct->addRelated($this->secondRelated);
         $this->_em->persist($this->firstProduct);
         $this->_em->persist($this->secondProduct);
-        
+
         $this->_em->flush();
         $this->_em->clear();
     }

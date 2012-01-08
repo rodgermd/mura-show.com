@@ -1,3 +1,33 @@
+* 1.5.1 (2012-01-05)
+
+ * fixed a regression when parsing strings
+
+* 1.5.0 (2012-01-04)
+
+ * added Traversable objects support for the join filter
+
+* 1.5.0-RC2 (2011-12-30)
+
+ * added a way to set the default global date interval format
+ * fixed the date filter for DateInterval instances (setTimezone() does not exist for them)
+ * refactored Twig_Template::display() to ease its extension
+ * added a number_format filter
+
+* 1.5.0-RC1 (2011-12-26)
+
+ * removed the need to quote hash keys
+ * allowed hash keys to be any expression
+ * added a do tag
+ * added a flush tag
+ * added support for dynamically named filters and functions
+ * added a dump function to help debugging templates
+ * added a nl2br filter
+ * added a random function
+ * added a way to change the default format for the date filter
+ * fixed the lexer when an operator ending with a letter ends a line
+ * added string interpolation support
+ * enhanced exceptions for unknown filters, functions, tests, and tags
+
 * 1.4.0 (2011-12-07)
 
  * fixed lexer when using big numbers (> PHP_INT_MAX)

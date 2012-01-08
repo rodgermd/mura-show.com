@@ -2,6 +2,8 @@
 
 namespace Doctrine\Tests\Common\Cache;
 
+use Doctrine\Common\Cache\Cache;
+
 abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
 {
     public function testBasics()
@@ -34,45 +36,12 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertFalse($cache->contains('test_key2'));
     }
 
-    public function testDeleteByRegex()
+    public function testFlushAll()
     {
         $cache = $this->_getCacheDriver();
         $cache->save('test_key1', '1');
         $cache->save('test_key2', '2');
-        $cache->deleteByRegex('/test_key[0-9]/');
-
-        $this->assertFalse($cache->contains('test_key1'));
-        $this->assertFalse($cache->contains('test_key2'));
-    }
-
-    public function testDeleteByPrefix()
-    {
-        $cache = $this->_getCacheDriver();
-        $cache->save('test_key1', '1');
-        $cache->save('test_key2', '2');
-        $cache->deleteByPrefix('test_key');
-
-        $this->assertFalse($cache->contains('test_key1'));
-        $this->assertFalse($cache->contains('test_key2'));
-    }
-
-    public function testDeleteBySuffix()
-    {
-        $cache = $this->_getCacheDriver();
-        $cache->save('1test_key', '1');
-        $cache->save('2test_key', '2');
-        $cache->deleteBySuffix('test_key');
-
-        $this->assertFalse($cache->contains('1test_key'));
-        $this->assertFalse($cache->contains('2test_key'));
-    }
-
-    public function testDeleteByWildcard()
-    {
-        $cache = $this->_getCacheDriver();
-        $cache->save('test_key1', '1');
-        $cache->save('test_key2', '2');
-        $cache->delete('test_key*');
+        $cache->flushAll();
 
         $this->assertFalse($cache->contains('test_key1'));
         $this->assertFalse($cache->contains('test_key2'));
@@ -83,11 +52,36 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
         $cache = $this->_getCacheDriver();
         $cache->setNamespace('test_');
         $cache->save('key1', 'test');
+
         $this->assertTrue($cache->contains('key1'));
 
-        $ids = $cache->getIds();
-        $this->assertTrue(in_array('test_key1', $ids));
+        $cache->setNamespace('test2_');
+
+        $this->assertFalse($cache->contains('key1'));
     }
 
+    /**
+     * @group DCOM-43
+     */
+    public function testGetStats()
+    {
+        if ($this instanceof ArrayCacheTest || $this instanceof ZendDataCacheTest ) {
+            $this->markTestSkipped("Statistics are not available for this driver");
+        }
+
+        $cache = $this->_getCacheDriver();
+        $stats = $cache->getStats();
+
+
+        $this->assertArrayHasKey(Cache::STATS_HITS,   $stats);
+        $this->assertArrayHasKey(Cache::STATS_MISSES, $stats);
+        $this->assertArrayHasKey(Cache::STATS_UPTIME, $stats);
+        $this->assertArrayHasKey(Cache::STATS_MEMORY_USAGE, $stats);
+        $this->assertArrayHasKey(Cache::STATS_MEMORY_AVAILIABLE, $stats);
+    }
+
+    /**
+     * @return \Doctrine\Common\Cache\CacheProvider
+     */
     abstract protected function _getCacheDriver();
 }

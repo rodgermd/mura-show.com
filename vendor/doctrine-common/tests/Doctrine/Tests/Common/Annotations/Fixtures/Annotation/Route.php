@@ -2,8 +2,10 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures\Annotation;
 
-class Route extends \Doctrine\Common\Annotations\Annotation
+/** @Annotation */
+class Route
 {
-    private $pattern;
-    private $name;
+    /** @var string @Required */
+    public $pattern;
+    public $name;
 }

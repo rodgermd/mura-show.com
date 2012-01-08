@@ -35,19 +35,18 @@ $metadata->mapOneToOne(array(
    'fieldName' => 'address',
    'targetEntity' => 'Doctrine\\Tests\\ORM\\Tools\\Export\\Address',
    'inversedBy' => 'user',
-   'cascade' => 
+   'cascade' =>
    array(
    0 => 'persist',
    ),
    'mappedBy' => NULL,
-   'joinColumns' => 
+   'joinColumns' =>
    array(
-   0 => 
+   0 =>
    array(
     'name' => 'address_id',
     'referencedColumnName' => 'id',
     'onDelete' => 'CASCADE',
-    'onUpdate' => 'CASCADE'
    ),
    ),
    'orphanRemoval' => true,
@@ -55,14 +54,14 @@ $metadata->mapOneToOne(array(
 $metadata->mapOneToMany(array(
    'fieldName' => 'phonenumbers',
    'targetEntity' => 'Doctrine\\Tests\\ORM\\Tools\\Export\\Phonenumber',
-   'cascade' => 
+   'cascade' =>
    array(
    1 => 'persist',
    2 => 'merge',
    ),
    'mappedBy' => 'user',
    'orphanRemoval' => true,
-   'orderBy' => 
+   'orderBy' =>
    array(
    'number' => 'ASC',
    ),
@@ -70,7 +69,7 @@ $metadata->mapOneToMany(array(
 $metadata->mapManyToMany(array(
    'fieldName' => 'groups',
    'targetEntity' => 'Doctrine\\Tests\\ORM\\Tools\\Export\\Group',
-   'cascade' => 
+   'cascade' =>
    array(
    0 => 'remove',
    1 => 'persist',
@@ -79,12 +78,12 @@ $metadata->mapManyToMany(array(
    4 => 'detach',
    ),
    'mappedBy' => NULL,
-   'joinTable' => 
+   'joinTable' =>
    array(
    'name' => 'cms_users_groups',
-   'joinColumns' => 
+   'joinColumns' =>
    array(
-    0 => 
+    0 =>
     array(
     'name' => 'user_id',
     'referencedColumnName' => 'id',
@@ -92,9 +91,9 @@ $metadata->mapManyToMany(array(
     'nullable' => false,
     ),
    ),
-   'inverseJoinColumns' => 
+   'inverseJoinColumns' =>
    array(
-    0 => 
+    0 =>
     array(
     'name' => 'group_id',
     'referencedColumnName' => 'id',

@@ -21,6 +21,7 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $this->_tmpDir = \sys_get_temp_dir();
         \mkdir($this->_tmpDir . \DIRECTORY_SEPARATOR . $this->_namespace);
         $this->_generator = new EntityGenerator();
+        $this->_generator->setAnnotationPrefix("");
         $this->_generator->setGenerateAnnotations(true);
         $this->_generator->setGenerateStubMethods(true);
         $this->_generator->setRegenerateEntityIfExists(false);
@@ -44,7 +45,7 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $metadata = new ClassMetadataInfo($this->_namespace . '\EntityGeneratorBook');
         $metadata->namespace = $this->_namespace;
         $metadata->customRepositoryClassName = $this->_namespace  . '\EntityGeneratorBookRepository';
-        
+
         $metadata->table['name'] = 'book';
         $metadata->mapField(array('fieldName' => 'name', 'type' => 'string'));
         $metadata->mapField(array('fieldName' => 'status', 'type' => 'string', 'default' => 'published'));
@@ -99,7 +100,7 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $this->assertTrue(method_exists($metadata->namespace . '\EntityGeneratorBook', 'getAuthor'), "EntityGeneratorBook::getAuthor() missing.");
         $this->assertTrue(method_exists($metadata->namespace . '\EntityGeneratorBook', 'getComments'), "EntityGeneratorBook::getComments() missing.");
         $this->assertTrue(method_exists($metadata->namespace . '\EntityGeneratorBook', 'addEntityGeneratorComment'), "EntityGeneratorBook::addEntityGeneratorComment() missing.");
-        
+
         $this->assertEquals('published', $book->getStatus());
 
         $book->setName('Jonathan H. Wage');
@@ -119,7 +120,7 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
     {
         $metadata = $this->generateBookEntityFixture();
         $metadata->mapField(array('fieldName' => 'test', 'type' => 'string'));
-        
+
         $this->_generator->writeEntityClass($metadata, $this->_tmpDir);
 
         $this->assertFileExists($this->_tmpDir . "/" . $this->_namespace . "/EntityGeneratorBook.php~");
@@ -166,6 +167,8 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
         $book = $this->newInstance($metadata);
 
         $cm = new \Doctrine\ORM\Mapping\ClassMetadata($metadata->name);
+        $cm->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
+
         $driver = $this->createAnnotationDriver();
         $driver->loadMetadataForClass($cm->name, $cm);
 
@@ -179,14 +182,17 @@ class EntityGeneratorTest extends \Doctrine\Tests\OrmTestCase
 
     public function testLoadPrefixedMetadata()
     {
-        $this->_generator->setAnnotationPrefix('orm:');
+        $this->_generator->setAnnotationPrefix('ORM\\');
         $metadata = $this->generateBookEntityFixture();
 
+        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+        $driver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($reader, array());
 
         $book = $this->newInstance($metadata);
 
         $cm = new \Doctrine\ORM\Mapping\ClassMetadata($metadata->name);
-        $driver = $this->createAnnotationDriver(array(), 'orm');
+        $cm->initializeReflection(new \Doctrine\Common\Persistence\Mapping\RuntimeReflectionService);
+
         $driver->loadMetadataForClass($cm->name, $cm);
 
         $this->assertEquals($cm->columnNames, $metadata->columnNames);

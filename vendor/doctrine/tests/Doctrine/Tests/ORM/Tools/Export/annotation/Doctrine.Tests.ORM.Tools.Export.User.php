@@ -23,8 +23,8 @@ class User
     public $email;
 
     /**
-     * @OneToOne(targetEntity="Doctrine\Tests\ORM\Tools\Export\Address", cascade={"remove", "persist"}, inversedBy="user", orphanRemoval=true)
-     * @JoinColumn(name="address_id", onDelete="CASCADE", onUpdate="CASCADE")
+     * @OneToOne(targetEntity="Doctrine\Tests\ORM\Tools\Export\Address", inversedBy="user", cascade={"persist"}, orphanRemoval=true)
+     * @JoinColumn(name="address_id", onDelete="CASCADE")
      */
     public $address;
 

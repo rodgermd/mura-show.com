@@ -15,13 +15,25 @@ require_once __DIR__ . '/../../TestInit.php';
  */
 class ResultCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
 {
-    protected function setUp() {
-        if (version_compare(\Doctrine\Common\Version::VERSION, '2.2.0-DEV', '>=')) {
-            $this->markTestSkipped('Test not compatible with 2.2 common');
-        }
+   /**
+     * @var \ReflectionProperty
+     */
+    private $cacheDataReflection;
 
+    protected function setUp() {
+        $this->cacheDataReflection = new \ReflectionProperty("Doctrine\Common\Cache\ArrayCache", "data");
+        $this->cacheDataReflection->setAccessible(true);
         $this->useModelSet('cms');
         parent::setUp();
+    }
+
+    /**
+     * @param   ArrayCache $cache
+     * @return  integer
+     */
+    private function getCacheSize(ArrayCache $cache)
+    {
+        return sizeof($this->cacheDataReflection->getValue($cache));
     }
 
     public function testResultCache()
@@ -78,10 +90,10 @@ class ResultCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testUseResultCache()
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
-        $this->_em->getConfiguration()->setResultCacheImpl($cache);
 
         $query = $this->_em->createQuery('select ux from Doctrine\Tests\Models\CMS\CmsUser ux');
         $query->useResultCache(true);
+        $query->setResultCacheDriver($cache);
         $query->setResultCacheId('testing_result_cache_id');
         $users = $query->getResult();
 
@@ -96,11 +108,11 @@ class ResultCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testUseResultCacheParams()
     {
         $cache = new \Doctrine\Common\Cache\ArrayCache();
-        $this->_em->getConfiguration()->setResultCacheImpl($cache);
 
         $sqlCount = count($this->_sqlLoggerStack->queries);
         $query = $this->_em->createQuery('select ux from Doctrine\Tests\Models\CMS\CmsUser ux WHERE ux.id = ?1');
         $query->setParameter(1, 1);
+        $query->setResultCacheDriver($cache);
         $query->useResultCache(true);
         $query->getResult();
 
@@ -129,26 +141,26 @@ class ResultCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
         $cache = new ArrayCache();
         $query->setResultCacheDriver($cache)->useResultCache(true);
 
-        $this->assertEquals(0, count($cache->getIds()));
+        $this->assertEquals(0, $this->getCacheSize($cache));
         $query->getResult();
-        $this->assertEquals(1, count($cache->getIds()));
+        $this->assertEquals(1, $this->getCacheSize($cache));
 
         return $query;
     }
 
     /**
-     * @param <type> $query
+     * @param string $query
      * @depends testNativeQueryResultCaching
      */
-    public function testResultCacheDependsOnQueryHints($query)
+    public function testResultCacheNotDependsOnQueryHints($query)
     {
         $cache = $query->getResultCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $query->setHint('foo', 'bar');
         $query->getResult();
 
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount, $this->getCacheSize($cache));
     }
 
     /**
@@ -158,27 +170,27 @@ class ResultCacheTest extends \Doctrine\Tests\OrmFunctionalTestCase
     public function testResultCacheDependsOnParameters($query)
     {
         $cache = $query->getResultCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $query->setParameter(1, 50);
         $query->getResult();
 
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount + 1, $this->getCacheSize($cache));
     }
 
     /**
      * @param <type> $query
      * @depends testNativeQueryResultCaching
      */
-    public function testResultCacheDependsOnHydrationMode($query)
+    public function testResultCacheNotDependsOnHydrationMode($query)
     {
         $cache = $query->getResultCacheDriver();
-        $cacheCount = count($cache->getIds());
+        $cacheCount = $this->getCacheSize($cache);
 
         $this->assertNotEquals(\Doctrine\ORM\Query::HYDRATE_ARRAY, $query->getHydrationMode());
         $query->getArrayResult();
 
-        $this->assertEquals($cacheCount + 1, count($cache->getIds()));
+        $this->assertEquals($cacheCount, $this->getCacheSize($cache));
     }
 
     /**

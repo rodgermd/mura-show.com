@@ -3,6 +3,7 @@
 namespace Doctrine\Tests\DBAL\Functional;
 
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\DBAL\Types\Type;
 
 require_once __DIR__ . '/../../TestInit.php';
 
@@ -38,7 +39,7 @@ class ConnectionTest extends \Doctrine\Tests\DbalFunctionalTestCase
         try {
             $this->_conn->beginTransaction();
             $this->assertEquals(1, $this->_conn->getTransactionNestingLevel());
-            
+
             try {
                 $this->_conn->beginTransaction();
                 $this->assertEquals(2, $this->_conn->getTransactionNestingLevel());
@@ -47,7 +48,7 @@ class ConnectionTest extends \Doctrine\Tests\DbalFunctionalTestCase
             } catch (\Exception $e) {
                 $this->_conn->rollback();
                 $this->assertEquals(1, $this->_conn->getTransactionNestingLevel());
-                //no rethrow                
+                //no rethrow
             }
             $this->assertTrue($this->_conn->isRollbackOnly());
 
@@ -163,9 +164,9 @@ class ConnectionTest extends \Doctrine\Tests\DbalFunctionalTestCase
         try {
             $this->_conn->beginTransaction();
             $this->assertEquals(1, $this->_conn->getTransactionNestingLevel());
-            
+
             throw new \Exception;
-              
+
             $this->_conn->commit(); // never reached
         } catch (\Exception $e) {
             $this->assertEquals(1, $this->_conn->getTransactionNestingLevel());
@@ -206,5 +207,13 @@ class ConnectionTest extends \Doctrine\Tests\DbalFunctionalTestCase
             /* @var $conn Connection */
             $conn->executeQuery($conn->getDatabasePlatform()->getDummySelectSQL());
         });
+    }
+
+    /**
+     * Tests that the quote function accepts DBAL and PDO types.
+     */
+    public function testQuote()
+    {
+        $this->assertEquals($this->_conn->quote("foo", Type::STRING), $this->_conn->quote("foo", \PDO::PARAM_STR));
     }
 }

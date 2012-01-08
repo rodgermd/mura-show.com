@@ -18,3 +18,5 @@ Tags
     spaceless
     autoescape
     raw
+    flush
+    do

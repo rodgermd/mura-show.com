@@ -8,8 +8,8 @@ namespace Doctrine\Tests\Models\Company;
  * @InheritanceType("SINGLE_TABLE")
  * @DiscriminatorColumn(name="discr", type="string")
  * @DiscriminatorMap({
- *     "fix"       = "CompanyFixContract", 
- *     "flexible"  = "CompanyFlexContract", 
+ *     "fix"       = "CompanyFixContract",
+ *     "flexible"  = "CompanyFlexContract",
  *     "flexultra" = "CompanyFlexUltraContract"
  * })
  */
@@ -21,7 +21,7 @@ abstract class CompanyContract
     private $id;
 
     /**
-     * @ManyToOne(targetEntity="CompanyEmployee")
+     * @ManyToOne(targetEntity="CompanyEmployee", inversedBy="soldContracts")
      */
     private $salesPerson;
 
@@ -32,7 +32,7 @@ abstract class CompanyContract
     private $completed = false;
 
     /**
-     * @ManyToMany(targetEntity="CompanyEmployee")
+     * @ManyToMany(targetEntity="CompanyEmployee", inversedBy="contracts")
      * @JoinTable(name="company_contract_employees",
      *    joinColumns={@JoinColumn(name="contract_id", referencedColumnName="id", onDelete="CASCADE")},
      *    inverseJoinColumns={@JoinColumn(name="employee_id", referencedColumnName="id")}

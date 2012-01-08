@@ -54,7 +54,7 @@ zend_module_entry twig_module_entry = {
 	PHP_RSHUTDOWN(twig),
 	PHP_MINFO(twig),
 #if ZEND_MODULE_API_NO >= 20010901
-	"1.4.0",
+	PHP_TWIG_VERSION,
 #endif
 	STANDARD_MODULE_PROPERTIES
 };
@@ -100,7 +100,8 @@ PHP_RSHUTDOWN_FUNCTION(twig)
 PHP_MINFO_FUNCTION(twig)
 {
 	php_info_print_table_start();
-	php_info_print_table_header(2, "twig support", "enabled");
+	php_info_print_table_header(2, "Twig support", "enabled");
+	php_info_print_table_row(2, "Version", PHP_TWIG_VERSION);
 	php_info_print_table_end();
 
 	DISPLAY_INI_ENTRIES();
@@ -148,7 +149,7 @@ zval *TWIG_GET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 
         if (!retval) {
             if (!EG(exception)) {
-                zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+                zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
             }
             return NULL;
         }
@@ -171,7 +172,7 @@ int TWIG_ISSET_ARRAYOBJECT_ELEMENT(zval *object, zval *offset TSRMLS_DC)
 
 		if (!retval) {
 			if (!EG(exception)) {
-				zend_error_noreturn(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
+				zend_error(E_ERROR, "Undefined offset for object of type %s used as array", ce->name);
 			}
 			return 0;
 		}
@@ -619,16 +620,20 @@ static int twig_add_method_to_class(void *pDest TSRMLS_DC, int num_args, va_list
 {
 	zval *retval;
 	char *item;
+	size_t item_len;
 	zend_function *mptr = (zend_function *) pDest;
 
-	if ( ! (mptr->common.fn_flags & ZEND_ACC_PUBLIC ) ) {
+	if (!(mptr->common.fn_flags & ZEND_ACC_PUBLIC)) {
 		return 0;
 	}
 
 	retval = va_arg(args, zval*);
-	item = php_strtolower(mptr->common.function_name, strlen(mptr->common.function_name));
 
-	add_assoc_string(retval, item, item, 1);
+	item_len = strlen(mptr->common.function_name);
+	item = estrndup(mptr->common.function_name, item_len);
+	php_strtolower(item, item_len);
+
+	add_assoc_stringl_ex(retval, item, item_len+1, item, item_len, 0);
 
 	return 0;
 }
@@ -640,7 +645,7 @@ static int twig_add_property_to_class(void *pDest TSRMLS_DC, int num_args, va_li
 	char *class_name, *prop_name;
 	zend_property_info *pptr = (zend_property_info *) pDest;
 
-	if ( ! (pptr->flags & ZEND_ACC_PUBLIC ) ) {
+	if (!(pptr->flags & ZEND_ACC_PUBLIC)) {
 		return 0;
 	}
 
@@ -773,7 +778,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
+			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
 				return;
 			}
 /*
@@ -813,10 +818,17 @@ PHP_FUNCTION(twig_template_get_attributes)
 		throw new Twig_Error_Runtime(sprintf('Item "%s" for "%s" does not exist', $item, implode(', ', array_keys($object))));
 	}
 */
-		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
+		if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
 			RETURN_FALSE;
 		}
-		TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, TWIG_IMPLODE_ARRAY_KEYS(", ", object TSRMLS_CC));
+		if (Z_TYPE_P(object) == IS_ARRAY) {
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"Array\" does not exist", item);
+		} else {
+			Z_ADDREF_P(object);
+			convert_to_string_ex(&object);
+			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Item \"%s\" for \"%s\" does not exist", item, Z_STRVAL_P(object));
+			zval_ptr_dtor(&object);
+		}
 		return;
 	}
 /*
@@ -949,7 +961,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 			if (isDefinedTest) {
 				RETURN_FALSE;
 			}
-			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC) TSRMLS_CC) {
+			if (ignoreStrictCheck || !TWIG_CALL_BOOLEAN(TWIG_PROPERTY_CHAR(template, "env" TSRMLS_CC), "isStrictVariables" TSRMLS_CC)) {
 				return;
 			}
 			TWIG_THROW_EXCEPTION("Twig_Error_Runtime" TSRMLS_CC, "Method \"%s\" for object \"%s\" does not exist", item, TWIG_GET_CLASS_NAME(object TSRMLS_CC));
