@@ -6,6 +6,7 @@ $(function(){
       slideshowAuto: false,
       loop: false,
       rel: 'show-in-colorbox', 
+      href: function() { return $.colorbox.element().attr('target-image')},
       transition:"elastic" });
     
     if (location.hash.length) {

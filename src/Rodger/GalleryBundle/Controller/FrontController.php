@@ -64,12 +64,12 @@ class FrontController extends CommonController {
   public function yearsMenuAction() {
     $this->preExecute();
     $years = $this->em->getRepository('RodgerGalleryBundle:Image')->getYears($this->user);
-    return array('years' => $years, 'selected' => $this->get_selected_year());
+    return array('years' => array_merge(array('all'), $years), 'selected' => $this->get_selected_year());
   }
   
   /**
    * Filters years
-   * @Route("/year/{year}", name="filter.year", requirements={"year"="20\d{2}"})
+   * @Route("/year/{year}", name="filter.year", requirements={"year"="20\d{2}|all"})
    * @param type $year 
    */
   public function filterYearAction($year) {

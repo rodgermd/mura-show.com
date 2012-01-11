@@ -27,7 +27,7 @@ class AlbumRepository extends EntityRepository
     if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
       $qb->where('a.is_private = false AND i.is_private = false');
     }
-    if ($filters['year']) {
+    if (is_numeric($filters['year'])) {
       $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
     }
     if (count($filters['tags'])) {
@@ -59,7 +59,7 @@ class AlbumRepository extends EntityRepository
     if (count($tags)) {
       $qb->andWhere($qb->expr()->orX($qb->expr()->in('at.name', $tags), $qb->expr()->in('it.name', $tags)));
     }
-    if ($year)
+    if (is_numeric($year))
     {
       $qb->andWhere($qb->expr()->eq('i.year', $year));
     }

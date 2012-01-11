@@ -19,7 +19,7 @@ class ImageRepository extends EntityRepository
           ->addOrderBy('i.uploaded_at', 'desc');
     
     if (count($filters)) {
-      if ($filters['year']) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
+      if (is_numeric($filters['year'])) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
       if (count($filters['tags'])) $qb->innerJoin ('i.Tags', 't', 'WITH', $qb->expr()->in('t.name', $filters['tags']));
     }
     
@@ -62,7 +62,6 @@ class ImageRepository extends EntityRepository
   public function getFilteredAlbumImages(Album $album, array $filters, $user)
   {
     $qb = $this->getAccessibleImagesBuilder($album, $user);
-    //if ($filters['year']) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
     if (count($filters['tags'])) {
       $qb->innerJoin('i.Album', 'a')
          ->leftJoin('a.Tags', 'at')

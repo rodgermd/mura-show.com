@@ -55,7 +55,7 @@ class TagRepository extends EntityRepository
   public function getFilteredAlbumsTags($user, $year = null, array $use_tags = array()) {
     $qb = $this->createQueryBuilder('t')->select('t')->orderBy('t.name');
     
-    if ($year) {
+    if (is_numeric($year)) {
       $qb1 = $this->createQueryBuilder('t');
           $qb1->select('t')
               ->innerJoin('t.Images', 'i', 'WITH', $qb1->expr()->eq('i.year', $year))
@@ -96,8 +96,7 @@ class TagRepository extends EntityRepository
             ->orderBy('t.name');
     $qb->andWhere($qb->expr()->eq('i.album_id', $album->getId()));
     
-    //if (count($filters['tags'])) $qb->andWhere($qb->expr()->in('t.name', $filters['tags']));
-    if ($filters['year']) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
+    if (is_numeric($filters['year'])) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
     if (!$user instanceof UserInterface) $qb->andWhere('i.is_private = false');
     
     return $qb->getQuery()->execute();

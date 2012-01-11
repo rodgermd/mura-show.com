@@ -11,7 +11,7 @@
 <ul class="album-images">
 {% for image in images %}
 <li class="album-image">
-  <a href="{{ image.thumbnail('resource') }}" title="{{ image }}" class="show-in-colorbox" name="image-{{ image.id }}">
+  <a href="{{ path('image.show', {'album' : album.slug, 'id' : image.id}) }}" target-image="{{ image.thumbnail('resource') }}" title="{{ image }}" class="show-in-colorbox" name="image-{{ image.id }}">
     <img data-original="{{ image.thumbnail( (images | length) > 30 ? 'list' : 'list_medium')}}" 
          class="lazy thumbnails thumbnails-{{(images | length) > 30 ? 'list' : 'list-medium' }}" alt=""/>
   </a>

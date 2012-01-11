@@ -5,3 +5,4 @@
 \.git
 ^uploads/images/
 ^web/gallery/
+^vendor/
