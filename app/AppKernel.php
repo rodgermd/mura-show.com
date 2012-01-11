@@ -32,6 +32,7 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
             $bundles[] = new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle();
             $bundles[] = new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle();
+            $bundles[] = new JMS\TranslationBundle\JMSTranslationBundle();
         }
         
         if ('test' === $this->getEnvironment()) {

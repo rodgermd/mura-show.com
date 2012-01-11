@@ -107,3 +107,10 @@
 [DoctrineMigrationsBundle]
     git=http://github.com/symfony/DoctrineMigrationsBundle.git
     target=/bundles/Symfony/Bundle/DoctrineMigrationsBundle
+
+[JMSTranslationBundle]
+    git=http://github.com/schmittjoh/JMSTranslationBundle.git
+    target=/bundles/JMS/TranslationBundle
+
+[php-parser]
+    git=http://github.com/nikic/PHP-Parser.git
