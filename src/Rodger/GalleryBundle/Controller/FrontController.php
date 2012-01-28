@@ -30,17 +30,23 @@ class FrontController extends CommonController {
     
     $images_holder = array();
     $images_manager = $this->em->getRepository('RodgerGalleryBundle:Image');
+    $counter = 0;
     foreach($albums as $album) {
       $album = $album[0];
-      $images = $images_manager->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $filters)
-            ->setMaxResults(15)
-            ->getQuery()->execute();
-      if (!count($images)) {
-        $images = $images_manager->getLatestInAlbumQueryBuilder($album, (bool)$this->user)
-            ->setMaxResults(15)
-            ->getQuery()->execute();
+      $images = array();
+
+      if ($counter++ < 20) {  
+        $images = $images_manager->getLatestInAlbumQueryBuilder($album, (bool)$this->user, $filters)
+              ->setMaxResults(15)
+              ->getQuery()->execute();
+        if (!count($images)) {
+          $images = $images_manager->getLatestInAlbumQueryBuilder($album, (bool)$this->user)
+              ->setMaxResults(15)
+              ->getQuery()->execute();
+        }
       }
       $images_holder[$album->getSlug()] = $images;
+      
     }
     
     return array('albums' => $albums, 'images' => $images_holder, 'filters' => $filters);
