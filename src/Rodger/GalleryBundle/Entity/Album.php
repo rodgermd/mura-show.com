@@ -246,4 +246,10 @@ class Album {
     return sprintf("%s/gallery/%s", $prefix, $this->getSlug());
   }
 
+  public function delete_images()
+  {
+    exec(sprintf("rm -rf %s", $this->getUploadRootDir()));
+    exec(sprintf("rm -rf %s", $this->getThumbnailsFolder(true)));
+  }
+
 }

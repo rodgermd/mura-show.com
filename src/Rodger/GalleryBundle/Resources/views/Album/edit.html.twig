@@ -29,5 +29,6 @@
 {{ parent() }}
 {% if album is defined %}
   <li><a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ 'Show album' | trans }}</a></li>
+  <li><a href="{{ path('albums.delete', {'slug' : album.slug}) }}" onclick="return confirm('{{ 'Are you sure to delete this album?' | trans }}')">{{ 'Delete album' | trans }}</a></li>
 {% endif %}
 {% endblock primary_menu_items %}

@@ -9,7 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommonController extends Controller
 {
-  public $user, $em, $session;
+  public $user, $session;
+  /**
+   * @var \Doctrine\ORM\EntityManager $em
+   */
+  public $em;
+
   const FILTER_TAGS_KEY = 'filter.tags';
   const FILTER_YEAR_KEY = 'filter.year';
   

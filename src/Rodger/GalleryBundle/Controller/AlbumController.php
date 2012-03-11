@@ -45,9 +45,20 @@ protected $bulk_form, $validating_object, $paginator;
   public function editAction(Album $album) {
     $form = $this->process_album($album);
     if ($form instanceof \Symfony\Component\HttpFoundation\RedirectResponse) return $form;
-    
-    
+
     return array('form' => $form->createView(), 'album' => $album);
+  }
+
+  /**
+   * @Route("/delete/{slug}", name="albums.delete")
+   * @Template()
+   * @Secure(roles="ROLE_USER")
+   */
+  public function deleteAction(Album $album) {
+    $album->delete_images();
+    $this->em->remove($album);
+    $this->em->flush();
+    return $this->redirect($this->generateUrl('albums'));
   }
   
   private function process_album(Album $album) {
@@ -168,8 +179,8 @@ protected $bulk_form, $validating_object, $paginator;
     $this->paginator->setMaxPerPage(20);
     $this->paginator->setCurrentPage($page);
     $this->paginator->getNbPages();
-
-    $ids = array_map(function($image) {return $image->getId();}, $this->paginator->getCurrentPageResults());
+    $ids = array();
+    foreach($this->paginator->getCurrentPageResults() as $img) $ids[] = $img->getId();
 
     $this->validating_object = new ValidateHelpers\BulkImages(
             $query_builder->andWhere($query_builder->expr()->in('i.id', count($ids) ? $ids : array(0))),
