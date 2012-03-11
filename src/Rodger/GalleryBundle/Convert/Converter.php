@@ -87,15 +87,17 @@ class Converter
   
   public function convert()
   {
+    $operator = $this->template->getWidth() > 50 ? 'resize' : 'thumbnail';
     switch ($this->template->getCrop()):
       case ImageSize::FITMODE_FIT:
         $inflate_modifier = ($this->template->getHeight()) ? '>' : '';
-        $command = sprintf('-quality %d -thumbnail "%dx%s%s"', 81, $this->template->getWidth(), $this->template->getHeight(), $inflate_modifier);
+        $command = sprintf('-quality %d -%s "%dx%s%s"', 81, $this->template->getWidth(), $operator, $this->template->getHeight(), $inflate_modifier);
 
         break;
 
       case ImageSize::FITMODE_CROP:
-        $command = sprintf('-resize %dx%d^ -gravity center -extent %dx%d -quality %d', 
+        $command = sprintf('-%s %dx%d^ -gravity center -extent %dx%d -quality %d',
+                $operator,
                 $this->template->getWidth(), $this->template->getHeight(),
                 $this->template->getWidth(), $this->template->getHeight(),
                 81);
