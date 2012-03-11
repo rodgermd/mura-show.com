@@ -91,7 +91,7 @@ class Converter
     switch ($this->template->getCrop()):
       case ImageSize::FITMODE_FIT:
         $inflate_modifier = ($this->template->getHeight()) ? '>' : '';
-        $command = sprintf('-quality %d -%s "%dx%s%s"', 81, $this->template->getWidth(), $operator, $this->template->getHeight(), $inflate_modifier);
+        $command = sprintf('-quality %d -%s "%dx%s%s"', 81, $operator, $this->template->getWidth(), $this->template->getHeight(), $inflate_modifier);
 
         break;
 
