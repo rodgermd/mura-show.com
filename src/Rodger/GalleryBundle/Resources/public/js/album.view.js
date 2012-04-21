@@ -4,6 +4,7 @@ $(function(){
       slideshow : true, 
       slideshowSpeed: 4000,
       slideshowAuto: false,
+      maxHeight: '100%',
       loop: false,
       rel: 'show-in-colorbox', 
       href: function() { return $.colorbox.element().attr('target-image')},
