@@ -24,20 +24,20 @@ class User extends BaseUser {
 
   /**
    * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Image", mappedBy="User", cascade={"all"})
-   * @var array Images 
+   * @var array Images
    */
-  private $Images;
+  protected $Images;
 
   /**
    * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Album", mappedBy="User", cascade={"all"})
-   * @var array Albums 
+   * @var array Albums
    */
-  private $Albums;
-  
+  protected $Albums;
+
   /**
    * Get id
    *
-   * @return integer 
+   * @return integer
    */
   public function getId() {
     return $this->id;

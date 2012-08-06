@@ -1,10 +1,10 @@
 [symfony]
     git=http://github.com/symfony/symfony.git
-    version=v2.0.11
+    version=origin/2.0
 
 [twig]
     git=http://github.com/fabpot/Twig.git
-    version=v1.6.1
+    version=v1.8.2
 
 [monolog]
     git=http://github.com/Seldaek/monolog.git
@@ -24,7 +24,7 @@
 
 [swiftmailer]
     git=http://github.com/swiftmailer/swiftmailer.git
-    version=v4.1.5
+    version=v4.2.0
 
 [assetic]
     git=http://github.com/kriswallsmith/assetic.git
@@ -50,7 +50,7 @@
 [SensioDistributionBundle]
     git=http://github.com/sensio/SensioDistributionBundle.git
     target=/bundles/Sensio/Bundle/DistributionBundle
-    version=origin/1.0
+    version=origin/2.0
 
 [SensioGeneratorBundle]
     git=http://github.com/sensio/SensioGeneratorBundle.git
@@ -60,22 +60,25 @@
 [AsseticBundle]
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
-    version=v1.0.1
+    version=origin/2.0
 
 [doctrine-fixtures]
     git=http://github.com/doctrine/data-fixtures.git
 
 [DoctrineFixturesBundle]
-    git=http://github.com/symfony/DoctrineFixturesBundle.git
+    git=http://github.com/doctrine/DoctrineFixturesBundle.git
     target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+    version=origin/2.0
 
 [DoctrineExtensions]
     git=git://github.com/l3pp4rd/DoctrineExtensions.git
     target=/bundles/gedmo-doctrine-extensions
+    version=origin/2.2.x
 
 [DoctrineExtensionsBundle]
     git=git://github.com/stof/StofDoctrineExtensionsBundle.git
     target=/bundles/Stof/DoctrineExtensionsBundle
+    version=origin/1.0.x
 
 [Fanta]
     git=git://github.com/whiteoctober/Pagerfanta.git
@@ -88,6 +91,7 @@
 [FOSUserBundle]
     git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
     target=bundles/FOS/UserBundle
+    version=1.2.0
 
 [BCCExtraToolsBundle] 
     git=http://github.com/michelsalib/BCCExtraToolsBundle.git 
@@ -105,8 +109,9 @@
     git=http://github.com/doctrine/migrations.git
 
 [DoctrineMigrationsBundle]
-    git=http://github.com/symfony/DoctrineMigrationsBundle.git
+    git=http://github.com/doctrine/DoctrineMigrationsBundle.git
     target=/bundles/Symfony/Bundle/DoctrineMigrationsBundle
+    version=origin/2.0
 
 [JMSTranslationBundle]
     git=http://github.com/schmittjoh/JMSTranslationBundle.git

@@ -1,6 +1,6 @@
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: 
+        FOS\UserBundle\Model\UserInterface:
           algorithm:   sha1
           iterations:  84
           encode_as_base64: false
@@ -11,14 +11,14 @@ security:
 
     providers:
       fos_userbundle:
-        id: fos_user.user_manager
+          id: fos_user.user_manager
 
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        fos:
+        main:
             pattern: ^/
             form_login:
                 provider: fos_userbundle
