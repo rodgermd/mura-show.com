@@ -1,49 +1,39 @@
 # Doctrine2 behavioral extensions
 
-**Version 2.3.1-DEV**
-
-[![Build Status](https://secure.travis-ci.org/l3pp4rd/DoctrineExtensions.png?branch=master)](http://travis-ci.org/l3pp4rd/DoctrineExtensions)
-
-**Note:** tag **2.2.1** was removed, because it was published with backward incompatible changes by
-misstake. If you have used **2.2.1** tag as a dependency version, please switch to **2.3.0** it is
-a dirrect replacement of the removed tag.
-
-**Note:** Use 2.1.x or 2.2.x tag in order to use extensions based on Doctrine2.x.x component versions. Currently
-master branch is based on 2.3.x versions and may not work with older components.
+**Version 2.2-DEV**
 
 ### Latest updates
 
-**2012-03-04**
+**Note:** Use 2.1.x tag in order to use extensions based on Doctrine2.1.x versions. Currently
+master branch is based on 2.2.x versions and may not work with 2.1.x components.
 
-- We should be very grateful for contributions of [comfortablynumb](http://github.com/comfortablynumb)
-He has contributed most to these extensions and recently - long waited [softdeleteable
-behavior](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/softdeleteable.md) for **ORM** users. Also most important, there
-was a tree extension missing for **ODM** now everyone can enjoy [materialized path tree strategy](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/tree.md#materialized-path) for **ORM** including.
+**2012-01-09**
 
-**2012-02-26**
+- My [blog](http://gediminasm.org) was recently rebuilt from scratch using symfony2.
+All recent documentation based on [extension docs](https://github.com/l3pp4rd/DoctrineExtensions/tree/master/doc)
+will be available there too. Also it will be a good example for symfony2 users.
 
-- Removed slug handlers, this functionality brought complucations which could not be maintained.
+**2012-01-04**
 
-**2012-02-15**
+- Refactored translatable to be able to persist, update many translations
+using repository, [issue #224](https://github.com/l3pp4rd/DoctrineExtensions/issues/224)
 
-- Add option to force **Translatable** store translation in default locale like any other.
-See [documentation](http://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/translatable.md#advanced-examples)
+**2011-12-20**
 
-**2012-01-29**
+- Refactored html tree building function, see [documentation](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/doc/tree.md)
+- Added [example](https://github.com/l3pp4rd/DoctrineExtensions/tree/master/example)
+on how to create entity manager with extensions hooked using environment without framework
+- To run this example follow the documentation on the bottom of this document
 
-- Translatable finally has **Personal Translations** which can relate through a real **foreign key**
-constraint and be used as a standard doctrine collection. This allows to configure domain
-objects anyway you prefere and still enjoy all features **Translatable** provides.
-- There were **BC** breaks introduced in **master** branch of extensions which is
-based on **doctrine2.3.x** version. If you are not interested in upgrading you can
-safely checkout at **2.2.x** or **2.1.x** [tag](http://github.com/l3pp4rd/DoctrineExtensions/tags).
-To upgrade your source code follow the [upgrade guide](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/upgrade/2-3-0.md)
-- Library now can map only **MappedSuperclass**es which would avoid generation of **ext_**
-tables which might not be used. Also it provides [convinient methods](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/lib/Gedmo/DoctrineExtensions.php#L66)
-to hook extension metadata drivers into metadata driver chain.
-- [Example demo application](https://github.com/l3pp4rd/DoctrineExtensions/blob/master/example/em.php) has a detailed configuration provided, which
-explains and shows how extensions can or should be used with **Doctrine2** ORM. To install
-it follow the [steps](#example-demo).
+**2011-10-30**
+
+- Support for doctrine common **2.2.x** with backward compatibility. Be sure to use all components
+from the specific version, etc.: **2.2.x** or **2.1.x** both are supported
+
+**2011-10-23**
+
+- [@everzet](https://github.com/everzet) has contributed the **Translator** behavior, which indeed
+is a more explicit way of handling translations in your projects
 
 ### Summary and features
 
@@ -52,15 +42,13 @@ offer new functionality or tools to use Doctrine2 more efficently. This package 
 used behaviors which can be easily attached to your event system of Doctrine2 and handle the
 records being flushed in the behavioral way. List of extensions:
 
-- **Tree** - this extension automates the tree handling process and adds some tree specific functions on repository.
-(**closure**, **nestedset** or **materialized path**)
-- **Translatable** - gives you a very handy solution for translating records into diferent languages. Easy to setup, easier to use.
-- **Sluggable** - urlizes your specified fields into single unique slug
-- **Timestampable** - updates date fields on create, update and even property change.
-- **Loggable** - helps tracking changes and history of objects, also supports version managment.
-- **Sortable** - makes any document or entity sortable
-- **Translator** - explicit way to handle translations
-- **Softdeleteable** - allows to implicitly remove records
+- Tree - this extension automates the tree handling process and adds some tree specific functions on repository. (closure or nestedset)
+- Translatable - gives you a very handy solution for translating records into diferent languages. Easy to setup, easier to use.
+- Sluggable - urlizes your specified fields into single unique slug
+- Timestampable - updates date fields on create, update and even property change.
+- Loggable - helps tracking changes and history of objects, also supports version managment.
+- Sortable - makes any document or entity sortable
+- Translator - explicit way to handle translations
 
 Currently these extensions support **Yaml**, **Annotation**  and **Xml** mapping. Additional mapping drivers
 can be easily implemented using Mapping extension to handle the additional metadata mapping.
@@ -94,7 +82,6 @@ List of extensions which support ODM
 - Timestampable
 - Loggable
 - Translator
-- Tree (Materialized Path strategy for now)
 
 All these extensions can be nested together and mapped in traditional ways - annotations,
 xml or yaml
@@ -113,8 +100,6 @@ To setup and run tests follow these steps:
 - run: **phpunit -c tests**
 - optional - run mongodb in background to complete all tests
 
-<a name="example-demo"></a>
-
 ### Running the example:
 
 To setup and run example follow these steps:
@@ -128,12 +113,16 @@ To setup and run example follow these steps:
 
 ### Contributors:
 
-Thanks to [everyone participating](http://github.com/l3pp4rd/DoctrineExtensions/contributors) in
-the development of these great Doctrine2 extensions!
-
-And especialy ones who create and maintain new extensions:
-
+- acasademont [acasademont](https://github.com/acasademont)
 - Lukas Botsch [lbotsch](http://github.com/lbotsch)
+- Daniel Gomes [danielcsgomes](http://github.com/danielcsgomes)
+- megabite [oscarballadares](http://github.com/oscarballadares)
+- DinoWeb [dinoweb](http://github.com/dinoweb)
+- Miha Vrhovnik [mvrhov](http://github.com/mvrhov)
+- Clément JOBEILI [dator](http://github.com/dator)
+- Illya Klymov [xanf](http://github.com/xanf)
 - Gustavo Adrian [comfortablynumb](http://github.com/comfortablynumb)
 - Boussekeyt Jules [gordonslondon](http://github.com/gordonslondon)
+- Christophe Coevoet [stof](http://github.com/stof)
 - Kudryashov Konstantin [everzet](http://github.com/everzet)
+- Klein Florian [docteurklein](http://github.com/docteurklein)

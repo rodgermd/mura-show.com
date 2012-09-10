@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -54,6 +54,16 @@ class PHPCRPurger implements PurgerInterface
     public function setDocumentManager(DocumentManager $dm)
     {
         $this->dm = $dm;
+    }
+
+    /**
+     * Retrieve the DocumentManager instance this purger instance is using.
+     *
+     * @return \Doctrine\ODM\PHPCR\DocumentManager
+     */
+    public function getObjectManager()
+    {
+        return $this->dm;
     }
 
     /**

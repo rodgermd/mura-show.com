@@ -2,12 +2,9 @@
 
 namespace Gedmo\Translatable\Document\Repository;
 
-use Gedmo\Translatable\TranslatableListener;
+use Gedmo\Translatable\TranslationListener;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\Cursor;
-use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\UnitOfWork;
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Gedmo\Tool\Wrapper\MongoDocumentWrapper;
 use Gedmo\Translatable\Mapping\Event\Adapter\ODM as TranslatableAdapterODM;
 use Doctrine\ODM\MongoDB\Mapping\Types\Type;
@@ -25,23 +22,12 @@ use Doctrine\ODM\MongoDB\Mapping\Types\Type;
 class TranslationRepository extends DocumentRepository
 {
     /**
-     * Current TranslatableListener instance used
+     * Current TranslationListener instance used
      * in EntityManager
      *
-     * @var TranslatableListener
+     * @var TranslationListener
      */
     private $listener;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(DocumentManager $dm, UnitOfWork $uow, ClassMetadata $class)
-    {
-        if ($class->getReflectionClass()->isSubclassOf('Gedmo\Translatable\Document\MappedSuperclass\AbstractPersonalTranslation')) {
-            throw new \Gedmo\Exception\UnexpectedValueException('This repository is useless for personal translations');
-        }
-        parent::__construct($dm, $uow, $class);
-    }
 
     /**
      * Makes additional translation of $document $field into $locale
@@ -56,7 +42,7 @@ class TranslationRepository extends DocumentRepository
     public function translate($document, $field, $locale, $value)
     {
         $meta = $this->dm->getClassMetadata(get_class($document));
-        $listener = $this->getTranslatableListener();
+        $listener = $this->getTranslationListener();
         $config = $listener->getConfiguration($this->dm, $meta->name);
         if (!isset($config['fields']) || !in_array($field, $config['fields'])) {
             throw new \Gedmo\Exception\InvalidArgumentException("Document: {$meta->name} does not translate field - {$field}");
@@ -196,17 +182,17 @@ class TranslationRepository extends DocumentRepository
     }
 
     /**
-     * Get the currently used TranslatableListener
+     * Get the currently used TranslationListener
      *
      * @throws \Gedmo\Exception\RuntimeException - if listener is not found
-     * @return TranslatableListener
+     * @return TranslationListener
      */
-    private function getTranslatableListener()
+    private function getTranslationListener()
     {
         if (!$this->listener) {
             foreach ($this->dm->getEventManager()->getListeners() as $event => $listeners) {
                 foreach ($listeners as $hash => $listener) {
-                    if ($listener instanceof TranslatableListener) {
+                    if ($listener instanceof TranslationListener) {
                         $this->listener = $listener;
                         break;
                     }
