@@ -2,12 +2,12 @@
 namespace Rodger\GalleryBundle\Form;
 
 use Symfony\Component\Form\AbstractType,
-    Symfony\Component\Form\FormBuilder;
+    Symfony\Component\Form\FormBuilderInterface;
 
 class UploadType extends AbstractType
 {
   public $keywords_autocomplete_source;
-  public function buildForm(FormBuilder $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder->add('file', 'file', array('required' => false))
             ->add('default_name')

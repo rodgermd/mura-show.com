@@ -2,13 +2,13 @@
 namespace Rodger\GalleryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class AlbumImagesType extends AbstractType
 {
   protected $images, $thumbnail_template = 'small';
   const ACTION_DELETE = 'delete';
-  public function buildForm(FormBuilder $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder->add('images', 'image_choice', array(
         'required' => false, 

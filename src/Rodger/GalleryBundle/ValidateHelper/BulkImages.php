@@ -62,10 +62,9 @@ class BulkImages {
     $captured_ids = array_map(function($image){ return $image->getId(); }, $this->images->toArray());
     
     $property_path = $context->getPropertyPath() . '.images';
-    $context->setPropertyPath($property_path);
-    
+
     if (!count($captured_ids)) {
-      $context->addViolation('Please select at least one image!', array(), null);
+      $context->addViolationAtPath($property_path, 'Please select at least one image!', array(), null);
       return;
     }
     

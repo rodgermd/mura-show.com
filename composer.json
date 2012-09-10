@@ -20,8 +20,6 @@
     "sensio/generator-bundle":"2.1.*",
     "jms/security-extra-bundle":"1.2.*",
     "jms/di-extra-bundle":"1.1.*",
-    "doctrine/doctrine-migrations-bundle":"dev-master",
-    "doctrine/doctrine-fixtures-bundle":"dev-master",
     "stof/doctrine-extensions-bundle":"dev-master",
     "friendsofsymfony/user-bundle":"*",
     "white-october/pagerfanta-bundle":"dev-master"

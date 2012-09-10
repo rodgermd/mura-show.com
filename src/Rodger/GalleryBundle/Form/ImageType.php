@@ -1,12 +1,12 @@
 <?php
 namespace Rodger\GalleryBundle\Form;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageType extends AbstractType
 {
   public $keywords_autocomplete_source;
-  public function buildForm(FormBuilder $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder->add('name')
             ->add('album', 'entity', array('class' => 'RodgerGalleryBundle:Album'))

@@ -5,7 +5,7 @@
 </h1>
 <img src="{{ image.thumbnail('resource') }}" alt="" id="main-image"/>
 
-<p>{% if image.takenAt  %} {{ image.takenAt | localeDate('long') }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
+<p>{% if image.takenAt  %} {{ image.takenAt | date }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
 
 {% if image.tags | length %}
 <h4>{{ 'Tags' | trans }}:</h4>

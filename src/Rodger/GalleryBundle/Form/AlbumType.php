@@ -1,13 +1,13 @@
 <?php
 namespace Rodger\GalleryBundle\Form;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Rodger\GalleryBundle\Entity\Upload;
 
 class AlbumType extends AbstractType
 {
   public $keywords_autocomplete_source;
-  public function buildForm(FormBuilder $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $upload_type = new UploadType(new Upload());
     $upload_type->setKeywordsAutocompleteSource($this->keywords_autocomplete_source);

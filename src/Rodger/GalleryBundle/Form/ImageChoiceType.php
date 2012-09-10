@@ -7,14 +7,10 @@ use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Exception\FormException;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\Extension\Core\EventListener\FixRadioInputListener;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\Extension\Core\DataTransformer\ScalarToChoiceTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\ScalarToBooleanChoicesTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\ArrayToChoicesTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\ArrayToBooleanChoicesTransformer;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageChoiceType extends AbstractType {
 
@@ -26,11 +22,11 @@ class ImageChoiceType extends AbstractType {
     return array('multiple' => true, 'expanded' => true, 'template' => '');
   }
 
-  public function getParent(array $options) {
+  public function getParent() {
     return 'choice';
   }
 
-  public function buildForm(FormBuilder $builder, array $options) {
+  public function buildForm(FormBuilderInterface $builder, array $options) {
     if ($options['choice_list'] && !$options['choice_list'] instanceof ChoiceListInterface) {
       throw new FormException('The "choice_list" must be an instance of "Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface".');
     }
@@ -92,7 +88,7 @@ class ImageChoiceType extends AbstractType {
       } else {
         $builder
                 ->appendClientTransformer(new ScalarToBooleanChoicesTransformer($options['choice_list']))
-                ->addEventSubscriber(new FixRadioInputListener(), 10)
+                ->addEventSubscriber(new FixRadioInputListener($options['choice_list']), 10)
         ;
       }
     } else {

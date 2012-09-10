@@ -29,7 +29,7 @@
           <td>{{ image.id }}</td>
           <td><img src="{{ image.thumbnail('list') }}?{{ nocache }}" alt=""/></td>
           <td>{{ image.name }}</td>
-          <td>{{ image.takenAt | localeDate('long') }}</td>
+          <td>{{ image.takenAt | date }}</td>
           <td>{{ image.getKeywords() }}</td>
           <td>{{ image.isPrivate ? 'Private' | trans : '' }}</td>
           <td><a href="{{ path ('image.edit', { 'id': image.id }) }}">{{ 'edit' | trans }}</a></td>
