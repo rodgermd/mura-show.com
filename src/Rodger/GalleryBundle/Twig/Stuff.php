@@ -23,7 +23,7 @@
     public function getFilters()
     {
       return array(
-        'thumbnail'      => new Twig_Filter_Method($this, 'thumbnail', array('is_safe' => true)),
+        'thumbnail'      => new Twig_Filter_Method($this, 'thumbnail', array('is_safe' => array('html'))),
         'thumbnail_path' => new Twig_Filter_Method($this, 'thumbnail_path'),
       );
     }
