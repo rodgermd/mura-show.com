@@ -5,7 +5,7 @@
       {% for image in album.images %}
         <li>
           <input type="checkbox" name="images[image][]" value="{{ image.id }}" id="images_image_{{ image.id }}"/>
-          <img src="{{ image.thumbnail('small') }}" alt=""/>
+          <img src="{{ image | thumbnail('list.small') }}" alt=""/>
         </li>
       {% endfor %}
     </ul>

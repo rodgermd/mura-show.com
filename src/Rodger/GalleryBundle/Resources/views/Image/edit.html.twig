@@ -3,7 +3,7 @@
 <h1>{{ 'Edit %image%' | trans({'%image%' : image}) }}
 <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug })}}" title="{{ image.album }}">[{{ image.album }}]</a>
 </h1>
-<img src="{{ image.thumbnail('edit') }}" alt=""/>
+<img src="{{ image | thumbnail('edit') }}" alt=""/>
 <form method="post" action="{{ path('image.update', { 'id': image.id }) }}">
 {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
 {{ form_widget(form) }}

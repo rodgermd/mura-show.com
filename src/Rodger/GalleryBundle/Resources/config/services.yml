@@ -1,0 +1,21 @@
+services:
+  kernel.listener.pre_execute_listener:
+    class: Rodger\GalleryBundle\Listener\PreExecuteListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  form.type.image_choice.addmethod:
+    class: Rodger\GalleryBundle\Form\ImageChoiceType
+    tags:
+      - { name: form.type, alias: image_choice }
+
+  form.type.image_checkbox.addmethod:
+    class: Rodger\GalleryBundle\Form\ImageCheckboxType
+    tags:
+      - { name: form.type, alias: image_checkbox }
+
+  twig.stuff:
+    class: Rodger\GalleryBundle\Twig\Stuff
+    arguments: [%web_root%, @imagine.templating.helper]
+    tags:
+      - { name: twig.extension}

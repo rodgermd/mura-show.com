@@ -1,0 +1,19 @@
+avalanche_imagine:
+  source_root: %kernel.root_dir%/../
+  driver: imagick
+  filters:
+    edit:
+      type:    thumbnail
+      options: { size: [800, 2000], mode: inbound, quality: 100, format: png }
+    list:
+      type:    thumbnail
+      options: { size: [75, 75], mode: outbound, quality: 70, format: jpg }
+    list.small:
+      type:    thumbnail
+      options: { size: [50, 50], mode: inbound, quality: 70, format: jpg }
+    list.medium:
+      type:    thumbnail
+      options: { size: [200, 200], mode: outbound, quality: 70, format: jpg }
+    resource:
+      type:    thumbnail
+      options: { size: [800, 600], mode: inbound, format: png }

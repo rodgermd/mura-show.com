@@ -1,6 +1,10 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: thumbnails.yml}
+
+parameters:
+  web_root: %kernel.root_dir%/../web
 
 framework:
     #esi:             ~

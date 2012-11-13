@@ -27,7 +27,7 @@
         <tr>
           <td><input type="checkbox" name="{{ form_name }}[images][{{ image.id }}]" value="{{ image.id }}"/></td>
           <td>{{ image.id }}</td>
-          <td><img src="{{ image.thumbnail('list') }}?{{ nocache }}" alt=""/></td>
+          <td><img src="{{ image | thumbnail_path('list') }}?{{ nocache }}" alt=""/></td>
           <td>{{ image.name }}</td>
           <td>{{ image.takenAt | date }}</td>
           <td>{{ image.getKeywords() }}</td>

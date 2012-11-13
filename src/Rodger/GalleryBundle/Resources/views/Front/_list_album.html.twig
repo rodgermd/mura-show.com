@@ -9,7 +9,7 @@
   {% for image in images %}
     <li class="album-image">
       <a href="{{ path('album.show', {'slug' : album.slug}) }}#image-{{ image.id }}">
-        <img data-original="{{ image.thumbnail('list') }}" src="" alt="" class="lazy thumbnails thumbnails-list"/>
+        <img data-original="{{ image | thumbnail_path('list') }}" src="" alt="" class="lazy thumbnails thumbnails-list"/>
       </a>
       </li>
   {% endfor %}

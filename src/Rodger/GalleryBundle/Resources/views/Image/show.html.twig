@@ -3,7 +3,7 @@
 <h1>{{ image }}
   <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug })}}" title="{{ image.album }}">[{{ image.album }}]</a>
 </h1>
-<img src="{{ image.thumbnail('resource') }}" alt="" id="main-image"/>
+<img src="{{ image | thumbnail('resource') }}" alt="" id="main-image"/>
 
 <p>{% if image.takenAt  %} {{ image.takenAt | date }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
 
