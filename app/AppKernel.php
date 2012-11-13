@@ -24,7 +24,6 @@
         new FOS\UserBundle\FOSUserBundle(),
         new Rodger\UserBundle\RodgerUserBundle(),
         new Rodger\GalleryBundle\RodgerGalleryBundle(),
-        new Rodger\ImageSizeBundle\RodgerImageSizeBundle(),
         new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
       );
 
