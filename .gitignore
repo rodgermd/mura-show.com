@@ -1,0 +1,12 @@
+/app/config/parameters.yml
+/app/cache
+/app/logs
+/app/bootstrap.cache
+/web/bundles
+/.idea
+/uploads/images/
+/web/gallery/
+/vendor/
+/app/SymfonyRequirements.php
+/composer.lock
+/composer.phar
