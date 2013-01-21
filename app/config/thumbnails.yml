@@ -1,6 +1,7 @@
 liip_imagine:
   driver: imagick
   data_root: %kernel.root_dir%/../uploads/images/
+  cache_clearer: false
 
   filter_sets:
     word_thumbnail:
