@@ -29,8 +29,7 @@ class TagController extends CommonController {
   /**
    * Renders album images tags
    * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
-   * @Route("/{id}")
-   * @param Album $album 
+   * @param Album $album
    */
   public function albumImagesAction(Album $album) {
     $this->preExecute();
