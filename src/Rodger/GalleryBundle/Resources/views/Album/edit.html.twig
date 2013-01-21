@@ -8,7 +8,7 @@
 </form>
 
 <div id="images-list-holder">
-  {% render "RodgerGalleryBundle:Album:adminList" with {'slug' : album.slug} %}
+  {% render controller("RodgerGalleryBundle:Album:adminList", {'slug' : album.slug}) %}
 </div>
 
 {% endblock body %}

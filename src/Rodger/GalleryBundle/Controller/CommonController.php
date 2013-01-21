@@ -22,7 +22,7 @@ class CommonController extends Controller
   {
     $token = $this->get('security.context')->getToken();
     $this->user = ($token && is_object($token->getUser())) ? $token->getUser() : null;
-    $this->em = $this->getDoctrine()->getEntityManager();
+    $this->em = $this->getDoctrine()->getManager();
     $this->session = $this->get('session');
   }
   

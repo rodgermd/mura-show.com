@@ -30,14 +30,12 @@ class BulkImages {
    * @var \Doctrine\ORM\QueryBuilder $query_builder
    */
   protected $query_builder;
-  protected $resource_template;
   protected $em;
   
   public function __construct($query, \Doctrine\ORM\EntityManager $em) {
     $this->em = $em;
     $this->images = new \Doctrine\Common\Collections\ArrayCollection();
     $this->query_builder = $query;
-    $this->resource_template = $this->em->getRepository('RodgerImageSizeBundle:ImageSize')->find('resource');
   }
   
   public static function getActions() {

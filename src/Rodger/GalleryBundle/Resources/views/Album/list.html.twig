@@ -1,9 +1,9 @@
 <div id="images-list-wrapper">
-  <p class="source hidden">{{ path('admin.images.list', {'slug' : album.slug, 'page' : paginator.getCurrentPage() }) }}</p>
-  <h4 class="total-images-count">{{ "Total images count: %count%" | trans({ '%count%' : paginator.getNbResults() }) }}</h4>
+  <p class="source hidden">{{ path('admin.images.list', {'slug' : album.slug, 'page' : pagination.currentPageNumber }) }}</p>
+  <h4 class="total-images-count">{{ "Total images count: %count%" | trans({ '%count%' : pagination.totalItemCount }) }}</h4>
 
-  {% if paginator.getNbResults() %}
-  <form action="{{ path('admin.images.bulk', {'page' : paginator.getCurrentPage, 'slug' : album.slug}) }}" method="post">
+  {% if pagination.items | length %}
+  <form action="{{ path('admin.images.bulk', {'page' : pagination.currentPageNumber, 'slug' : album.slug}) }}" method="post">
   {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
       
   {{ form_errors(form.images) }}
@@ -23,7 +23,7 @@
     </thead>
 
     <tbody>
-      {% for image in paginator %}
+      {% for image in pagination %}
         <tr>
           <td><input type="checkbox" name="{{ form_name }}[images][{{ image.id }}]" value="{{ image.id }}"/></td>
           <td>{{ image.id }}</td>
@@ -47,9 +47,7 @@
   </form>
     {# display navigation #}
   <div id="navigation">
-    {% if paginator.haveToPaginate() %}
-    {{ pagerfanta(paginator, 'default', {'routeName': 'admin.images.list', 'routeParams' : {'slug' : album.slug} }) }}
-    {% endif %}
+      {{ knp_pagination_render(pagination, null, {'slug' : album.slug}) }}
   </div>
   
   {% endif %}
