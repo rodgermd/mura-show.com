@@ -13,7 +13,7 @@ class LoadUserData extends AbstractFixture implements FixtureInterface
       $rodger = new User();
       $rodger->setEmail('rodger@mura-show.com');
       $rodger->setUsername('rodger');
-      $rodger->setPlainPassword('party#An');
+      $rodger->setPlainPassword('123');
       $rodger->setEnabled(true);
       $rodger->addRole(User::ROLE_SUPER_ADMIN);
       
@@ -24,7 +24,7 @@ class LoadUserData extends AbstractFixture implements FixtureInterface
       $asol = new User();
       $asol->setEmail('lena@mura-show.com');
       $asol->setUsername('asol');
-      $asol->setPlainPassword('asol');
+      $asol->setPlainPassword('123');
       $asol->setEnabled(true);
       $rodger->addRole(User::ROLE_DEFAULT);
       
