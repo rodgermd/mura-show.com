@@ -1,7 +1,7 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 
 {% block body %}
-{% render "RodgerGalleryBundle:Tag:albumsList" with {'filters' : filters} %}
+{% render controller("RodgerGalleryBundle:Tag:albumsList", {'filters' : filters}) %}
 {% if albums | length %}
 <ul id="albums-list">
 {% for album in albums %}
@@ -31,5 +31,5 @@
 {% block title %}{{parent() }} • {{ 'Albums' | trans }}{% endblock title %}
 
 {% block secondary_menu %}
-{% render "RodgerGalleryBundle:Front:yearsMenu" %}
+{% render controller('RodgerGalleryBundle:Front:yearsMenu') %}
 {% endblock secondary_menu %}

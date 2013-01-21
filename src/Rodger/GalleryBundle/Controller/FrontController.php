@@ -65,6 +65,7 @@ class FrontController extends CommonController {
   
   /**
    * Renders years menu
+   * @Route("/years/menu")
    * @Template("RodgerGalleryBundle:Front:_years_menu.html.twig")
    */
   public function yearsMenuAction() {

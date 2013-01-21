@@ -1,19 +1,25 @@
-avalanche_imagine:
-  source_root: %kernel.root_dir%/../
+liip_imagine:
   driver: imagick
-  filters:
+  data_root: %kernel.root_dir%/../uploads/images/
+
+  filter_sets:
+    word_thumbnail:
+      filters:
+        thumbnail: { size: [50, 50], mode: outbound }
+
     edit:
-      type:    thumbnail
-      options: { size: [800, 2000], mode: inbound, quality: 100, format: png }
+      filters:
+        thumbnail: { size: [800, 2000], mode: inbound, quality: 100, format: png }
     list:
-      type:    thumbnail
-      options: { size: [75, 75], mode: outbound, quality: 70, format: jpg }
+      filters:
+        thumbnail: { size: [75, 75], mode: outbound, quality: 70, format: jpg }
     list.small:
-      type:    thumbnail
-      options: { size: [50, 50], mode: inbound, quality: 70, format: jpg }
+      filters:
+        thumbnail: { size: [50, 50], mode: inbound, quality: 70, format: jpg }
     list.medium:
-      type:    thumbnail
-      options: { size: [200, 200], mode: outbound, quality: 70, format: jpg }
+      filters:
+        thumbnail: { size: [200, 200], mode: outbound, quality: 70, format: jpg }
     resource:
-      type:    thumbnail
-      options: { size: [800, 600], mode: inbound, format: png }
+      filters:
+        thumbnail: { size: [800, 600], mode: inbound, format: png }
+

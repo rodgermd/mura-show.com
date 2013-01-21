@@ -7,7 +7,7 @@
   use Twig_Function_Method;
   use Symfony\Bundle\FrameworkBundle\Routing\Router;
   use Rodger\GalleryBundle\Entity\Image;
-  use Avalanche\Bundle\ImagineBundle\Templating\Helper\ImagineHelper;
+  use Liip\ImagineBundle\Templating\Helper\ImagineHelper;
 
   class Stuff extends Twig_Extension
   {
@@ -30,7 +30,7 @@
 
     public function thumbnail_path(Image $image, $thumbnail)
     {
-      $filename = $image->getUploadDir() . '/' . $image->getFilename();
+      $filename = preg_replace('#^uploads\/images\/#', '', $image->getUploadDir() . '/' . $image->getFilename());
       return $this->imagine_helper->filter($filename, $thumbnail);
     }
 

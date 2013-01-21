@@ -16,6 +16,6 @@ services:
 
   twig.stuff:
     class: Rodger\GalleryBundle\Twig\Stuff
-    arguments: [%web_root%, @imagine.templating.helper]
+    arguments: [%web_root%, @liip_imagine.templating.helper]
     tags:
       - { name: twig.extension}
