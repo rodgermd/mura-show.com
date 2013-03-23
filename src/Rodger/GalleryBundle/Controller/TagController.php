@@ -16,7 +16,6 @@ class TagController extends CommonController {
   
   /**
    * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
-   * @return type 
    */
   public function albumsListAction($filters) {
     $this->preExecute();
@@ -30,6 +29,7 @@ class TagController extends CommonController {
    * Renders album images tags
    * @Template("RodgerGalleryBundle:Tag:pane.html.twig")
    * @param Album $album
+   * @return array
    */
   public function albumImagesAction(Album $album) {
     $this->preExecute();

@@ -150,12 +150,12 @@ class AlbumController extends CommonController
   {
     $this->list_common_procedures($album, $page);
 
-    $this->bulk_form->bindRequest($this->getRequest());
+    $this->bulk_form->bind($this->getRequest());
     if ($this->bulk_form->isValid()) {
       $this->bulk_form->getData()->process();
       $this->em->flush();
       $number_processed = $this->bulk_form->getData()->images->count();
-      $this->session->setFlash('success', $this->get('translator')->transChoice(
+      $this->session->getFlashBag()->add('success', $this->get('translator')->transChoice(
         '{1}One image was %action%|]1,Inf]%number% images was %action%',
         $number_processed,
         array('%number%' => $number_processed,
@@ -195,7 +195,8 @@ class AlbumController extends CommonController
 
     $this->validating_object = new ValidateHelpers\BulkImages(
       $query_builder->andWhere($query_builder->expr()->in('i.id', count($ids) ? $ids : array(0))),
-      $this->em
+      $this->em,
+      $this->container
     );
     $this->bulk_form         = $this->createForm(new Forms\BulkImages(), $this->validating_object);
   }

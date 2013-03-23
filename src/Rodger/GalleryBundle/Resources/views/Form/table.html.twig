@@ -2,14 +2,14 @@
 {% use "RodgerGalleryBundle:Form:fields.html.twig" %}
 {% use "RodgerGalleryBundle:Form:decorations.html.twig" %}
 
-{% block form_widget %}
+{% block form_widget_compound %}
 {% spaceless %}
     <table id="fields-{{ id }}" class="fields-table">
-        {{ block('field_rows') }}
+        {{ block('form_rows') }}
         {{ form_rest(form) }}
     </table>
 {% endspaceless %}
-{% endblock form_widget %}
+{% endblock form_widget_compound %}
 
 {% block field_row %}
 {% spaceless %}

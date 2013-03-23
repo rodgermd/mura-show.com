@@ -1,11 +1,6 @@
 {
   "name":"symfony/framework-standard-edition",
   "description":"The \"Symfony Standard Edition\" distribution",
-  "autoload":{
-    "psr-0":{
-      "":"src/"
-    }
-  },
   "require":{
     "php":">=5.3.3",
 
@@ -51,6 +46,11 @@
     "symfony-app-dir":"app",
     "symfony-web-dir":"web",
     "symfony-assets-install":"symlink"
+  },
+  "autoload":{
+    "psr-0":{
+      "":"src/"
+    }
   }
 }
 

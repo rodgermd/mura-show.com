@@ -1,5 +1,11 @@
 <?php
 namespace Rodger\GalleryBundle\ValidateHelper;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use Rodger\GalleryBundle\Entity\Image;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContext;
 use Rodger\GalleryBundle\Convert\Converter;
@@ -31,11 +37,13 @@ class BulkImages {
    */
   protected $query_builder;
   protected $em;
+  protected $container;
   
-  public function __construct($query, \Doctrine\ORM\EntityManager $em) {
+  public function __construct($query, EntityManager $em, Container $container) {
     $this->em = $em;
-    $this->images = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->images = new ArrayCollection();
     $this->query_builder = $query;
+    $this->container = $container;
   }
   
   public static function getActions() {
@@ -85,15 +93,23 @@ class BulkImages {
           break;
         case self::ACTION_ROTATE_PLUS90:
           Converter::rotate_image($image, 90);
-          $converter = new Converter($image->getAbsolutePath(), $image->thumbnail('resource', true), $this->resource_template);
-          $converter->convert();
+          $this->drop_thumbnails($image);
           break;
         case self::ACTION_ROTATE_MINUS90:
           Converter::rotate_image($image, -90);
-          $converter = new Converter($image->getAbsolutePath(), $image->thumbnail('resource', true), $this->resource_template);
-          $converter->convert();
+          $this->drop_thumbnails($image);
           break;
       }
+    }
+  }
+
+  protected function drop_thumbnails(Image $image)
+  {
+    $finder = new Finder();
+    foreach ($finder->name($image->getFilename())->in($this->container->getParameter('web_root')) as $file)
+    {
+      /** @var SplFileInfo $file */
+      unlink($file->getPathname());
     }
   }
 }

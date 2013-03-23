@@ -6,10 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class CommonController extends Controller
 {
-  public $user, $session;
+  public $user;
+  /** @var Session $session */
+  public $session;
   /**
    * @var \Doctrine\ORM\EntityManager $em
    */
@@ -27,7 +30,7 @@ class CommonController extends Controller
   }
   
   /**
-   * @Route("/keywords-autocomplete", name="keywords.autocomplete", requirements={"_method"="get"})
+   * @Route("/keywords/autocomplete", name="keywords.autocomplete", requirements={"_method"="get"})
    */
   public function keywordsAutocompleteAction() {
     $search_string = $this->getRequest()->get('search_string');

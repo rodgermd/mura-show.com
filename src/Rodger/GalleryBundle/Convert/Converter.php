@@ -7,12 +7,11 @@ use Rodger\GalleryBundle\Entity\Image;
 class Converter
 {
   protected $source, $target, $template, $convert;
-  public function __construct($source, $target, ImageSize $template)
+  public function __construct($source, $target)
   {
     $this->source = $source;
     $this->target = $target;
-    $this->template = $template;
-    
+
     $this->convert = self::get_convert();
   }
   
@@ -81,8 +80,7 @@ class Converter
   public static function rotate_image(Image $image, $degrees) {
     if (!$image->getAbsolutePath()) return false;
     $command = implode(" ", array(self::get_convert(), $image->getAbsolutePath(), sprintf('-rotate %d', $degrees), $image->getAbsolutePath()));
-    $result = exec($command);
-    exec(sprintf("rm -f %s", $image->thumbnail('*', true)));
+    exec($command);
   }
   
   public function convert()
