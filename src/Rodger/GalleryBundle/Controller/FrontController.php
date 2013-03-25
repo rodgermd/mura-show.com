@@ -57,7 +57,7 @@ class FrontController extends CommonController {
    * @Template("RodgerGalleryBundle:Front:album_content.html.twig")
    */
   public function albumContentAction(Album $album) {
-    return array('album' => $album, 
+    return array('album' => $album,
         'images' => $this->em
             ->getRepository("RodgerGalleryBundle:Image")
             ->getFilteredAlbumImages($album, $this->get_filters(), $this->user));

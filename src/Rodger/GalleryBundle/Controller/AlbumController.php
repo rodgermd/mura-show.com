@@ -2,6 +2,7 @@
 
 namespace Rodger\GalleryBundle\Controller;
 
+use Rodger\GalleryBundle\Manager\UploadManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -12,6 +13,7 @@ use Rodger\GalleryBundle\Form as Forms,
   Rodger\GalleryBundle\Entity\Image;
 
 use Rodger\GalleryBundle\ValidateHelper as ValidateHelpers;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -216,22 +218,10 @@ class AlbumController extends CommonController
       $form->bind($this->getRequest());
       if ($form->isValid())
       {
-        $uploaded_file = $image->getFile();
+        /** @var UploadManager $manager  */
+        $manager = $this->get('gallery.upload_manager');
+        return $manager->save($image);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($image);
-        $em->flush();
-
-        $response = array(
-          'name' => $uploaded_file->getClientOriginalName(),
-          'size' => 100,
-          'url' => '',
-          'thumbnail_url' => 'aaa',
-          'delete_url' => 'ccc',
-          'delete_type' => 'POST'
-        );
-
-        return new Response(json_encode($response));
       }
       return new Response('', 500);
     }

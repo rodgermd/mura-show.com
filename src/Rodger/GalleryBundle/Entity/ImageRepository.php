@@ -14,7 +14,8 @@ class ImageRepository extends EntityRepository
 {
   public function getLatestInAlbumQueryBuilder(Album $album, $show_private = false, array $filters = array()) {
     $qb = $this->getAccessibleImagesBuilder($album, $show_private);
-    $qb->select('partial i.{id, filename}')
+    $qb->select('i, a')
+          ->innerJoin('i.album', 'a')
           ->orderBy('i.taken_at', 'desc')
           ->addOrderBy('i.uploaded_at', 'desc');
     

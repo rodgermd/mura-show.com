@@ -76,6 +76,24 @@ class ImageController extends CommonController {
   }
 
   /**
+   * @Route("/{id}/delete", name="image.delete")
+   * @Secure(roles="ROLE_USER")
+   * @param Image $image
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+   */
+  public function deleteAction(Image $image)
+  {
+    if (!$image->getUser()->equals($this->getUser())) throw new AccessDeniedException();
+    $redirect = $this->generateUrl('album.show', array('slug' => $image->getAlbum()->getSlug()));
+    $em = $this->getDoctrine()->getManager();
+    $em->remove($image);
+    $em->flush();
+
+    return $this->redirect($redirect);
+  }
+
+  /**
    * @Route("/{album}/{id}", name="image.show")
    * @Template
    */

@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * indexes={@ORM\Index(name="year_month_idx", columns={"year", "month"})})
  * )
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
+ * @Vich\Uploadable
  */
 class Image {
 
@@ -208,7 +209,7 @@ class Image {
 
   /**
    * Gets taken at
-   * @return datetime 
+   * @return \DateTime
    */
   public function getTakenAt() {
     return $this->taken_at;
@@ -216,10 +217,12 @@ class Image {
 
   /**
    * Sets taken at
-   * @param datetime $taken_at
+   * @param \DateTime $taken_at
    */
   public function setTakenAt($taken_at) {
     $this->taken_at = $taken_at;
+    $this->year = $taken_at->format('Y');
+    $this->month = $taken_at->format('m');
   }
   
   /**

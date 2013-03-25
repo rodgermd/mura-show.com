@@ -72,8 +72,9 @@ class TagRepository extends EntityRepository
               ->groupBy('t.name');
       if (!$user) $qb2->andWhere('i.is_private = false AND a.is_private = false');
       $result2 = array_unique(array_map(function($t){ return $t['name'];}, $qb2->getQuery()->execute(array(), Query::HYDRATE_ARRAY)));
-      
-      $qb->andWhere($qb->expr()->in('t.name', array_unique($result1 + $result2)));
+
+      $result = array_unique($result1 + $result2);
+      if (count($result)) $qb->andWhere($qb->expr()->in('t.name', array_unique($result1 + $result2)));
     }
     
     
@@ -91,7 +92,7 @@ class TagRepository extends EntityRepository
   public function getFilteredAlbumImagesTags(Album $album, $user, array $filters) {
     $qb = $this->createQueryBuilder('t')
             ->select('t')
-            ->innerJoin('t.Images', 'i')
+            ->innerJoin('t.images', 'i')
             ->groupBy('t.name')
             ->orderBy('t.name');
     $qb->andWhere('i.album = :album')->setParameter('album', $album);

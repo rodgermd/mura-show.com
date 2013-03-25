@@ -11,9 +11,13 @@ services:
 
   twig.stuff:
     class: Rodger\GalleryBundle\Twig\Stuff
-    arguments: [%web_root%, @liip_imagine.templating.helper]
+    arguments: [%web_root%, @liip_imagine.templating.helper, @vich_uploader.templating.helper.uploader_helper]
     tags:
       - { name: twig.extension}
+
+  gallery.upload_manager:
+    class: Rodger\GalleryBundle\Manager\UploadManager
+    arguments: [@service_container]
 
   namer.directory:
     class: Rodger\GalleryBundle\Namer\DirectoryNamer
