@@ -25,6 +25,6 @@ class DirectoryNamer implements DirectoryNamerInterface
    */
   public function directoryName($obj, $field, $uploadDir)
   {
-    return $uploadDir . '/' . $obj->getAlbum()->getId();
+    return $uploadDir . '/' . $obj->getAlbumId();
   }
 }

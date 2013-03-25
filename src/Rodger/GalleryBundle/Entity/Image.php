@@ -86,6 +86,12 @@ class Image {
   private $album;
 
   /**
+   * @var integer $album_id
+   * @ORM\Column(type="integer", nullable=true)
+   */
+  private $album_id;
+
+  /**
    * Related Tags
    * @var array Tags
    * @ORM\ManyToMany(targetEntity="Tag", inversedBy="images")
@@ -352,5 +358,21 @@ class Image {
   public function getFile()
   {
     return $this->file;
+  }
+
+  /**
+   * @param int $album_id
+   */
+  public function setAlbumId($album_id)
+  {
+    $this->album_id = $album_id;
+  }
+
+  /**
+   * @return int
+   */
+  public function getAlbumId()
+  {
+    return $this->album_id;
   }
 }

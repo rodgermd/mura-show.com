@@ -11,7 +11,7 @@ class ImageType extends AbstractType
   {
     $builder->add('name')
             ->add('is_private', 'checkbox', array('required' => false))
-            ->add('file', 'file', array('required' => false, 'data_class' => null))
+            ->add('file', 'file', array('required' => false, 'data_class' => null, 'attr' => array('multiple' => 'multiple')))
             ->add('keywords', 'text', array(
                 'required' => false, 
                 'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')));
