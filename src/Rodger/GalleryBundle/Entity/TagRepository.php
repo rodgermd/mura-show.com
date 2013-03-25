@@ -95,7 +95,7 @@ class TagRepository extends EntityRepository
             ->innerJoin('t.images', 'i')
             ->groupBy('t.name')
             ->orderBy('t.name');
-    $qb->andWhere('i.album = :album')->setParameter('album', $album);
+    $qb->andWhere('i.album = :album')->setParameter('album', $album->getId());
     
     if (is_numeric($filters['year'])) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
     if (!$user instanceof UserInterface) $qb->andWhere('i.is_private = false');

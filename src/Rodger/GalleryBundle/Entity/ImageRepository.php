@@ -37,7 +37,7 @@ class ImageRepository extends EntityRepository
   {
     $qb = $this->createQueryBuilder('i')
           ->where('i.album = :album')
-          ->setParameter('album', $album)
+          ->setParameter('album', $album->getId())
           ->orderBy('i.taken_at', 'asc')
           ->addOrderBy('i.uploaded_at', 'asc');
     

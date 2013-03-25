@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Imagine\Imagick\Imagine;
 use Liip\ImagineBundle\Templating\Helper\ImagineHelper;
 use Rodger\GalleryBundle\Entity\Image;
+use Rodger\GalleryBundle\Entity\TagRepository;
 use Rodger\GalleryBundle\Exif\ExifDataParser;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
@@ -55,6 +56,7 @@ class UploadManager
     $uploaded_file = $image->getFile();
 
     $this->update_exif($image);
+    $this->update_tags($image);
     $this->em->flush();
 
     $filepath = $this->getFilepath($image);
@@ -72,6 +74,23 @@ class UploadManager
         )));
 
     return new Response(json_encode($response));
+  }
+
+  protected function update_tags(Image $image)
+  {
+    /** @var TagRepository $tags_repository  */
+    $tags_repository = $this->em->getRepository('RodgerGalleryBundle:Tag');
+    if ($image->getKeywordsRaw()) {
+      $keywords = explode(',', $image->getKeywordsRaw());
+      $keywords = array_filter(array_map('trim', $keywords));
+      $tags     = array();
+      foreach ($keywords as $keyword) {
+        $tags[] = $tags_repository->getOrCreate($keyword);
+      }
+      $image->setTags($tags);
+    }
+
+    $this->em->persist($image);
   }
 
   protected function update_exif(Image $image)

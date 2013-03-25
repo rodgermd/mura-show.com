@@ -237,6 +237,7 @@ class Image {
    */
   public function setAlbum(Album $album) {
     $this->album = $album;
+    $this->album_id = $album->getId();
   }
 
   /**
@@ -333,6 +334,11 @@ class Image {
     foreach($this->tags as $tag) $result[] = (string)$tag;
     sort($result);
     return implode(', ', $result);
+  }
+
+  public function getKeywordsRaw()
+  {
+    return $this->keywords;
   }
 
   /**
