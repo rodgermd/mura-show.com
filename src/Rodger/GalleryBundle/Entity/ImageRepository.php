@@ -20,7 +20,7 @@ class ImageRepository extends EntityRepository
     
     if (count($filters)) {
       if (is_numeric($filters['year'])) $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
-      if (count($filters['tags'])) $qb->innerJoin ('i.Tags', 't', 'WITH', $qb->expr()->in('t.name', $filters['tags']));
+      if (count($filters['tags'])) $qb->innerJoin ('i.tags', 't', 'WITH', $qb->expr()->in('t.name', $filters['tags']));
     }
     
     return $qb;
@@ -35,8 +35,8 @@ class ImageRepository extends EntityRepository
   public function getAccessibleImagesBuilder(Album $album, $user = null)
   {
     $qb = $this->createQueryBuilder('i')
-          ->where('i.album_id = :album_id')
-          ->setParameter('album_id', $album->getId())
+          ->where('i.album = :album')
+          ->setParameter('album', $album)
           ->orderBy('i.taken_at', 'asc')
           ->addOrderBy('i.uploaded_at', 'asc');
     
@@ -63,9 +63,9 @@ class ImageRepository extends EntityRepository
   {
     $qb = $this->getAccessibleImagesBuilder($album, $user);
     if (count($filters['tags'])) {
-      $qb->innerJoin('i.Album', 'a')
-         ->leftJoin('a.Tags', 'at')
-         ->leftJoin('i.Tags', 'it')
+      $qb->innerJoin('i.album', 'a')
+         ->leftJoin('a.tags', 'at')
+         ->leftJoin('i.tags', 'it')
          ->andWhere($qb->expr()->orX(
            $qb->expr()->in('it.name', $filters['tags']),
            $qb->expr()->in('at.name', $filters['tags'])

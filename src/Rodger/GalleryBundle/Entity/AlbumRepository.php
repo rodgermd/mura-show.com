@@ -23,7 +23,7 @@ class AlbumRepository extends EntityRepository
   public function getLatestQueryBuilder($user, array $filters)
   {
     $qb = $this->createQueryBuilder('a');
-    $qb->innerJoin('a.Images', 'i');
+    $qb->innerJoin('a.images', 'i');
     if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
       $qb->where('a.is_private = false AND i.is_private = false');
     }
@@ -36,7 +36,7 @@ class AlbumRepository extends EntityRepository
     }
     
     $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
-       ->addSelect('(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album_id = a.id) album_images_count')
+       ->addSelect('(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album = a.id) album_images_count')
        ->orderBy('sort_date', 'desc');
     
     return $qb;
@@ -52,9 +52,9 @@ class AlbumRepository extends EntityRepository
   public function getAlbumsIdUsingTags($user, array $tags = array(), $year = null)
   {
     $qb = $this->createQueryBuilder('a')->select('a.id');
-    $qb->innerJoin('a.Images', 'i')
-       ->leftJoin('a.Tags', 'at')
-       ->leftJoin('i.Tags', 'it');
+    $qb->innerJoin('a.images', 'i')
+       ->leftJoin('a.tags', 'at')
+       ->leftJoin('i.tags', 'it');
     
     if (count($tags)) {
       $qb->andWhere($qb->expr()->orX($qb->expr()->in('at.name', $tags), $qb->expr()->in('it.name', $tags)));

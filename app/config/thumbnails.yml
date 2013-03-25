@@ -1,3 +1,13 @@
+vich_uploader:
+  db_driver: orm
+  storage: vich_uploader.storage.file_system
+  mappings:
+    image:
+      uri_prefix: /
+      directory_namer: namer.directory
+      namer: rodgermd.vichuploader.namer_md
+      upload_destination: %kernel.root_dir%/../uploads/images
+
 liip_imagine:
   driver: imagick
   data_root: %kernel.root_dir%/../uploads/images/

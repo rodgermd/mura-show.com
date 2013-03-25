@@ -8,20 +8,21 @@ use Gedmo\Mapping\Annotation\Timestampable;
 use Rodger\GalleryBundle\Entity\Album;
 use Rodger\GalleryBundle\Entity\Tag;
 use Rodger\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Rodger\GalleryBundle\Entity\Image
  *
  * @ORM\Table(name="images", uniqueConstraints={
- *   @ORM\UniqueConstraint(name="filename_unique",columns={"filename"}),
- *   @ORM\UniqueConstraint(name="basename_unique",columns={"basename"})
+ *   @ORM\UniqueConstraint(name="filename_unique",columns={"filename"})
  * },
  * indexes={@ORM\Index(name="year_month_idx", columns={"year", "month"})})
  * )
  * @ORM\Entity(repositoryClass="Rodger\GalleryBundle\Entity\ImageRepository")
- * @ORM\HasLifecycleCallbacks
  */
-class Image implements UploadableInterface {
+class Image {
 
   /**
    * @var integer $id
@@ -29,6 +30,7 @@ class Image implements UploadableInterface {
    * @ORM\Column(name="id", type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="AUTO")
+   * @Vich\Uploadable
    */
   private $id;
 
@@ -47,14 +49,8 @@ class Image implements UploadableInterface {
   private $filename;
   
   /**
-   * @var string $filename
-   * @ORM\Column(name="basename", type="string", length=50)
-   */
-  private $basename;
-
-  /**
    * Uploaded at
-   * @var datetime $uploaded_at
+   * @var \DateTime $uploaded_at
    * @Timestampable(on="create")
    * @ORM\Column(name="uploaded_at",type="datetime", nullable=true) 
    */
@@ -62,7 +58,7 @@ class Image implements UploadableInterface {
 
   /**
    * Datetime when picture was taken (shot)
-   * @var datetime $taken_at 
+   * @var \DateTime $taken_at
    * @ORM\Column(name="taken_at",type="datetime", nullable=true)
    */
   private $taken_at;
@@ -83,28 +79,21 @@ class Image implements UploadableInterface {
 
   /**
    * Related Album
-   * @ORM\ManyToOne(targetEntity="Album", inversedBy="Images") 
+   * @ORM\ManyToOne(targetEntity="Album", inversedBy="images")
    * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $Album;
-
-  /**
-   * Album id
-   * @var integer $album_id
-   * @ORM\Column(name="album_id", type="integer") 
-   */
-  private $album_id;
+  private $album;
 
   /**
    * Related Tags
    * @var array Tags
-   * @ORM\ManyToMany(targetEntity="Tag", inversedBy="Images")
+   * @ORM\ManyToMany(targetEntity="Tag", inversedBy="images")
    * @ORM\JoinTable(name="image_tags",
    *      joinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="name", onDelete="CASCADE")}
    *      ) 
    */
-  private $Tags;
+  private $tags;
 
   /**
    * Is private flag
@@ -116,22 +105,27 @@ class Image implements UploadableInterface {
   /**
    * Related User
    * @var User $user 
-   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="Images") 
+   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="images")
    * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="set null")
    */
-  private $User;
+  private $user;
 
-  /**
-   * @ORM\Column(name="user_id", type="integer", nullable=true)
-   * @var integer $user_id
-   */
-  private $user_id;
-  
   /**
    * @var array $exif_data
    * @ORM\Column(name="exif_data", type="array")
    */
   private $exif_data;
+
+  /**
+   * @Assert\File(
+   *     maxSize="6M",
+   *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+   * )
+   * @Vich\UploadableField(mapping="image", fileNameProperty="filename")
+   * @var UploadedFile $image
+   */
+  private $file;
+
 
   
   /**
@@ -141,7 +135,7 @@ class Image implements UploadableInterface {
   public $keywords; 
   
   public function __construct() {
-    $this->Tags = new ArrayCollection();
+    $this->tags = new ArrayCollection();
   }
 
   /**
@@ -169,16 +163,6 @@ class Image implements UploadableInterface {
    */
   public function getName() {
     return $this->name;
-  }
-
-  /**
-   * Set filename
-   *
-   * @param string $filename
-   */
-  public function setFilename($filename) {
-    $this->filename = $filename;
-    $this->basename = pathinfo($filename, PATHINFO_FILENAME);
   }
 
   /**
@@ -243,8 +227,7 @@ class Image implements UploadableInterface {
    * @param Album $album 
    */
   public function setAlbum(Album $album) {
-    $this->Album = $album;
-    $this->album_id = $album->getId();
+    $this->album = $album;
   }
 
   /**
@@ -252,7 +235,7 @@ class Image implements UploadableInterface {
    * @return Album 
    */
   public function getAlbum() {
-    return $this->Album;
+    return $this->album;
   }
 
   /**
@@ -260,7 +243,7 @@ class Image implements UploadableInterface {
    * @param array $tags 
    */
   public function setTags($tags) {
-    $this->Tags = $tags;
+    $this->tags = $tags;
   }
 
   /**
@@ -268,7 +251,7 @@ class Image implements UploadableInterface {
    * @param Tag $tag 
    */
   public function addTag(Tag $tag) {
-    $this->Tags[] = $tag;
+    $this->tags[] = $tag;
   }
 
   /**
@@ -276,7 +259,7 @@ class Image implements UploadableInterface {
    * @return array 
    */
   public function getTags() {
-    return $this->Tags;
+    return $this->tags;
   }
   
   /**
@@ -284,7 +267,7 @@ class Image implements UploadableInterface {
    * @return User 
    */
   public function getUser() {
-    return $this->User;
+    return $this->user;
   }
   
   /**
@@ -293,8 +276,7 @@ class Image implements UploadableInterface {
    */
   public function setUser(User $user)
   {
-    $this->User = $user;
-    $this->user_id = $user->getId();
+    $this->user = $user;
   }
   
   public function __toString() {
@@ -336,49 +318,10 @@ class Image implements UploadableInterface {
   public function getIptcData() {
     return $this->iptc_data;
   }
-  
-  /* uploadable interface implementation */
-  
-  
-  public function getAbsolutePath() {
-    return null === $this->filename ? null : $this->getUploadRootDir() . '/' . $this->filename;
-  }
 
-  public function getUploadRootDir() {
-    // the absolute directory path where uploaded documents should be saved
-    return $this->Album->getUploadRootDir();
-  }
-
-  public function getUploadDir() {
-    // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-    return $this->Album->getUploadDir();
-  }
-  
-  /**
-   * Gets thumbnail path
-   * @param string $template
-   * @param boolean $absolute
-   * @return string 
-   */
-  public function thumbnail($template, $absolute = false)
-  {
-    if (!$this->filename) return false;
-    $filename = pathinfo($this->filename, PATHINFO_FILENAME);
-    return sprintf("%s/%s.%s.png", $this->Album->getThumbnailsFolder($absolute), $filename, $template);
-  }
-  
-  /**
-   * @ORM\PreRemove
-   * Deletes all files related to image
-   */
-  public function deleteFiles() {
-    exec(sprintf('rm -f %s', $this->thumbnail('*', true)));
-    @unlink($this->getAbsolutePath());
-  }
-  
   public function getKeywords() {
     $result = array();
-    foreach($this->Tags as $tag) $result[] = (string)$tag;
+    foreach($this->tags as $tag) $result[] = (string)$tag;
     sort($result);
     return implode(', ', $result);
   }
@@ -393,5 +336,22 @@ class Image implements UploadableInterface {
       $this->year = $this->taken_at->format('Y');
       $this->month = $this->taken_at->format('m');
     }
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+   */
+  public function setFile(UploadedFile $file)
+  {
+    $this->file = $file;
+    $this->name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+  }
+
+  /**
+   * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+   */
+  public function getFile()
+  {
+    return $this->file;
   }
 }

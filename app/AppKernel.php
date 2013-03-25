@@ -24,6 +24,7 @@
         new Rodger\UserBundle\RodgerUserBundle(),
         new Rodger\GalleryBundle\RodgerGalleryBundle(),
         new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+        new \Vich\UploaderBundle\VichUploaderBundle(),
         new Liip\ImagineBundle\LiipImagineBundle(),
       );
 

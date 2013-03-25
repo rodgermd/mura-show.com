@@ -23,13 +23,13 @@ class User extends BaseUser {
   protected $id;
 
   /**
-   * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Image", mappedBy="User", cascade={"all"})
+   * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Image", mappedBy="user", cascade={"all"})
    * @var array Images
    */
   protected $Images;
 
   /**
-   * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Album", mappedBy="User", cascade={"all"})
+   * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Album", mappedBy="user", cascade={"all"})
    * @var array Albums
    */
   protected $Albums;
@@ -41,6 +41,16 @@ class User extends BaseUser {
    */
   public function getId() {
     return $this->id;
+  }
+
+  /**
+   * Checks if this user equals to given
+   * @param User $user
+   * @return bool
+   */
+  public function equals(User $user = null)
+  {
+    return $user && $this->getId() == $user->getId();
   }
   
 }

@@ -37,10 +37,10 @@ class Album {
 
   /**
    * related images
-   * @ORM\OneToMany(targetEntity="Image", mappedBy="Album")
+   * @ORM\OneToMany(targetEntity="Image", mappedBy="album")
    * @ORM\OrderBy({"taken_at" = "ASC", "uploaded_at" = "ASC"})
    */
-  private $Images;
+  private $images;
   
   /**
    * Created at
@@ -59,17 +59,11 @@ class Album {
   /**
    * Related User
    * @var User $user 
-   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="Images") 
+   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="images")
    * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
    */
   private $User;
 
-  /**
-   * @ORM\Column(name="user_id", type="integer")
-   * @var integer $user_id
-   */
-  private $user_id;
-  
   /**
    * @var string $slug 
    * @ORM\Column(type="string", nullable=true)
@@ -88,17 +82,17 @@ class Album {
   /**
    * Related Tags
    * @var array Tags
-   * @ORM\ManyToMany(targetEntity="Tag", inversedBy="Albums")
+   * @ORM\ManyToMany(targetEntity="Tag", inversedBy="albums")
    * @ORM\JoinTable(name="album_tags",
    *      joinColumns={@ORM\JoinColumn(name="album_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="name")}
    *      ) 
    */
-  private $Tags;
+  private $tags;
   
   public function __construct() {
-    $this->Images = new ArrayCollection();
-    $this->Tags = new ArrayCollection();
+    $this->images = new ArrayCollection();
+    $this->tags = new ArrayCollection();
     $this->created_at = new \DateTime();
   }
 
@@ -169,15 +163,14 @@ class Album {
   public function setUser(User $user)
   {
     $this->User = $user;
-    $this->user_id = $user->getId();
   }
-  
+
   /**
    * Gets related Images
    * @return array 
    */
   public function getImages() {
-    return $this->Images;
+    return $this->images;
   }
   
   /**
@@ -186,14 +179,14 @@ class Album {
    */
   public function addImage(Image $image)
   {
-    $this->Images[] = $image;
+    $this->images[] = $image;
   }
   /**
    * Gets related Tags
    * @return array 
    */
   public function getTags() {
-    return $this->Tags;
+    return $this->tags;
   }
   
   /**
@@ -202,7 +195,7 @@ class Album {
    */
   public function addTag(Tag $tag)
   {
-    $this->Tags[] = $tag;
+    $this->tags[] = $tag;
   }
   
   /**
@@ -211,7 +204,7 @@ class Album {
    */
   public function setTags($tags)
   {
-    $this->Tags = $tags;
+    $this->tags = $tags;
   }
   
   /**
@@ -223,33 +216,11 @@ class Album {
   public function getKeywords() {
     if ($this->keywords) return $this->keywords;
     $result = array();
-    foreach($this->Tags as $tag) $result[] = (string) $tag;
+    foreach($this->tags as $tag) $result[] = (string) $tag;
     $this->keywords = implode(", ", $result);
     
     return $this->keywords;
   }
   
   public function __toString() { return $this->name; }
-  
-  public function getUploadDir() {
-    // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-    return sprintf('%s/%s', self::STORE_FOLDER, $this->getSlug());
-  }
-  
-  public function getUploadRootDir() {
-    // the absolute directory path where uploaded documents should be saved
-    return __DIR__ . '/../../../../' . $this->getUploadDir();
-  }
-  
-  public function getThumbnailsFolder($absolute = false) {
-    $prefix = $absolute ? __DIR__ . '/../../../../web' : '';
-    return sprintf("%s/gallery/%s", $prefix, $this->getSlug());
-  }
-
-  public function delete_images()
-  {
-    exec(sprintf("rm -rf %s", $this->getUploadRootDir()));
-    exec(sprintf("rm -rf %s", $this->getThumbnailsFolder(true)));
-  }
-
 }

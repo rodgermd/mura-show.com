@@ -9,15 +9,11 @@ class AlbumType extends AbstractType
   public $keywords_autocomplete_source;
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
-    $upload_type = new UploadType(new Upload());
-    $upload_type->setKeywordsAutocompleteSource($this->keywords_autocomplete_source);
-    
     $builder->add('name')
             ->add('is_private', 'checkbox', array('required' => false))
             ->add('keywords', 'text', array(
                 'required' => false, 
-                'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')))
-            ->add('upload', $upload_type, array('required' => false));
+                'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')));
   }
   
   public function getName() { return 'album'; }

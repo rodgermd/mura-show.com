@@ -2,6 +2,7 @@
 namespace Rodger\GalleryBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImageType extends AbstractType
 {
@@ -9,8 +10,8 @@ class ImageType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder->add('name')
-            ->add('album', 'entity', array('class' => 'RodgerGalleryBundle:Album'))
             ->add('is_private', 'checkbox', array('required' => false))
+            ->add('file', 'file', array('required' => false, 'data_class' => null))
             ->add('keywords', 'text', array(
                 'required' => false, 
                 'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')));
@@ -25,6 +26,13 @@ class ImageType extends AbstractType
   public function setKeywordsAutocompleteSource($url)
   {
     $this->keywords_autocomplete_source = $url;
+  }
+
+  public function setDefaultOptions(OptionsResolverInterface $resolver)
+  {
+    $resolver->setDefaults(array(
+      'csrf_protection'   => false,
+    ));
   }
 }
 ?>

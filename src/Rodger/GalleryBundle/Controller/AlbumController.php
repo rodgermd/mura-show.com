@@ -9,10 +9,10 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Rodger\GalleryBundle\Form as Forms,
   Rodger\GalleryBundle\Entity\Album,
-  Rodger\GalleryBundle\Entity\Image,
-  Rodger\GalleryBundle\Uploader\Uploader;
+  Rodger\GalleryBundle\Entity\Image;
 
 use Rodger\GalleryBundle\ValidateHelper as ValidateHelpers;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/album")
@@ -88,12 +88,6 @@ class AlbumController extends CommonController
         if ($old_album->getId() && $old_album->getSlug() != $album->getSlug()) {
           $result = rename($old_album->getUploadRootDir(), $album->getUploadRootDir());
           $result = rename($old_album->getThumbnailsFolder(true), $album->getThumbnailsFolder(true));
-        }
-
-        // process uploads
-        if ($album->upload['file']) {
-          $uploader = new Uploader($album->upload['file'], $this->get('validator'), $this->em);
-          $uploader->addImagesToAlbum($album, $album->upload, $this->user);
         }
 
         // process keywords
@@ -175,9 +169,9 @@ class AlbumController extends CommonController
   {
     $query_builder = $this->em->getRepository('RodgerGalleryBundle:Image')
       ->createQueryBuilder('i')
-      ->where('i.album_id = :album_id')
+      ->where('i.album = :album')
       ->orderBy('i.uploaded_at', 'desc')
-      ->setParameter('album_id', $album->getId());
+      ->setParameter('album', $album);
 
     $paginator = $this->get('knp_paginator');
 
@@ -199,6 +193,50 @@ class AlbumController extends CommonController
       $this->container
     );
     $this->bulk_form         = $this->createForm(new Forms\BulkImages(), $this->validating_object);
+  }
+
+  /**
+   * @Route("/{slug}/upload", name="album.upload")
+   * @Template
+   * @Secure(roles="ROLE_USER")
+   * @param Album $album
+   * @throws AccessDeniedException
+   * @return array|\Symfony\Component\HttpFoundation\Response
+   */
+  public function uploadAction(Album $album)
+  {
+    if (!$album->getUser()->equals($this->getUser())) throw new AccessDeniedException();
+
+    $image = new Image();
+    $image->setAlbum($album);
+    $image->setUser($this->getUser());
+    $form = $this->createForm(new Forms\ImageType(), $image);
+    if ($this->getRequest()->isMethod('POST'))
+    {
+      $form->bind($this->getRequest());
+      if ($form->isValid())
+      {
+        $uploaded_file = $image->getFile();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($image);
+        $em->flush();
+
+        $response = array(
+          'name' => $uploaded_file->getClientOriginalName(),
+          'size' => 100,
+          'url' => '',
+          'thumbnail_url' => 'aaa',
+          'delete_url' => 'ccc',
+          'delete_type' => 'POST'
+        );
+
+        return new Response(json_encode($response));
+      }
+      return new Response('', 500);
+    }
+
+    return array('form' => $form->createView(), 'album' => $album);
   }
 
 

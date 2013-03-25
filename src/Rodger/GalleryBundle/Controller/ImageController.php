@@ -10,6 +10,8 @@ use Rodger\GalleryBundle\Entity\Album;
 use Rodger\GalleryBundle\Entity\Image;
 
 use Rodger\GalleryBundle\Form\ImageType;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/image")
@@ -20,7 +22,8 @@ class ImageController extends CommonController {
    * @Route("/edit/{id}", name="image.edit", requirements={"id"="\d+"})
    * @Secure(roles="ROLE_USER")
    * @Template
-   * @param Image $image 
+   * @param Image $image
+   * @return array
    */
   public function editAction(Image $image) {
     $type = new ImageType();
@@ -34,7 +37,8 @@ class ImageController extends CommonController {
    * @Route("/update/{id}", name="image.update", requirements={"id"="\d+", "_method"="post"})
    * @Secure(roles="ROLE_USER")
    * @Template("RodgerGalleryBundle:Image:edit.html.twig")
-   * @param Image $image 
+   * @param Image $image
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function updateAction(Image $image) {
     $type = new ImageType();
@@ -43,7 +47,7 @@ class ImageController extends CommonController {
     
     $old_image = clone $image;
     
-    $form->bindRequest($this->getRequest());
+    $form->bind($this->getRequest());
     
     if ($form->isValid()) {
       $keywords = array_filter(array_map('trim', explode(",", $image->keywords)));
@@ -70,7 +74,7 @@ class ImageController extends CommonController {
 
     return array('form' => $form->createView(), 'image' => $image);
   }
-  
+
   /**
    * @Route("/{album}/{id}", name="image.show")
    * @Template

@@ -1,34 +1,57 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 {% block body %}
-<h1>{{ 'Edit %album%' | trans({'%album%' : album}) }}</h1>
-<form method="post" action="{{ path('albums.edit', { 'slug': album.slug }) }}" enctype="multipart/form-data">
-{% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
-{{ form_widget(form) }}
-<input type="submit" value="{{ 'update album' | trans }}"/>
-</form>
+  <h1>{{ 'Edit %album%' | trans({'%album%' : album}) }}</h1>
+  <form id="album-form" method="post" action="{{ path('albums.edit', { slug: album.slug }) }}"
+        enctype="multipart/form-data">
+    {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
+    {{ form_widget(form) }}
+    <input type="submit" class="btn btn-success" value="{{ 'update album' | trans }}"/>
+  </form>
 
-<div id="images-list-holder">
-  {% render controller("RodgerGalleryBundle:Album:adminList", {'slug' : album.slug}) %}
-</div>
+  {% render(controller("RodgerGalleryBundle:Album:upload", { album: album })) %}
+
+  <div id="images-list-holder">
+    {% render controller("RodgerGalleryBundle:Album:adminList", {'slug' : album.slug}) %}
+  </div>
 
 {% endblock body %}
 
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
-<script type="text/javascript" src="/js/use_select_all.js"></script>
-<script type="text/javascript" src="/bundles/rodgergallery/js/album.edit.js"></script>
-{% endblock javascripts %}
+{% block primary_menu_items %}
+  {{ parent() }}
+  {% if album is defined %}
+    <li><a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ 'Show album' | trans }}</a></li>
+    <li><a href="{{ path('albums.delete', {'slug' : album.slug}) }}"
+           onclick="return confirm('{{ 'Are you sure to delete this album?' | trans }}')">{{ 'Delete album' | trans }}</a>
+    </li>
+  {% endif %}
+{% endblock primary_menu_items %}
+
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/album.edit.css">
+  {{ parent() }}
+  <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css">
+  <link rel="stylesheet" href="/bundles/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="/bundles/bootstrap/css/bootstrap-responsive.css">
+  <link rel="stylesheet" href="/jquery-file-upload/css/jquery.fileupload-ui.css">
+  <noscript><link rel="stylesheet" href="/bundles/bootstrap/css/jquery.fileupload-ui-noscript.css"></noscript>
+  <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/album.edit.css">
 {% endblock stylesheets %}
 
-{% block primary_menu_items %}
-{{ parent() }}
-{% if album is defined %}
-  <li><a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ 'Show album' | trans }}</a></li>
-  <li><a href="{{ path('albums.delete', {'slug' : album.slug}) }}" onclick="return confirm('{{ 'Are you sure to delete this album?' | trans }}')">{{ 'Delete album' | trans }}</a></li>
-{% endif %}
-{% endblock primary_menu_items %}
+{% block javascripts %}
+  {{ parent() }}
+  {#<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
+  <script src="/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="//blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
+  <script src="//blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+  <script src="//blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
+  <script src="/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="/jquery-file-upload/js/jquery.fileupload.js"></script>
+  <script>window.testBasicWidget = $.blueimp.fileupload;</script>
+  <script src="/jquery-file-upload/js/jquery.fileupload-fp.js"></script>
+  <script src="/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
+  <script>window.testUIWidget = $.blueimp.fileupload;</script>
+  <script src="//code.jquery.com/qunit/git/qunit.js"></script>
+  <script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
+  <script type="text/javascript" src="/js/use_select_all.js"></script>
+  <script type="text/javascript" src="/bundles/rodgergallery/js/album.edit.js"></script>
+{% endblock javascripts %}

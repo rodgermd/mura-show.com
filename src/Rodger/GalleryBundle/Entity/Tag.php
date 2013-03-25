@@ -20,16 +20,16 @@ class Tag {
   private $name;
   
   /**
-   * @ORM\ManyToMany(targetEntity="Image", mappedBy="Tags")
-   * @var array Images 
+   * @ORM\ManyToMany(targetEntity="Image", mappedBy="tags")
+   * @var array $images
    */
-  private $Images;
+  private $images;
   
   /**
-   * @ORM\ManyToMany(targetEntity="Album", mappedBy="Tags")
-   * @var array Albums 
+   * @ORM\ManyToMany(targetEntity="Album", mappedBy="tags")
+   * @var array $albums
    */
-  private $Albums;
+  private $albums;
 
   /**
    * Set name
@@ -55,7 +55,7 @@ class Tag {
    */
   public function getImages()
   {
-    return $this->Images;
+    return $this->images;
   }
   
   /**
@@ -63,7 +63,7 @@ class Tag {
    * @param array $images 
    */
   public function setImages($images) {
-    $this->Images = $images;
+    $this->images = $images;
   }
   
   /**
@@ -72,7 +72,7 @@ class Tag {
    */
   public function addImage(Image $image)
   {
-    $this->Images[] = $image;
+    $this->images[] = $image;
   }
   
   /**
@@ -81,7 +81,7 @@ class Tag {
    */
   public function getAlbums()
   {
-    return $this->Albums;
+    return $this->albums;
   }
   
   /**
@@ -89,16 +89,16 @@ class Tag {
    * @param array $albums 
    */
   public function setAlbums($albums) {
-    $this->Albums = $albums;
+    $this->albums = $albums;
   }
   
   /**
    * Add Album into collection
-   * @param Album $Album 
+   * @param Album $album
    */
   public function addAlbum(Album $album)
   {
-    $this->Albums[] = $album;
+    $this->albums[] = $album;
   }
   
   public function __toString() { return $this->getName(); }

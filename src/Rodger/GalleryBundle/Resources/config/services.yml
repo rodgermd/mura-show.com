@@ -4,11 +4,6 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
-  form.type.image_choice.addmethod:
-    class: Rodger\GalleryBundle\Form\ImageChoiceType
-    tags:
-      - { name: form.type, alias: image_choice }
-
   form.type.image_checkbox.addmethod:
     class: Rodger\GalleryBundle\Form\ImageCheckboxType
     tags:
@@ -19,3 +14,6 @@ services:
     arguments: [%web_root%, @liip_imagine.templating.helper]
     tags:
       - { name: twig.extension}
+
+  namer.directory:
+    class: Rodger\GalleryBundle\Namer\DirectoryNamer
