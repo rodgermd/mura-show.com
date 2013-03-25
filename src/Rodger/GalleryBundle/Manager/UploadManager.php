@@ -11,10 +11,12 @@ namespace Rodger\GalleryBundle\Manager;
 
 
 use Doctrine\ORM\EntityManager;
+use Imagine\Imagick\Imagine;
 use Liip\ImagineBundle\Templating\Helper\ImagineHelper;
 use Rodger\GalleryBundle\Entity\Image;
 use Rodger\GalleryBundle\Exif\ExifDataParser;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Vich\UploaderBundle\Storage\FileSystemStorage;
@@ -34,6 +36,8 @@ class UploadManager
   /** @var ImagineHelper $liip_helper */
   protected $liip_helper;
 
+  protected $container;
+
   public function __construct(Container $container)
   {
     $this->em            = $container->get('doctrine')->getManager();
@@ -41,6 +45,7 @@ class UploadManager
     $this->vich_uploader = $container->get('vich_uploader.templating.helper.uploader_helper');
     $this->liip_helper   = $container->get('liip_imagine.templating.helper');
     $this->storage       = $container->get('vich_uploader.storage.file_system');
+    $this->container     = $container;
   }
 
   public function save(Image $image)
@@ -78,14 +83,26 @@ class UploadManager
     $datetime = null;
     try {
       $datetime = new \DateTime(@$exif_parsed['DateTimeOriginal']);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $datetime = new \DateTime($exif_parsed['DateTime']);
     }
 
     $image->setTakenAt($datetime);
     $this->em->persist($image);
 
+  }
+
+  /**
+   * Rotates image
+   * @param Image $image
+   * @param $degrees
+   */
+  public function rotate_image(Image $image, $degrees)
+  {
+    $image_absolute = $this->getFilepath($image);
+    $imagine        = new Imagine();
+    $imagine->open($image_absolute)->rotate($degrees)->save($image_absolute);
+    $this->drop_thumbnails($image);
   }
 
   /**
@@ -96,6 +113,15 @@ class UploadManager
   protected function getFilepath(Image $image)
   {
     return $this->storage->resolvePath($image, 'file');
+  }
+
+  protected function drop_thumbnails(Image $image)
+  {
+    $finder = new Finder();
+    foreach ($finder->name($image->getFilename())->in($this->container->getParameter('web_root')) as $file) {
+      /** @var SplFileInfo $file */
+      unlink($file->getPathname());
+    }
   }
 
 }

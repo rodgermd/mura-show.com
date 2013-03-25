@@ -17,8 +17,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Album {
   
-  const STORE_FOLDER = 'uploads/images/';
- 
   /**
    * @var integer $id
    *
@@ -44,7 +42,7 @@ class Album {
   
   /**
    * Created at
-   * @var datetime $created_at
+   * @var \DateTime $created_at
    * @ORM\Column(type="datetime") 
    */
   private $created_at;
@@ -59,10 +57,10 @@ class Album {
   /**
    * Related User
    * @var User $user 
-   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="images")
+   * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="albums")
    * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
    */
-  private $User;
+  private $user;
 
   /**
    * @var string $slug 
@@ -75,10 +73,8 @@ class Album {
    * Related keywords
    * @var string
    */
-  public $keywords; 
-  
-  public $upload;
-  
+  protected $keywords;
+
   /**
    * Related Tags
    * @var array Tags
@@ -153,7 +149,7 @@ class Album {
    * @return User 
    */
   public function getUser() {
-    return $this->User;
+    return $this->user;
   }
   
   /**
@@ -162,7 +158,7 @@ class Album {
    */
   public function setUser(User $user)
   {
-    $this->User = $user;
+    $this->user = $user;
   }
 
   /**
@@ -221,6 +217,14 @@ class Album {
     
     return $this->keywords;
   }
-  
+
+  /**
+   * @param string $keywords
+   */
+  public function setKeywords($keywords)
+  {
+    $this->keywords = $keywords;
+  }
+
   public function __toString() { return $this->name; }
 }

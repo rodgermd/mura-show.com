@@ -75,26 +75,17 @@ class AlbumController extends CommonController
 
     if ($this->getRequest()->getMethod() == 'POST') {
 
-      $old_album = clone $album;
-
       $form->bind($this->getRequest());
       if ($form->isValid()) {
 
         $this->em->beginTransaction();
         $tags_repository = $this->em->getRepository('RodgerGalleryBundle:Tag');
-
         $this->em->persist($album);
-
         $this->em->flush();
 
-        if ($old_album->getId() && $old_album->getSlug() != $album->getSlug()) {
-          $result = rename($old_album->getUploadRootDir(), $album->getUploadRootDir());
-          $result = rename($old_album->getThumbnailsFolder(true), $album->getThumbnailsFolder(true));
-        }
-
         // process keywords
-        if ($album->keywords) {
-          $keywords = explode(',', $album->keywords);
+        if ($album->getKeywords()) {
+          $keywords = explode(',', $album->getKeywords());
           $keywords = array_filter(array_map('trim', $keywords));
           $tags     = array();
           foreach ($keywords as $keyword) {
@@ -173,7 +164,7 @@ class AlbumController extends CommonController
       ->createQueryBuilder('i')
       ->where('i.album = :album')
       ->orderBy('i.uploaded_at', 'desc')
-      ->setParameter('album', $album);
+      ->setParameter('album', $album->getId());
 
     $paginator = $this->get('knp_paginator');
 

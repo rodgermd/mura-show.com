@@ -26,13 +26,13 @@ class User extends BaseUser {
    * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Image", mappedBy="user", cascade={"all"})
    * @var array Images
    */
-  protected $Images;
+  protected $images;
 
   /**
    * @ORM\OneToMany(targetEntity="Rodger\GalleryBundle\Entity\Album", mappedBy="user", cascade={"all"})
    * @var array Albums
    */
-  protected $Albums;
+  protected $albums;
 
   /**
    * Get id

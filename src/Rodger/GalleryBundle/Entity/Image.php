@@ -133,8 +133,8 @@ class Image {
    * Related keywords
    * @var string
    */
-  public $keywords; 
-  
+  protected $keywords;
+
   public function __construct() {
     $this->tags = new ArrayCollection();
   }
@@ -328,17 +328,13 @@ class Image {
     sort($result);
     return implode(', ', $result);
   }
-  
+
   /**
-   * Updates year and month fields
-   * @ORM\PrePersist
+   * @param string $keywords
    */
-  public function update_taken_related_fields() {
-    if ($this->taken_at)
-    {
-      $this->year = $this->taken_at->format('Y');
-      $this->month = $this->taken_at->format('m');
-    }
+  public function setKeywords($keywords)
+  {
+    $this->keywords = $keywords;
   }
 
   /**

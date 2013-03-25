@@ -3,6 +3,7 @@ namespace Rodger\GalleryBundle\ValidateHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Rodger\GalleryBundle\Entity\Image;
+use Rodger\GalleryBundle\Manager\UploadManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -38,12 +39,15 @@ class BulkImages {
   protected $query_builder;
   protected $em;
   protected $container;
+  /** @var UploadManager object */
+  protected $upload_manager;
   
   public function __construct($query, EntityManager $em, Container $container) {
     $this->em = $em;
     $this->images = new ArrayCollection();
     $this->query_builder = $query;
     $this->container = $container;
+    $this->upload_manager = $container->get('gallery.upload_manager');
   }
   
   public static function getActions() {
@@ -70,7 +74,7 @@ class BulkImages {
     $property_path = $context->getPropertyPath() . '.images';
 
     if (!count($captured_ids)) {
-      $context->addViolationAtPath($property_path, 'Please select at least one image!', array(), null);
+      $context->addViolationAt($property_path, 'Please select at least one image!', array(), null);
       return;
     }
     
@@ -92,25 +96,15 @@ class BulkImages {
           $this->em->persist($image);
           break;
         case self::ACTION_ROTATE_PLUS90:
-          Converter::rotate_image($image, 90);
-          $this->drop_thumbnails($image);
+          $this->upload_manager->rotate_image($image, 90);
           break;
         case self::ACTION_ROTATE_MINUS90:
-          Converter::rotate_image($image, -90);
-          $this->drop_thumbnails($image);
+          $this->upload_manager->rotate_image($image, -90);
           break;
       }
     }
   }
 
-  protected function drop_thumbnails(Image $image)
-  {
-    $finder = new Finder();
-    foreach ($finder->name($image->getFilename())->in($this->container->getParameter('web_root')) as $file)
-    {
-      /** @var SplFileInfo $file */
-      unlink($file->getPathname());
-    }
-  }
+
 }
 ?>
