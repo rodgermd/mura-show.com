@@ -20,17 +20,17 @@ liip_imagine:
 
     edit:
       filters:
-        thumbnail: { size: [800, 2000], mode: inbound, quality: 100, format: png }
+        thumbnail: { size: [800, 2000], mode: inset, quality: 100, format: png }
     list:
       filters:
         thumbnail: { size: [75, 75], mode: outbound, quality: 70, format: jpg }
     list.small:
       filters:
-        thumbnail: { size: [50, 50], mode: inbound, quality: 70, format: jpg }
+        thumbnail: { size: [50, 50], mode: inset, quality: 70, format: jpg }
     list.medium:
       filters:
         thumbnail: { size: [200, 200], mode: outbound, quality: 70, format: jpg }
     resource:
       filters:
-        thumbnail: { size: [800, 600], mode: inbound, format: png }
+        thumbnail: { size: [800, 600], mode: inset, format: png }
 
