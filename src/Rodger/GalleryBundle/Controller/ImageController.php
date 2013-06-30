@@ -12,6 +12,8 @@ use Rodger\GalleryBundle\Entity\Image;
 use Rodger\GalleryBundle\Form\ImageType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Vich\UploaderBundle\Storage\FileSystemStorage;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 /**
  * @Route("/image")
@@ -47,10 +49,10 @@ class ImageController extends CommonController {
     
     $old_image = clone $image;
     
-    $form->bind($this->getRequest());
+    $form->submit($this->getRequest());
     
     if ($form->isValid()) {
-      $keywords = array_filter(array_map('trim', explode(",", $image->keywords)));
+      $keywords = array_filter(array_map('trim', explode(",", $image->getKeywords())));
       $tags = array();
       if (count($keywords)) {
         foreach($keywords as $keyword) {
@@ -76,7 +78,22 @@ class ImageController extends CommonController {
   }
 
   /**
-   * @Route("/{id}/delete", name="image.delete")
+   * @Route("/{id}/original", name="image.original", requirements={"id"="\d+"})
+   */
+  public function originalAction(Image $image)
+  {
+    /** @var FileSystemStorage $storage */
+    $storage = $this->get('vich_uploader.storage.file_system');
+    $file = $storage->resolvePath($image, 'file');
+
+
+    $response = new Response(file_get_contents($file));
+    $response->headers->set('Content-Type', 'image/png');
+    return $response;
+  }
+
+  /**
+   * @Route("/{id}/delete", name="image.delete", requirements={"id"="\d+"})
    * @Secure(roles="ROLE_USER")
    * @param Image $image
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -100,5 +117,7 @@ class ImageController extends CommonController {
   public function showAction(Image $image) {
     return array('image' => $image, 'album' => $image->getAlbum());
   }
+
+
 }
 ?>
