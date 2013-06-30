@@ -11,7 +11,7 @@
   {% render(controller("RodgerGalleryBundle:Album:upload", { album: album })) %}
 
   <div id="images-list-holder">
-    {% render controller("RodgerGalleryBundle:Album:adminList", {'slug' : album.slug}) %}
+    {% render controller("RodgerGalleryBundle:Album:adminList", {'slug' : album.slug, 'page' : page}) %}
   </div>
 
 {% endblock body %}
@@ -41,9 +41,9 @@
   {{ parent() }}
   {#<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
   <script src="/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
-  <script src="//blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
-  <script src="//blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
-  <script src="//blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
+  <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+  <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
+  <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
   <script src="/jquery-file-upload/js/jquery.iframe-transport.js"></script>
   <script src="/jquery-file-upload/js/jquery.fileupload.js"></script>
   <script>window.testBasicWidget = $.blueimp.fileupload;</script>

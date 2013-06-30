@@ -13,6 +13,7 @@ use Rodger\GalleryBundle\Form as Forms,
   Rodger\GalleryBundle\Entity\Image;
 
 use Rodger\GalleryBundle\ValidateHelper as ValidateHelpers;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -36,7 +37,7 @@ class AlbumController extends CommonController
     $album->setUser($this->user);
 
     $form = $this->process_album($album);
-    if ($form instanceof \Symfony\Component\HttpFoundation\RedirectResponse) return $form;
+    if ($form instanceof RedirectResponse) return $form;
 
     return array('form' => $form->createView());
   }
@@ -49,9 +50,10 @@ class AlbumController extends CommonController
   public function editAction(Album $album)
   {
     $form = $this->process_album($album);
-    if ($form instanceof \Symfony\Component\HttpFoundation\RedirectResponse) return $form;
+    if ($form instanceof RedirectResponse) return $form;
+    $page = $this->getRequest()->get('page', 1);
 
-    return array('form' => $form->createView(), 'album' => $album);
+    return array('form' => $form->createView(), 'album' => $album, 'page' => $page);
   }
 
   /**
@@ -61,7 +63,6 @@ class AlbumController extends CommonController
    */
   public function deleteAction(Album $album)
   {
-    $album->delete_images();
     $this->em->remove($album);
     $this->em->flush();
     return $this->redirect($this->generateUrl('albums'));
@@ -75,7 +76,7 @@ class AlbumController extends CommonController
 
     if ($this->getRequest()->getMethod() == 'POST') {
 
-      $form->bind($this->getRequest());
+      $form->submit($this->getRequest());
       if ($form->isValid()) {
 
         $this->em->beginTransaction();
@@ -109,14 +110,14 @@ class AlbumController extends CommonController
   /**
    * Renders images list
    * @param integer $page
-   * @Route("/album/{slug}/list/{page}", name="admin.images.list", requirements={"page"="\d+"}, defaults={"page"=1})
+   * @Route("/album/{slug}/list", name="admin.images.list", requirements={"page"="\d+"}, defaults={"page"=1})
    * @Template("RodgerGalleryBundle:Album:list.html.twig")
    * @Secure(roles="ROLE_USER")
    */
-  public function adminListAction(Album $album, $page = 1)
+  public function adminListAction(Album $album)
   {
     $this->preExecute();
-    $this->list_common_procedures($album, $page);
+    $this->list_common_procedures($album);
 
     return array('form'       => $this->bulk_form->createView(),
                  'pagination' => $this->pagination,
@@ -137,7 +138,7 @@ class AlbumController extends CommonController
   {
     $this->list_common_procedures($album, $page);
 
-    $this->bulk_form->bind($this->getRequest());
+    $this->bulk_form->submit($this->getRequest());
     if ($this->bulk_form->isValid()) {
       $this->bulk_form->getData()->process();
       $this->em->flush();
@@ -158,7 +159,7 @@ class AlbumController extends CommonController
     );
   }
 
-  protected function list_common_procedures(Album $album, $page)
+  protected function list_common_procedures(Album $album)
   {
     $query_builder = $this->em->getRepository('RodgerGalleryBundle:Image')
       ->createQueryBuilder('i')
@@ -171,7 +172,7 @@ class AlbumController extends CommonController
     /** @var \Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination $pagination */
     $pagination = $paginator->paginate(
       $query_builder,
-      $page,
+      $this->getRequest()->get('page', 1),
       20
     );
 
@@ -206,7 +207,7 @@ class AlbumController extends CommonController
     $form = $this->createForm(new Forms\ImageType(), $image);
     if ($this->getRequest()->isMethod('POST'))
     {
-      $form->bind($this->getRequest());
+      $form->submit($this->getRequest());
       if ($form->isValid())
       {
         /** @var UploadManager $manager  */

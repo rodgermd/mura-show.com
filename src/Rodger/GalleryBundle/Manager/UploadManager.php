@@ -18,6 +18,7 @@ use Rodger\GalleryBundle\Entity\TagRepository;
 use Rodger\GalleryBundle\Exif\ExifDataParser;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Vich\UploaderBundle\Storage\FileSystemStorage;
@@ -53,6 +54,7 @@ class UploadManager
   {
     $this->em->persist($image);
     $this->vich_uploader->asset($image, 'file');
+    /** @var File $uploaded_file */
     $uploaded_file = $image->getFile();
 
     $this->update_exif($image);
@@ -65,7 +67,7 @@ class UploadManager
       'files' =>
       array(
         array(
-          'name'          => $uploaded_file->getClientOriginalName(),
+          'name'          => $uploaded_file->getFilename(),
           'size'          => filesize($filepath),
           'url'           => $this->router->generate('image.show', array('album' => $image->getAlbum()->getSlug(), 'id' => $image->getId())),
           'thumbnail_url' => $this->liip_helper->filter($this->vich_uploader->asset($image, 'file'), 'list'),

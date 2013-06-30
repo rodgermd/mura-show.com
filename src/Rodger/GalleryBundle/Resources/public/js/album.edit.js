@@ -29,6 +29,3 @@ $.album_edit = function () {
   $obj.init();
 };
 
-$(function () {
-  $.album_edit()
-});
