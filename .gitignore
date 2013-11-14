@@ -8,5 +8,3 @@
 /web/gallery/
 /vendor/
 /app/SymfonyRequirements.php
-/composer.lock
-/composer.phar
