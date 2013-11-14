@@ -3,7 +3,7 @@
   <h1>{{ 'Edit %album%' | trans({'%album%' : album}) }}</h1>
   <form id="album-form" method="post" action="{{ path('albums.edit', { slug: album.slug }) }}"
         enctype="multipart/form-data">
-    {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
+
     {{ form_widget(form) }}
     <input type="submit" class="btn btn-success" value="{{ 'update album' | trans }}"/>
   </form>

@@ -1,29 +1,46 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends app.request.isXmlHttpRequest ? "::modal.layout.html.twig" : "::dialog.layout.html.twig" %}
 
-{% block fos_user_content %}
-  <div id="login-container">
-  <h1>{{ 'Login form' | trans }}:</h1>
-  <form action="{{ path("fos_user_security_check") }}" method="post" id="login-form">
-    {% if error %}
-      <div class="error">{{ error }}</div>
-    {% endif %}
-    <ul>
-      <li class="label-in-a-row">
-        <label for="username">{{ 'username' | trans({}, 'FOSUserBundle') }}</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
-      </li>
-      <li class="label-in-a-row">
-        <label for="password">{{ 'password'|trans({}, 'FOSUserBundle') }}</label>
-        <input type="password" id="password" name="_password" />
-      </li>
-      <li>
-        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-        <label for="remember_me">{{ 'remember me'|trans({}, 'FOSUserBundle') }}</label>
-      </li>
-      <li>
-        <input type="submit" id="_submit" name="_submit" value="{{ 'try login'|trans({}, 'FOSUserBundle') }}" />
-      </li>
-    </ul>
-  </form>
+{% block modal_pre %}
+<form class="form-horizontal" action="{{ path("fos_user_security_check") }}" method="post">
+  {% endblock modal_pre %}
+
+  {% block modal_post %}</form>{% endblock modal_post %}
+
+{% block dialog_header %}{{ 'login.dialog.header' | trans }}{% endblock dialog_header %}
+
+{% block dialog_body %}
+  {% if error %}
+    <div class="alert alert-block alert-danger">{{ error|trans({}, 'FOSUserBundle') }}</div>
+  {% endif %}
+  <div class="form-group">
+    <label class="control-label col-lg-2" for="username">{{ 'Email' | trans }}:</label>
+
+    <div class="col-lg-10">
+      <input class="form-control" required="required" type="text" id="username" name="_username" placeholder="{{ 'Email' | trans }}"/>
+    </div>
   </div>
-{% endblock fos_user_content %}
+  <div class="form-group">
+    <label class="control-label col-lg-2" for="password">{{ 'Password' | trans }}:</label>
+
+    <div class="col-lg-10">
+      <input class="form-control" required="required" type="password" id="password" name="_password"
+             placeholder="{{ 'Password' | trans }}"/>
+    </div>
+  </div>
+{% endblock dialog_body %}
+
+{% block dialog_footer %}
+  <span class="pull-right">
+    <button type="submit" class="btn btn-success">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+  </span>
+  <span class="pull-left forgot-register-holder">
+    <label class="checkbox" for="remember_me">
+      <input type="checkbox" id="remember_me" name="_remember_me" value="on"/> {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+    </label>
+    <a href="{{ path('fos_user_resetting_request') }}">{{ 'Forgot password?' | trans }}</a>
+  </span>
+{% endblock dialog_footer %}
+
+

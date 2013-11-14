@@ -1,7 +1,8 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: thumbnails.yml}
+    - { resource: thumbnails.yml }
+    - { resource: fos.yml }
 
 parameters:
   web_root: %kernel.root_dir%/../web
@@ -62,11 +63,6 @@ doctrine:
 
 jms_security_extra:
     secure_all_services: false
-
-fos_user:
-    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
-    firewall_name: main
-    user_class: Rodger\UserBundle\Entity\User
 
 stof_doctrine_extensions:
   default_locale: en_US

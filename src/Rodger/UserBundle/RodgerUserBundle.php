@@ -6,8 +6,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class RodgerUserBundle extends Bundle
 {
-//  public function getParent()
-//  {
-//    return 'FOSUserBundle';
-//  }
+  public function getParent()
+  {
+    return 'FOSUserBundle';
+  }
 }

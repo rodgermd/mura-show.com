@@ -1,0 +1,33 @@
+{% block body %}
+  {% block modal_pre %}{% endblock modal_pre %}
+
+  {% if form is defined %}
+
+    {% form_theme form "::form_div_horizontal_theme.html.twig" %}
+
+    <form class="form-horizontal {% block dialog_form_class %}{% endblock dialog_form_class %}"
+    action="{% block dialog_action %}{% endblock dialog_action %}"
+    method="post" {{ form_enctype(form) }}>
+  {% endif %}
+
+  <div class="modal in" style="display: block" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          {% if app.request.isXmlHttpRequest %}
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          {% endif %}
+          <h3>{% block dialog_header %}{% endblock dialog_header %}</h3>
+        </div>
+        <div class="modal-body">
+          {% block dialog_body %}{% endblock dialog_body %}
+        </div>
+        <div class="modal-footer">
+          {% block dialog_footer %}{% endblock dialog_footer %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if form is defined %}{{ form_end(form) }}{% endif %}
+  {% block modal_post %}{% endblock modal_post %}
+{% endblock body %}

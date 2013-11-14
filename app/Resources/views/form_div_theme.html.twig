@@ -1,0 +1,29 @@
+{% extends "form_div_layout.html.twig" %}
+
+{% block form_row %}
+  {% spaceless %}
+    <div class="form-group">
+      {{ form_label(form) }}
+      {{ form_errors(form) }}
+      {{ form_widget(form) }}
+    </div>
+  {% endspaceless %}
+{% endblock form_row %}
+
+{% block form_widget_simple %}
+  {% spaceless %}
+    {% set type = type|default('text') %}
+    {% set attr =  attr | merge({ 'class': attr.class | default('') ~ ' form-control' }) %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+  {% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block textarea_widget %}
+  {% set attr =  attr | merge({ 'class': attr.class | default('') ~ ' form-control' }) %}
+  {{ parent() }}
+{% endblock textarea_widget %}
+
+{% block choice_widget %}
+  {% set attr =  attr | merge({ 'class': attr.class | default('') ~ ' form-control' }) %}
+  {{ parent() }}
+{% endblock choice_widget %}

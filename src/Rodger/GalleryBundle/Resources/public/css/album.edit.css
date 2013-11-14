@@ -6,22 +6,12 @@
 #album-images-container .field > label { font-weight: bold; margin-right: 2em;}
 
 #fields-album_images { margin-bottom: 1em;}
+#images-upload-form {
+  margin-top: 2em;
+}
 
 .image-choice-item { display: inline-block; width: 33%}
 .image-choice-item img { display: inline-block; margin: 3px; vertical-align: middle}
-
-.items-list td, .items-list th { padding: 3px 5px}
-.items-list thead th { 
-  background: -moz-linear-gradient(top, #f3f3f3 0%, #d6d6d6 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(100%,#d6d6d6));
-  background: -webkit-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
-  background: -o-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
-  background: -ms-linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
-  background: linear-gradient(top, #f3f3f3 0%,#d6d6d6 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#d6d6d6',GradientType=0 );
-  font-weight: bold;
-}
-.items-list tbody td { border-bottom: 1px #ccc solid}
 
 #list-actions {margin:10px 0}
 #list-actions label { margin-right: 1em;}
