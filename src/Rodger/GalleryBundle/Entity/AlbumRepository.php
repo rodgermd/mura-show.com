@@ -14,60 +14,69 @@ use Doctrine\ORM\EntityRepository,
  */
 class AlbumRepository extends EntityRepository
 {
-  /**
-   * Prepares QUeryBuilder to show latest albums
-   * @param mixed $user
-   * @param array $filters
-   * @return \Doctrine\ORM\QueryBuilder 
-   */
-  public function getLatestQueryBuilder($user, array $filters)
-  {
-    $qb = $this->createQueryBuilder('a');
-    $qb->innerJoin('a.images', 'i');
-    if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
-      $qb->where('a.is_private = false AND i.is_private = false');
-    }
-    if (is_numeric($filters['year'])) {
-      $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
-    }
-    if (count($filters['tags'])) {
-      $album_ids = $this->getAlbumsIdUsingTags($user, $filters['tags'], $filters['year']);
-      $qb->andWhere($qb->expr()->in('a.id', $album_ids + array(0)));
-    }
-    
-    $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
-       ->addSelect('(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album = a.id) album_images_count')
-       ->orderBy('sort_date', 'desc');
-    
-    return $qb;
-  }
-  
-  /**
-   * Gets id of Albums matching filters
-   * @param mixed $user
-   * @param array $tags
-   * @param integer $year
-   * @return array 
-   */
-  public function getAlbumsIdUsingTags($user, array $tags = array(), $year = null)
-  {
-    $qb = $this->createQueryBuilder('a')->select('a.id');
-    $qb->innerJoin('a.images', 'i')
-       ->leftJoin('a.tags', 'at')
-       ->leftJoin('i.tags', 'it');
-    
-    if (count($tags)) {
-      $qb->andWhere($qb->expr()->orX($qb->expr()->in('at.name', $tags), $qb->expr()->in('it.name', $tags)));
-    }
-    if (is_numeric($year))
+    /**
+     * Prepares QUeryBuilder to show latest albums
+     * @param mixed $user
+     * @param array $filters
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getLatestQueryBuilder($user, array $filters)
     {
-      $qb->andWhere($qb->expr()->eq('i.year', $year));
+        $qb = $this->createQueryBuilder('a');
+        $qb->innerJoin('a.images', 'i');
+        if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
+            $qb->where('a.is_private = false AND i.is_private = false');
+        }
+        if (is_numeric($filters['year'])) {
+            $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
+        }
+        if (count($filters['tags'])) {
+            $album_ids = $this->getAlbumsIdUsingTags($user, $filters['tags'], $filters['year']);
+            $qb->andWhere($qb->expr()->in('a.id', $album_ids + array(0)));
+        }
+
+        $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
+            ->addSelect(
+                '(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album = a.id) album_images_count'
+            )
+            ->orderBy('sort_date', 'desc');
+
+        return $qb;
     }
-    if (!$user instanceof UserInterface) {
-      $qb->andWhere('a.is_private = false and i.is_private = false');
+
+    /**
+     * Gets id of Albums matching filters
+     * @param mixed $user
+     * @param array $tags
+     * @param integer $year
+     * @return array
+     */
+    public function getAlbumsIdUsingTags($user, array $tags = array(), $year = null)
+    {
+        $qb = $this->createQueryBuilder('a')->select('a.id');
+        $qb->innerJoin('a.images', 'i')
+            ->leftJoin('a.tags', 'at')
+            ->leftJoin('i.tags', 'it');
+
+        if (count($tags)) {
+            $qb->andWhere($qb->expr()->orX($qb->expr()->in('at.name', $tags), $qb->expr()->in('it.name', $tags)));
+        }
+        if (is_numeric($year)) {
+            $qb->andWhere($qb->expr()->eq('i.year', $year));
+        }
+        if (!$user instanceof UserInterface) {
+            $qb->andWhere('a.is_private = false and i.is_private = false');
+        }
+        $result = array_unique(
+            array_map(
+                function ($r) {
+                    return $r['id'];
+                },
+                $qb->getQuery()->execute(array(), Query::HYDRATE_ARRAY)
+            )
+        );
+
+        return $result;
     }
-    $result = array_unique(array_map(function($r) {return $r['id'];}, $qb->getQuery()->execute(array(), Query::HYDRATE_ARRAY)));
-    return $result;
-  }
-  
+
 }

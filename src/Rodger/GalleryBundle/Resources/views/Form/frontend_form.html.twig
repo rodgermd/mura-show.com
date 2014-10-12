@@ -2,51 +2,51 @@
 {% use "RodgerGalleryBundle:Form:decorations.html.twig" %}
 
 {% block field_row %}
-{% spaceless %}
-    <li class="field" id="field-{{ id | lower }}">
-        {{ form_label(form, label|default(null)) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
-    </li>
-{% endspaceless %}
+    {% spaceless %}
+        <li class="field" id="field-{{ id | lower }}">
+            {{ form_label(form, label|default(null)) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </li>
+    {% endspaceless %}
 {% endblock field_row %}
 
 {% block form_widget %}
-{% spaceless %}
-    <ul id="fields-{{ id | lower}}" class="list-layout-fields">
-        {{ block('field_rows') }}
-        {{ form_rest(form) }}
-    </ul>
-{% endspaceless %}
+    {% spaceless %}
+        <ul id="fields-{{ id | lower }}" class="list-layout-fields">
+            {{ block('field_rows') }}
+            {{ form_rest(form) }}
+        </ul>
+    {% endspaceless %}
 {% endblock form_widget %}
 
 {% block choice_widget %}
-{% spaceless %}
-    {% if expanded %}
-        <ul {{ block('widget_container_attributes') }}>
-        {% for child in form %}
-            <li class="form-choice">
-            {{ form_widget(child) }}
-            {{ form_label(child) }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {% if empty_value is not none %}
-            <option value="">{{ empty_value|trans }}</option>
+    {% spaceless %}
+        {% if expanded %}
+            <ul {{ block('widget_container_attributes') }}>
+                {% for child in form %}
+                    <li class="form-choice">
+                        {{ form_widget(child) }}
+                        {{ form_label(child) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+                {% if empty_value is not none %}
+                    <option value="">{{ empty_value|trans }}</option>
+                {% endif %}
+                {% if preferred_choices|length > 0 %}
+                    {% set options = preferred_choices %}
+                    {{ block('widget_choice_options') }}
+                    {% if choices|length > 0 and separator is not none %}
+                        <option disabled="disabled">{{ separator }}</option>
+                    {% endif %}
+                {% endif %}
+                {% set options = choices %}
+                {{ block('widget_choice_options') }}
+            </select>
         {% endif %}
-        {% if preferred_choices|length > 0 %}
-            {% set options = preferred_choices %}
-            {{ block('widget_choice_options') }}
-            {% if choices|length > 0 and separator is not none %}
-                <option disabled="disabled">{{ separator }}</option>
-            {% endif %}
-        {% endif %}
-        {% set options = choices %}
-        {{ block('widget_choice_options') }}
-    </select>
-    {% endif %}
-{% endspaceless %}
+    {% endspaceless %}
 {% endblock choice_widget %}
     

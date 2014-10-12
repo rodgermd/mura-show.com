@@ -1,23 +1,24 @@
 {% block image_checkbox_widget %}
-{% spaceless %}
-  <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-  <a href="{{ path('image.edit', {'id' : value}) }}" title="{{ 'edit image' | trans }}"><img src="{{ thumbnail }}" alt=""/></a>
-{% endspaceless %}
+    {% spaceless %}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        <a href="{{ path('image.edit', {'id' : value}) }}" title="{{ 'edit image' | trans }}"><img src="{{ thumbnail }}"
+                                                                                                   alt=""/></a>
+    {% endspaceless %}
 {% endblock image_checkbox_widget %}
 
 {% block image_field_widget %}
-{% spaceless %}
-{% for child in form %} 
-{% set type = child.get('type', 'checkbox') %}
-{% if type == 'checkbox' %}
-<div class="edit-image-thumbnail">
-  <img src="{{ path }}" alt=""/>
-</div>
-{% endif %}
-<div class="edit-image-field-{{ type  }}">
-{{ form_label(child) }}
-{{ form_widget(child) }} 
-</div>
-{% endfor %}
-{% endspaceless %}
+    {% spaceless %}
+        {% for child in form %}
+            {% set type = child.get('type', 'checkbox') %}
+            {% if type == 'checkbox' %}
+                <div class="edit-image-thumbnail">
+                    <img src="{{ path }}" alt=""/>
+                </div>
+            {% endif %}
+            <div class="edit-image-field-{{ type }}">
+                {{ form_label(child) }}
+                {{ form_widget(child) }}
+            </div>
+        {% endfor %}
+    {% endspaceless %}
 {% endblock image_field_widget %}

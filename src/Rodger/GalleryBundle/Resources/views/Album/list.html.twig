@@ -1,54 +1,56 @@
 <div id="images-list-wrapper">
-  <p class="source hidden">{{ path('admin.images.list', {'slug' : album.slug, 'page' : pagination.currentPageNumber }) }}</p>
-  <h4 class="total-images-count">{{ "Total images count: %count%" | trans({ '%count%' : pagination.totalItemCount }) }}</h4>
+    <p class="source hidden">{{ path('admin.images.list', {'slug' : album.slug, 'page' : pagination.currentPageNumber }) }}</p>
+    <h4 class="total-images-count">{{ "Total images count: %count%" | trans({ '%count%' : pagination.totalItemCount }) }}</h4>
 
-  {% if pagination.items | length %}
-  <form action="{{ path('admin.images.bulk', {'page' : pagination.currentPageNumber, 'slug' : album.slug}) }}" method="post">
-  {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
-      
-  {{ form_errors(form.images) }}
-    
-  <table id="images-list" class="items-list table">
-    <thead>
-      <tr>
-        <th><input type="checkbox" name="select-all" class="checkbox-select-all"/></th>
-        <th>{{ 'id' | trans }}</th>
-        <th></th>
-        <th>{{ 'name' | trans }}</th>
-        <th>{{ 'date' | trans }}</th>
-        <th>{{ 'tags' | trans }}</th>
-        <th>{{ 'is private' | trans }}</th>
-        <th>{{ 'actions' | trans }}</th>
-      </tr>
-    </thead>
+    {% if pagination.items | length %}
+        <form action="{{ path('admin.images.bulk', {'page' : pagination.currentPageNumber, 'slug' : album.slug}) }}"
+              method="post">
+            {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
 
-    <tbody>
-      {% for image in pagination %}
-        <tr>
-          <td><input type="checkbox" name="{{ form_name }}[images][{{ image.id }}]" value="{{ image.id }}"/></td>
-          <td>{{ image.id }}</td>
-          <td><img src="{{ image | thumbnail_path('list') }}?{{ nocache }}" alt=""/></td>
-          <td>{{ image.name }}</td>
-          <td>{{ image.takenAt | date }}</td>
-          <td>{{ image.getKeywords() }}</td>
-          <td>{{ image.isPrivate ? 'Private' | trans : '' }}</td>
-          <td><a href="{{ path ('image.edit', { 'id': image.id }) }}">{{ 'edit' | trans }}</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-    {{ form_errors(form.images) }}
-    <div id="list-actions">
-      {{ form_errors(form.action) }}
-      {{ form_widget(form._token) }}
-      {{ form_row(form.action) }}
-    </div>
-    <input type="submit"/>
-  </form>
-    {# display navigation #}
-  <div id="navigation">
-      {{ knp_pagination_render(pagination, null, {'slug' : album.slug}) }}
-  </div>
-  
-  {% endif %}
+            {{ form_errors(form.images) }}
+
+            <table id="images-list" class="items-list table">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" name="select-all" class="checkbox-select-all"/></th>
+                    <th>{{ 'id' | trans }}</th>
+                    <th></th>
+                    <th>{{ 'name' | trans }}</th>
+                    <th>{{ 'date' | trans }}</th>
+                    <th>{{ 'tags' | trans }}</th>
+                    <th>{{ 'is private' | trans }}</th>
+                    <th>{{ 'actions' | trans }}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for image in pagination %}
+                    <tr>
+                        <td><input type="checkbox" name="{{ form_name }}[images][{{ image.id }}]"
+                                   value="{{ image.id }}"/></td>
+                        <td>{{ image.id }}</td>
+                        <td><img src="{{ image | thumbnail_path('list') }}?{{ nocache }}" alt=""/></td>
+                        <td>{{ image.name }}</td>
+                        <td>{{ image.takenAt | date }}</td>
+                        <td>{{ image.getKeywords() }}</td>
+                        <td>{{ image.isPrivate ? 'Private' | trans : '' }}</td>
+                        <td><a href="{{ path ('image.edit', { 'id': image.id }) }}">{{ 'edit' | trans }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ form_errors(form.images) }}
+            <div id="list-actions">
+                {{ form_errors(form.action) }}
+                {{ form_widget(form._token) }}
+                {{ form_row(form.action) }}
+            </div>
+            <input type="submit"/>
+        </form>
+        {# display navigation #}
+        <div id="navigation">
+            {{ knp_pagination_render(pagination, null, {'slug' : album.slug}) }}
+        </div>
+
+    {% endif %}
 </div>

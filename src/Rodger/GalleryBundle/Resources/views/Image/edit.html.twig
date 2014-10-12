@@ -1,29 +1,32 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 {% block body %}
-<h1>{{ 'Edit %image%' | trans({'%image%' : image}) }}
-<a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug })}}" title="{{ image.album }}">[{{ image.album }}]</a>
-</h1>
-<img src="{{ image | thumbnail('edit') }}" alt=""/>
-<form method="post" action="{{ path('image.update', { 'id': image.id }) }}">
-{% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
-{{ form_widget(form) }}
-<input type="submit" value="{{ 'update image' | trans }}"/>
-</form>
+    <h1>{{ 'Edit %image%' | trans({'%image%' : image}) }}
+        <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug }) }}"
+           title="{{ image.album }}">[{{ image.album }}]</a>
+    </h1>
+    <img src="{{ image | thumbnail('edit') }}" alt=""/>
+    <form method="post" action="{{ path('image.update', { 'id': image.id }) }}">
+        {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
+        {{ form_widget(form) }}
+        <input type="submit" value="{{ 'update image' | trans }}"/>
+    </form>
 {% endblock body %}
 
 {% block primary_menu_items %}
-{% if app.user %}
-{{ parent() }}
-  <li><a href="{{ path('albums.edit', {'slug' : image.album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
-  <li><a href="{{ path('image.show', {'id' : image.id, 'album' : image.album.slug}) }}">{{ 'Show image' | trans }}</a></li>
-{% endif %}
+    {% if app.user %}
+        {{ parent() }}
+        <li><a href="{{ path('albums.edit', {'slug' : image.album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
+        <li>
+            <a href="{{ path('image.show', {'id' : image.id, 'album' : image.album.slug}) }}">{{ 'Show image' | trans }}</a>
+        </li>
+    {% endif %}
 {% endblock primary_menu_items %}
 {% block javascripts %}
-{{ parent() }}
-<script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/image.edit.css">
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/image.edit.css">
 {% endblock stylesheets %}

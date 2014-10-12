@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Rodger\UserBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -10,31 +10,31 @@ class LoadUserData extends AbstractFixture implements FixtureInterface
 {
     public function load($manager)
     {
-      $rodger = new User();
-      $rodger->setEmail('rodger@mura-show.com');
-      $rodger->setUsername('rodger');
-      $rodger->setPlainPassword('123');
-      $rodger->setEnabled(true);
-      $rodger->addRole(User::ROLE_SUPER_ADMIN);
-      
-      $this->addReference('rodger', $rodger);
-      
-      $manager->persist($rodger);
-      
-      $asol = new User();
-      $asol->setEmail('lena@mura-show.com');
-      $asol->setUsername('asol');
-      $asol->setPlainPassword('123');
-      $asol->setEnabled(true);
-      $rodger->addRole(User::ROLE_DEFAULT);
-      
-      $manager->persist($asol);
-      
-      $manager->flush();
+        $rodger = new User();
+        $rodger->setEmail('rodger@mura-show.com');
+        $rodger->setUsername('rodger');
+        $rodger->setPlainPassword('123');
+        $rodger->setEnabled(true);
+        $rodger->addRole(User::ROLE_SUPER_ADMIN);
+
+        $this->addReference('rodger', $rodger);
+
+        $manager->persist($rodger);
+
+        $asol = new User();
+        $asol->setEmail('lena@mura-show.com');
+        $asol->setUsername('asol');
+        $asol->setPlainPassword('123');
+        $asol->setEnabled(true);
+        $rodger->addRole(User::ROLE_DEFAULT);
+
+        $manager->persist($asol);
+
+        $manager->flush();
     }
-    
+
     public function getOrder()
     {
-      return 2;
+        return 2;
     }
 }

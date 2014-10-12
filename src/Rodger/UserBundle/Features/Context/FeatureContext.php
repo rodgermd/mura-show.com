@@ -15,13 +15,15 @@ use Rodger\GalleryBundle\Features\Context\CommonFeatureContext;
 /**
  * Feature context.
  */
-class FeatureContext extends CommonFeatureContext {
+class FeatureContext extends CommonFeatureContext
+{
 
-  /**
-   * @BeforeScenario
-   */
-  public function cleanDatabase() {
-    $this->cleanUsers();
-  }
+    /**
+     * @BeforeScenario
+     */
+    public function cleanDatabase()
+    {
+        $this->cleanUsers();
+    }
 
 }

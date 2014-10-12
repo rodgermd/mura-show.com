@@ -24,6 +24,6 @@ class FeatureContext extends CommonFeatureContext
      */
     public function cleanDatabase()
     {
-      $this->cleanUsers();
+        $this->cleanUsers();
     }
 }

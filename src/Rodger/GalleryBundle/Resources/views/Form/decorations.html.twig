@@ -1,40 +1,40 @@
 {% block generic_label %}
-{% spaceless %}
-    {% if required %}
-        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
-    {% endif %}
-    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-      {{ label|trans }}
-      {% if required %}
-        <span class="label-required">{{ '(required)' | trans }}</span>
-      {% endif %}
-    </label>
-{% endspaceless %}
+    {% spaceless %}
+        {% if required %}
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
+        {% endif %}
+        <label{% for attrname,attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ label|trans }}
+        {% if required %}
+            <span class="label-required">{{ '(required)' | trans }}</span>
+        {% endif %}
+        </label>
+    {% endspaceless %}
 {% endblock %}
     
 {% block widget_attributes %}
-{% spaceless %}
-    id="{{ id | lower }}" name="{{ full_name }}"{% if read_only %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
-    {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
-    placeholder="{{ label }}"
-{% endspaceless %}
+    {% spaceless %}
+        id="{{ id | lower }}" name="{{ full_name }}"{% if read_only %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {% for attrname,attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
+        placeholder="{{ label }}"
+    {% endspaceless %}
 {% endblock widget_attributes %}
     
 {% block widget_container_attributes %}
-{% spaceless %}
-    id="{{ id | lower}}"
-    {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
-{% endspaceless %}
+    {% spaceless %}
+        id="{{ id | lower }}"
+        {% for attrname,attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
+    {% endspaceless %}
 {% endblock widget_container_attributes %}    
     
 {% block field_errors %}
-{% spaceless %}
-    {% if errors|length > 0 %}
-    <ul class="field-errors">
-        {% for error in errors %}
-            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-{% endspaceless %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <ul class="field-errors">
+                {% for error in errors %}
+                    <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endspaceless %}
 {% endblock field_errors %}    

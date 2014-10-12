@@ -5,18 +5,21 @@ use Doctrine\ORM\Query\Lexer,
     Doctrine\ORM\Query\AST\Functions;
 
 
-class Greatest extends Functions\FunctionNode {
+class Greatest extends Functions\FunctionNode
+{
 
-  protected $firstExpression, $secondExpression;
-  
-  public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
-  {
-    return sprintf("GREATEST(%s, %s)", 
-            $this->firstExpression->dispatch($sqlWalker), 
-            $this->secondExpression->dispatch($sqlWalker));
-  }
-  
-  public function parse(\Doctrine\ORM\Query\Parser $parser)
+    protected $firstExpression, $secondExpression;
+
+    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
+    {
+        return sprintf(
+            "GREATEST(%s, %s)",
+            $this->firstExpression->dispatch($sqlWalker),
+            $this->secondExpression->dispatch($sqlWalker)
+        );
+    }
+
+    public function parse(\Doctrine\ORM\Query\Parser $parser)
     {
         $parser->match(Lexer::T_IDENTIFIER); // (2)
         $parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
@@ -26,4 +29,5 @@ class Greatest extends Functions\FunctionNode {
         $parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
     }
 }
+
 ?>

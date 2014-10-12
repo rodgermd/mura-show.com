@@ -1,24 +1,24 @@
 {% block secondary_menu %}
-{% if years | length %}
-<div id="years-menu-holder">
-  <table id="years-menu">
-    <tbody>
-      <tr>
-        {% for year in years %}
-          <td>
-            <a href="{{ path('filter.year', { 'year' : year})}}" 
-            {% if year == selected %}
-               class="selected" title="{{ 'remove filter %year% year' |trans({ '%year%' : year })}}"
-            {% else %}
-               title="{{ 'filter %year% year' |trans({ '%year%' : year })}}"
-            {% endif %}>
-              {{ year }}
-            </a>
-          </td>
-        {% endfor %}
-      </tr>
-    </tbody>
-  </table>
-</div>
-{% endif %}
+    {% if years | length %}
+        <div id="years-menu-holder">
+            <table id="years-menu">
+                <tbody>
+                <tr>
+                    {% for year in years %}
+                        <td>
+                            <a href="{{ path('filter.year', { 'year' : year}) }}"
+                                    {% if year == selected %}
+                                class="selected" title="{{ 'remove filter %year% year' |trans({ '%year%' : year }) }}"
+                            {% else %}
+                                title="{{ 'filter %year% year' |trans({ '%year%' : year }) }}"
+                                    {% endif %}>
+                                {{ year }}
+                            </a>
+                        </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endblock secondary_menu %}

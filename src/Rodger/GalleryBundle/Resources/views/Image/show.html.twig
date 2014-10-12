@@ -1,36 +1,37 @@
 {% extends "RodgerGalleryBundle:Front:base.html.twig" %}
 {% block body %}
-<h1>{{ image }}
-  <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug })}}" title="{{ image.album }}">[{{ image.album }}]</a>
-</h1>
-{{ image | thumbnail('resource') }}
+    <h1>{{ image }}
+        <a class="link-in-title" href="{{ path('album.show', { 'slug' : image.album.slug }) }}"
+           title="{{ image.album }}">[{{ image.album }}]</a>
+    </h1>
+    {{ image | thumbnail('resource') }}
 
-<p>{% if image.takenAt  %} {{ image.takenAt | date }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
+    <p>{% if image.takenAt %} {{ image.takenAt | date }}. {{ image.takenAt.format('H:i') }}{% endif %}</p>
 
-{% if image.tags | length %}
-<h4>{{ 'Tags' | trans }}:</h4>
-<ul class="tags-list">
-  {% for tag in image.tags %}
-    <li class="tag">{{ tag }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+    {% if image.tags | length %}
+        <h4>{{ 'Tags' | trans }}:</h4>
+        <ul class="tags-list">
+            {% for tag in image.tags %}
+                <li class="tag">{{ tag }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-<p><a href="{{ path('image.original', { id: image.id }) }}" class="btn">Original image</a></p>
+    <p><a href="{{ path('image.original', { id: image.id }) }}" class="btn">Original image</a></p>
 
 {% endblock body %}
 
 {% block primary_menu_items %}
-{% if app.user %}
-{{ parent() }}
-  <li><a href="{{ path('albums.edit', {'slug' : image.album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
-  <li><a href="{{ path('image.edit', {'id' : image.id}) }}">{{ 'Edit image' | trans }}</a></li>
-{% endif %}
+    {% if app.user %}
+        {{ parent() }}
+        <li><a href="{{ path('albums.edit', {'slug' : image.album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
+        <li><a href="{{ path('image.edit', {'id' : image.id}) }}">{{ 'Edit image' | trans }}</a></li>
+    {% endif %}
 {% endblock primary_menu_items %}
   
 {% block title %}{{ parent() }} • {{ image.album }} • {{ image }}{% endblock %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/image.show.css">
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/image.show.css">
 {% endblock stylesheets %}

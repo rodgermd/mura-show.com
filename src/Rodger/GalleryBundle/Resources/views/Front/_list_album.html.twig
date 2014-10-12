@@ -1,16 +1,17 @@
 <h2>
-  <a href="{{path('album.show', {'slug' : album.slug}) }}">{{ album }}</a>
-  <a class="total-images button gray-button" href="{{path('album.show', {'slug' : album.slug}) }}">
-{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
-    | transchoice(album_options.album_images_count, {"%number%" : album_options.album_images_count})  }}</a>
+    <a href="{{ path('album.show', {'slug' : album.slug}) }}">{{ album }}</a>
+    <a class="total-images button gray-button" href="{{ path('album.show', {'slug' : album.slug}) }}">
+        {{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images'
+        | transchoice(album_options.album_images_count, {"%number%" : album_options.album_images_count}) }}</a>
 </h2>
 
 <ul class="album-images">
-  {% for image in images %}
-    <li class="album-image">
-      <a href="{{ path('album.show', {'slug' : album.slug}) }}#image-{{ image.id }}">
-        <img data-original="{{ image | thumbnail_path('list') }}" src="" alt="" class="lazy thumbnails thumbnails-list"/>
-      </a>
-      </li>
-  {% endfor %}
+    {% for image in images %}
+        <li class="album-image">
+            <a href="{{ path('album.show', {'slug' : album.slug}) }}#image-{{ image.id }}">
+                <img data-original="{{ image | thumbnail_path('list') }}" src="" alt=""
+                     class="lazy thumbnails thumbnails-list"/>
+            </a>
+        </li>
+    {% endfor %}
 </ul>

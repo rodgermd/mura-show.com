@@ -2,40 +2,43 @@
 {% block title %}{{ parent() }} • {{ album }}{% endblock title %}
 
 {% block body %}
-{% render controller("RodgerGalleryBundle:Tag:albumImages", { id : album.id }) %}
-<h1>{{ album }}
-    <span class="total-images">{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images' 
-    | transchoice(images | length, {"%number%" : images | length})  }}</span>
-</h1>
-{% if images | length %}
-<ul class="album-images">
-{% for image in images %}
-<li class="album-image">
-  <a href="{{ path('image.show', {'album' : album.slug, 'id' : image.id}) }}" target-image="{{ image | thumbnail_path('resource') }}" title="{{ image }}" class="show-in-colorbox" name="image-{{ image.id }}">
-    <img data-original="{{ image| thumbnail_path( (images | length) > 30 ? 'list' : 'list.medium')}}"
-         class="lazy thumbnails thumbnails-{{(images | length) > 30 ? 'list' : 'list-medium' }}" alt=""/>
-  </a>
-</li>
-{% endfor %}
-</ul>
-{% endif %}
+    {% render controller("RodgerGalleryBundle:Tag:albumImages", { id : album.id }) %}
+    <h1>{{ album }}
+        <span class="total-images">{{ '{0}empty album |{1}has one image|]1,Inf]contains %number% images'
+            | transchoice(images | length, {"%number%" : images | length}) }}</span>
+    </h1>
+    {% if images | length %}
+        <ul class="album-images">
+            {% for image in images %}
+                <li class="album-image">
+                    <a href="{{ path('image.show', {'album' : album.slug, 'id' : image.id}) }}"
+                       target-image="{{ image | thumbnail_path('resource') }}" title="{{ image }}"
+                       class="show-in-colorbox" name="image-{{ image.id }}">
+                        <img data-original="{{ image| thumbnail_path( (images | length) > 30 ? 'list' : 'list.medium') }}"
+                             class="lazy thumbnails thumbnails-{{ (images | length) > 30 ? 'list' : 'list-medium' }}"
+                             alt=""/>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock body %}
 
 {% block javascripts %}
-{{ parent() }}
-<script src="/js/jquery.colorbox-min.js" type="text/javascript"></script>
-<script src="/bundles/rodgergallery/js/album.view.js" type="text/javascript"></script>
+    {{ parent() }}
+    <script src="/js/jquery.colorbox-min.js" type="text/javascript"></script>
+    <script src="/bundles/rodgergallery/js/album.view.js" type="text/javascript"></script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link media="screen" rel="stylesheet" href="/css/colorbox.css" />
+    {{ parent() }}
+    <link media="screen" rel="stylesheet" href="/css/colorbox.css"/>
 {% endblock stylesheets %}
 
 {% block primary_menu_items %}
-{% if app.user %}
-{{ parent() }}
-  <li><a href="{{ path('albums.edit', {'slug' : album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
-{% endif %}
+    {% if app.user %}
+        {{ parent() }}
+        <li><a href="{{ path('albums.edit', {'slug' : album.slug}) }}">{{ 'Edit album' | trans }}</a></li>
+    {% endif %}
 {% endblock primary_menu_items %}

@@ -1,9 +1,9 @@
 {% extends "RodgerGalleryBundle:Album:edit.html.twig" %}
 {% block body %}
-<h1>{{ 'Create album' | trans }}</h1>
-<form method="post" action="{{ path('albums.create') }}" enctype="multipart/form-data">
-{% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
-{{ form_widget(form) }}
-<input type="submit" value="{{ 'create album' | trans }}"/>
-</form>
+    <h1>{{ 'Create album' | trans }}</h1>
+    <form method="post" action="{{ path('albums.create') }}" enctype="multipart/form-data">
+        {% form_theme form "RodgerGalleryBundle:Form:table.html.twig" %}
+        {{ form_widget(form) }}
+        <input type="submit" value="{{ 'create album' | trans }}"/>
+    </form>
 {% endblock body %}

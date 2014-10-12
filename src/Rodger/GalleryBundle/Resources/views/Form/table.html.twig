@@ -3,24 +3,24 @@
 {% use "RodgerGalleryBundle:Form:decorations.html.twig" %}
 
 {% block form_widget_compound %}
-{% spaceless %}
-    <table id="fields-{{ id }}" class="fields-table">
-        {{ block('form_rows') }}
-        {{ form_rest(form) }}
-    </table>
-{% endspaceless %}
+    {% spaceless %}
+        <table id="fields-{{ id }}" class="fields-table">
+            {{ block('form_rows') }}
+            {{ form_rest(form) }}
+        </table>
+    {% endspaceless %}
 {% endblock form_widget_compound %}
 
 {% block field_row %}
-{% spaceless %}
-    <tr class="field-row-{{ name }}">
-        <th>
-            {{ form_label(form, label|default(null)) }}
-        </th>
-        <td>
-            {{ form_errors(form) }}
-            {{ form_widget(form) }}
-        </td>
-    </tr>
-{% endspaceless %}
+    {% spaceless %}
+        <tr class="field-row-{{ name }}">
+            <th>
+                {{ form_label(form, label|default(null)) }}
+            </th>
+            <td>
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+            </td>
+        </tr>
+    {% endspaceless %}
 {% endblock field_row %}

@@ -1,19 +1,19 @@
 {% if tags | length %}
-<div id="tags-pane">
-  <h4>{{ 'Tags' | trans }}:</h4>
-  <ul id="tags-list">
-  {% for tag in tags %}
-  <li>
-    <a href="{{ path('filter.use', { 'name' : tag }) }}"{% if tag.name in filtered_tags %} class="selected"{% endif %}>
-    {{ tag.name }}
-    </a>
-  </li>
-  {% endfor %}
-  
-  {% if filtered_tags | length > 3 %}
-  <li><a href="{{ path('filter.clear') }}" id="tags-clear">{{ 'clear filters' }}</a></li>
-  {% endif %}
-  
-  </ul>
-</div>
+    <div id="tags-pane">
+        <h4>{{ 'Tags' | trans }}:</h4>
+        <ul id="tags-list">
+            {% for tag in tags %}
+                <li>
+                    <a href="{{ path('filter.use', { 'name' : tag }) }}"{% if tag.name in filtered_tags %} class="selected"{% endif %}>
+                        {{ tag.name }}
+                    </a>
+                </li>
+            {% endfor %}
+
+            {% if filtered_tags | length > 3 %}
+                <li><a href="{{ path('filter.clear') }}" id="tags-clear">{{ 'clear filters' }}</a></li>
+            {% endif %}
+
+        </ul>
+    </div>
 {% endif %}

@@ -1,16 +1,16 @@
 {% extends "::base.html.twig" %}
 
 {% block header %}
-<div id="header">
-<a href="{{ path('homepage') }}" title="{{ 'go to start page' | trans }}" id="sitelogo">murashow.com</a>
-</div>
+    <div id="header">
+        <a href="{{ path('homepage') }}" title="{{ 'go to start page' | trans }}" id="sitelogo">murashow.com</a>
+    </div>
 {% endblock header %}
 
 {% block stylesheets %}
-{{ parent() }}
-  <link href="/bundles/rodgeruser/css/login.css" media="screen" rel="stylesheet" type="text/css" />
+    {{ parent() }}
+    <link href="/bundles/rodgeruser/css/login.css" media="screen" rel="stylesheet" type="text/css"/>
 {% endblock stylesheets %}
 
 {% block body %}
-  {% block fos_user_content %}{% endblock fos_user_content %}
+    {% block fos_user_content %}{% endblock fos_user_content %}
 {% endblock  body %}
