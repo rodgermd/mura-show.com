@@ -10,6 +10,7 @@
 namespace Rodger\GalleryBundle\Namer;
 
 
+use Rodger\GalleryBundle\Entity\Image;
 use Vich\UploaderBundle\Mapping\PropertyMapping;
 use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
 
@@ -26,6 +27,7 @@ class DirectoryNamer implements DirectoryNamerInterface
      */
     public function directoryName($object, PropertyMapping $mapping)
     {
-        return $mapping->getUploadDestination() . '/' . $object->getAlbumId();
+        /** @var Image $object */
+        return $mapping->getUploadDestination() . '/' . $object->getAlbum()->getId();
     }
 }

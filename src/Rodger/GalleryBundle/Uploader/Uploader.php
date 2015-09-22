@@ -175,8 +175,8 @@ class Uploader
             }
         }
 
-        if (@$options['is_private']) {
-            $image->setIsPrivate(true);
+        if (@$options['private']) {
+            $image->setPrivate(true);
         }
 
         $this->em->persist($image);

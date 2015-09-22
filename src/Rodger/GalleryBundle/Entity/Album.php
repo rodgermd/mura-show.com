@@ -43,20 +43,23 @@ class Album
 
     /**
      * Created at
-     * @var \DateTime $created_at
-     * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime $createdAt
+     * @ORM\Column(type="datetime", name="created_at")
      */
-    private $created_at;
+    private $createdAt;
 
     /**
      * Is private flag
-     * @var boolean $is_private
+     *
+     * @var boolean $private
      * @ORM\Column(name="is_private", type="boolean")
      */
-    private $is_private = false;
+    private $private = false;
 
     /**
      * Related User
+     *
      * @var User $user
      * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="albums")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
@@ -72,12 +75,14 @@ class Album
 
     /**
      * Related keywords
+     *
      * @var string
      */
     protected $keywords;
 
     /**
      * Related Tags
+     *
      * @var array Tags
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="albums")
      * @ORM\JoinTable(name="album_tags",
@@ -89,9 +94,9 @@ class Album
 
     public function __construct()
     {
-        $this->images = new ArrayCollection();
-        $this->tags = new ArrayCollection();
-        $this->created_at = new \DateTime();
+        $this->images     = new ArrayCollection();
+        $this->tags       = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -126,33 +131,37 @@ class Album
 
     /**
      * Gets is_provate flag
+     *
      * @return boolean
      */
-    public function getIsPrivate()
+    public function isPrivate()
     {
-        return $this->is_private;
+        return $this->private;
     }
 
     /**
      * Sets is_private flag
-     * @param boolean $is_private
+     *
+     * @param boolean $private
      */
-    public function setIsPrivate($is_private)
+    public function setPrivate($private)
     {
-        $this->is_private = (bool)$is_private;
+        $this->private = (bool)$private;
     }
 
     /**
      * Gets created at
+     *
      * @return datetime
      */
     public function getCreatedAt()
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
      * Gets uploader User
+     *
      * @return User
      */
     public function getUser()
@@ -162,6 +171,7 @@ class Album
 
     /**
      * Sets uploader User
+     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -171,6 +181,7 @@ class Album
 
     /**
      * Gets related Images
+     *
      * @return array
      */
     public function getImages()
@@ -180,6 +191,7 @@ class Album
 
     /**
      * Adds Image
+     *
      * @param Image $image
      */
     public function addImage(Image $image)
@@ -189,6 +201,7 @@ class Album
 
     /**
      * Gets related Tags
+     *
      * @return array
      */
     public function getTags()
@@ -198,6 +211,7 @@ class Album
 
     /**
      * Adds Image
+     *
      * @param Image $image
      */
     public function addTag(Tag $tag)
@@ -207,6 +221,7 @@ class Album
 
     /**
      * Sets related Tags
+     *
      * @param array $tags
      */
     public function setTags($tags)
@@ -216,6 +231,7 @@ class Album
 
     /**
      * Gets slug value
+     *
      * @return string
      */
     public function getSlug()

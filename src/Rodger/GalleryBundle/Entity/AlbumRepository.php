@@ -25,7 +25,7 @@ class AlbumRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->innerJoin('a.images', 'i');
         if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
-            $qb->where('a.is_private = false AND i.is_private = false');
+            $qb->where('a.private = false AND i.private = false');
         }
         if (is_numeric($filters['year'])) {
             $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
@@ -35,7 +35,7 @@ class AlbumRepository extends EntityRepository
             $qb->andWhere($qb->expr()->in('a.id', $album_ids + array(0)));
         }
 
-        $qb->addSelect('GREATEST(a.created_at, i.uploaded_at) sort_date')
+        $qb->addSelect('GREATEST(a.createdAt, i.uploadedAt) sort_date')
             ->addSelect(
                 '(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album = a.id) album_images_count'
             )
@@ -65,7 +65,7 @@ class AlbumRepository extends EntityRepository
             $qb->andWhere($qb->expr()->eq('i.year', $year));
         }
         if (!$user instanceof UserInterface) {
-            $qb->andWhere('a.is_private = false and i.is_private = false');
+            $qb->andWhere('a.private = false and i.private = false');
         }
         $result = array_unique(
             array_map(

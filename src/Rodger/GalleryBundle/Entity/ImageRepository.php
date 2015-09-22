@@ -17,8 +17,8 @@ class ImageRepository extends EntityRepository
         $qb = $this->getAccessibleImagesBuilder($album, $show_private);
         $qb->select('i, a')
             ->innerJoin('i.album', 'a')
-            ->orderBy('i.taken_at', 'desc')
-            ->addOrderBy('i.uploaded_at', 'desc');
+            ->orderBy('i.takenAt', 'desc')
+            ->addOrderBy('i.uploadedAt', 'desc');
 
         if (count($filters)) {
             if (is_numeric($filters['year'])) {
@@ -43,11 +43,11 @@ class ImageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('i')
             ->where('i.album = :album')
             ->setParameter('album', $album->getId())
-            ->orderBy('i.taken_at', 'asc')
-            ->addOrderBy('i.uploaded_at', 'asc');
+            ->orderBy('i.takenAt', 'asc')
+            ->addOrderBy('i.uploadedAt', 'asc');
 
         if (!$user) {
-            $qb->andWhere('i.is_private = false');
+            $qb->andWhere('i.private = false');
         }
 
         return $qb;
@@ -58,7 +58,7 @@ class ImageRepository extends EntityRepository
         $show_private = ($user instanceof \FOS\UserBundle\Model\UserInterface);
         $qb = $this->createQueryBuilder('i');
         if (!$show_private) {
-            $qb->where('i.is_private = false');
+            $qb->where('i.private = false');
         }
         $qb->select('DISTINCT i.year')->orderBy('i.year', 'desc');
 

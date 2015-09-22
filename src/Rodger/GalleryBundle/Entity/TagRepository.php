@@ -65,7 +65,7 @@ class TagRepository extends EntityRepository
                 ->innerJoin('i.album', 'a')
                 ->groupBy('t.name');
             if (!$user) {
-                $qb1->andWhere('i.is_private = false AND a.is_private = false');
+                $qb1->andWhere('i.private = false AND a.private = false');
             }
 
             $result1 = array_unique(
@@ -83,7 +83,7 @@ class TagRepository extends EntityRepository
                 ->innerJoin('a.images', 'i', 'WITH', $qb2->expr()->eq('i.year', $year))
                 ->groupBy('t.name');
             if (!$user) {
-                $qb2->andWhere('i.is_private = false AND a.is_private = false');
+                $qb2->andWhere('i.private = false AND a.private = false');
             }
             $result2 = array_unique(
                 array_map(
@@ -124,7 +124,7 @@ class TagRepository extends EntityRepository
             $qb->andWhere($qb->expr()->eq('i.year', $filters['year']));
         }
         if (!$user instanceof UserInterface) {
-            $qb->andWhere('i.is_private = false');
+            $qb->andWhere('i.private = false');
         }
 
         return $qb->getQuery()->execute();

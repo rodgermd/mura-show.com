@@ -182,7 +182,7 @@ class AlbumController extends CommonController
         $query_builder = $this->em->getRepository('RodgerGalleryBundle:Image')
             ->createQueryBuilder('i')
             ->where('i.album = :album')
-            ->orderBy('i.uploaded_at', 'desc')
+            ->orderBy('i.uploadedAt', 'desc')
             ->setParameter('album', $album->getId());
 
         $paginator = $this->get('knp_paginator');

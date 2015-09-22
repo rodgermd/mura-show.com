@@ -4,10 +4,12 @@ namespace Rodger\GalleryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 use Gedmo\Mapping\Annotation\Timestampable;
 use Rodger\GalleryBundle\Entity\Album;
 use Rodger\GalleryBundle\Entity\Tag;
 use Rodger\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -52,21 +54,24 @@ class Image
 
     /**
      * Uploaded at
-     * @var \DateTime $uploaded_at
+     *
+     * @var \DateTime $uploadedAt
      * @Timestampable(on="create")
      * @ORM\Column(name="uploaded_at",type="datetime", nullable=true)
      */
-    private $uploaded_at;
+    private $uploadedAt;
 
     /**
      * Datetime when picture was taken (shot)
-     * @var \DateTime $taken_at
+     *
+     * @var \DateTime $takenAt
      * @ORM\Column(name="taken_at",type="datetime", nullable=true)
      */
-    private $taken_at;
+    private $takenAt;
 
     /**
      * Year of image taken date
+     *
      * @var integer $year
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -74,6 +79,7 @@ class Image
 
     /**
      * month of image taken date
+     *
      * @var integer $month
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -94,7 +100,8 @@ class Image
 
     /**
      * Related Tags
-     * @var array Tags
+     *
+     * @var PersistentCollection Tags
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="images")
      * @ORM\JoinTable(name="image_tags",
      *      joinColumns={@ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -105,13 +112,15 @@ class Image
 
     /**
      * Is private flag
-     * @var boolean $is_private
+     *
+     * @var boolean $private
      * @ORM\Column(name="is_private", type="boolean")
      */
-    private $is_private = false;
+    private $private = false;
 
     /**
      * Related User
+     *
      * @var User $user
      * @ORM\ManyToOne(targetEntity="Rodger\UserBundle\Entity\User", inversedBy="images")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="set null")
@@ -119,10 +128,10 @@ class Image
     private $user;
 
     /**
-     * @var array $exif_data
+     * @var array $exifData
      * @ORM\Column(name="exif_data", type="array")
      */
-    private $exif_data;
+    private $exifData;
 
     /**
      * @Assert\File(
@@ -137,6 +146,7 @@ class Image
 
     /**
      * Related keywords
+     *
      * @var string
      */
     protected $keywords;
@@ -187,73 +197,81 @@ class Image
     }
 
     /**
-     * Gets is_provate flag
+     * Gets is_private flag
+     *
      * @return boolean
      */
-    public function getIsPrivate()
+    public function isPrivate()
     {
-        return $this->is_private;
+        return $this->private;
     }
 
     /**
      * Sets is_private flag
-     * @param boolean $is_private
+     *
+     * @param boolean $private
      */
-    public function setIsPrivate($is_private)
+    public function setPrivate($private)
     {
-        $this->is_private = (bool)$is_private;
+        $this->private = (bool)$private;
     }
 
     /**
      * Gets uploaded at
-     * @return datetime
+     *
+     * @return \DateTime
      */
     public function getUploadedAt()
     {
-        return $this->uploaded_at;
+        return $this->uploadedAt;
     }
 
     /**
      * Sets uploaded at
-     * @param datetime $uploaded_at
+     *
+     * @param \DateTime $uploadedAt
      */
-    public function setUploadedAt($uploaded_at)
+    public function setUploadedAt($uploadedAt)
     {
-        $this->uploaded_at = $uploaded_at;
+        $this->uploadedAt = $uploadedAt;
     }
 
     /**
      * Gets taken at
+     *
      * @return \DateTime
      */
     public function getTakenAt()
     {
-        return $this->taken_at;
+        return $this->takenAt;
     }
 
     /**
      * Sets taken at
-     * @param \DateTime $taken_at
+     *
+     * @param \DateTime $takenAt
      */
-    public function setTakenAt($taken_at)
+    public function setTakenAt($takenAt)
     {
-        $this->taken_at = $taken_at;
-        $this->year = $taken_at->format('Y');
-        $this->month = $taken_at->format('m');
+        $this->takenAt = $takenAt;
+        $this->year    = $takenAt->format('Y');
+        $this->month   = $takenAt->format('m');
     }
 
     /**
      * Sets related album
+     *
      * @param Album $album
      */
     public function setAlbum(Album $album)
     {
-        $this->album = $album;
+        $this->album    = $album;
         $this->album_id = $album->getId();
     }
 
     /**
      * Gets related Album
+     *
      * @return Album
      */
     public function getAlbum()
@@ -263,6 +281,7 @@ class Image
 
     /**
      * Sets related Tags
+     *
      * @param array $tags
      */
     public function setTags($tags)
@@ -272,6 +291,7 @@ class Image
 
     /**
      * Adds a Tag into collection
+     *
      * @param Tag $tag
      */
     public function addTag(Tag $tag)
@@ -281,6 +301,7 @@ class Image
 
     /**
      * Gets related Tags
+     *
      * @return array
      */
     public function getTags()
@@ -290,6 +311,7 @@ class Image
 
     /**
      * Gets uploader User
+     *
      * @return User
      */
     public function getUser()
@@ -299,6 +321,7 @@ class Image
 
     /**
      * Sets uploader User
+     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -314,11 +337,11 @@ class Image
     /**
      * Set exif data
      *
-     * @param array $exif_data
+     * @param array $data
      */
     public function setExifData(array $data)
     {
-        $this->exif_data = $data;
+        $this->exifData = $data;
     }
 
     /**
@@ -328,40 +351,32 @@ class Image
      */
     public function getExifData()
     {
-        return $this->exif_data;
+        return $this->exifData;
     }
 
     /**
-     * Set Iptc data
+     * Gets keywords
      *
-     * @param array $Iptc_data
+     * @return string
      */
-    public function setIptcData(array $data)
-    {
-        $this->iptc_data = $data;
-    }
-
-    /**
-     * Get Iptc data
-     *
-     * @return array
-     */
-    public function getIptcData()
-    {
-        return $this->iptc_data;
-    }
-
     public function getKeywords()
     {
-        $result = array();
-        foreach ($this->tags as $tag) {
-            $result[] = (string)$tag;
-        }
-        sort($result);
-
-        return implode(', ', $result);
+        return implode(
+            ', ',
+            array_map(
+                function (Tag $tag) {
+                    return $tag->__toString();
+                },
+                $this->tags->toArray()
+            )
+        );
     }
 
+    /**
+     * Gets keywords
+     *
+     * @return string
+     */
     public function getKeywordsRaw()
     {
         return $this->keywords;
@@ -376,35 +391,19 @@ class Image
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param File $file
      */
-    public function setFile(UploadedFile $file)
+    public function setFile(File $file)
     {
         $this->file = $file;
-        $this->name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $this->name = pathinfo($file->getFilename(), PATHINFO_FILENAME);
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @return File
      */
     public function getFile()
     {
         return $this->file;
-    }
-
-    /**
-     * @param int $album_id
-     */
-    public function setAlbumId($album_id)
-    {
-        $this->album_id = $album_id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAlbumId()
-    {
-        return $this->album_id;
     }
 }

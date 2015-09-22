@@ -11,7 +11,7 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
-            ->add('is_private', 'checkbox', array('required' => false))
+            ->add('private', 'checkbox', array('required' => false))
             ->add(
                 'file',
                 'file',
@@ -22,7 +22,7 @@ class ImageType extends AbstractType
                 'text',
                 array(
                     'required' => false,
-                    'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')
+                    'attr'     => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')
                 )
             );
     }
@@ -34,6 +34,7 @@ class ImageType extends AbstractType
 
     /**
      * Sets keywords autocomplete source url
+     *
      * @param string $url
      */
     public function setKeywordsAutocompleteSource($url)

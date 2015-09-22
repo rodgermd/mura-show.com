@@ -2,7 +2,7 @@
 <form id="images-upload-form" action="{{ path('album.upload', { slug: album.slug}) }}"
       method="post" {{ form_enctype(form) }}>
     {{ form_errors(form) }}
-    {{ form_row(form.is_private) }}
+    {{ form_row(form.private) }}
     {{ form_row(form.keywords) }}
 
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
