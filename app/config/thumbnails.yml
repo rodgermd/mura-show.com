@@ -1,41 +1,58 @@
+services:
+  liip_imagine.data.loader.stream.images:
+     class: "%liip_imagine.binary.loader.stream.class%"
+     arguments:
+       - 'gaufrette://images_fs/'
+     tags:
+       - { name: 'liip_imagine.binary.loader', loader: 'stream.images' }
+
+knp_gaufrette:
+  stream_wrapper: ~
+  adapters:
+    images:
+      local:
+        directory: %kernel.root_dir%/../uploads/images
+  filesystems:
+    images_fs:
+      adapter: images
+
 vich_uploader:
   db_driver: orm
-  storage: file_system
+  storage: gaufrette
   mappings:
     image:
       uri_prefix: /
       directory_namer: namer.directory
       namer: rodgermd.vichuploader.namer_md5
-      upload_destination: %kernel.root_dir%/../uploads/images
+      upload_destination: images_fs
       inject_on_load: true
 
 liip_imagine:
   driver: imagick
-  loaders:
-    default:
-        filesystem:
-            data_root: %kernel.root_dir%/../uploads/images/
-
-  data_loader: default
-
   filter_sets:
     word_thumbnail:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [50, 50], mode: outbound }
 
     edit:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [800, 2000], mode: inset, quality: 100, format: png }
     list:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [75, 75], mode: outbound, quality: 70, format: jpg }
     list.small:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [50, 50], mode: inset, quality: 70, format: jpg }
     list.medium:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [200, 200], mode: outbound, quality: 70, format: jpg }
     resource:
+      data_loader: stream.images
       filters:
         thumbnail: { size: [800, 600], mode: inset, format: png }
 

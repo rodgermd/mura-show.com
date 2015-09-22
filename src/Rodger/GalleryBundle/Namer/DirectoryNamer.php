@@ -28,6 +28,6 @@ class DirectoryNamer implements DirectoryNamerInterface
     public function directoryName($object, PropertyMapping $mapping)
     {
         /** @var Image $object */
-        return $mapping->getUploadDestination() . '/' . $object->getAlbum()->getId();
+        return $object->getAlbum()->getId();
     }
 }
