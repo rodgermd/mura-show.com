@@ -1,17 +1,22 @@
 vich_uploader:
   db_driver: orm
-  storage: vich_uploader.storage.file_system
+  storage: file_system
   mappings:
     image:
       uri_prefix: /
       directory_namer: namer.directory
       namer: rodgermd.vichuploader.namer_md5
       upload_destination: %kernel.root_dir%/../uploads/images
+      inject_on_load: true
 
 liip_imagine:
   driver: imagick
-  data_root: %kernel.root_dir%/../uploads/images/
-  cache_clearer: false
+  loaders:
+    default:
+        filesystem:
+            data_root: %kernel.root_dir%/../uploads/images/
+
+  data_loader: default
 
   filter_sets:
     word_thumbnail:

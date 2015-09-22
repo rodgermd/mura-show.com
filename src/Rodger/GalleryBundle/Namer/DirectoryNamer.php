@@ -10,6 +10,7 @@
 namespace Rodger\GalleryBundle\Namer;
 
 
+use Vich\UploaderBundle\Mapping\PropertyMapping;
 use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
 
 class DirectoryNamer implements DirectoryNamerInterface
@@ -18,13 +19,13 @@ class DirectoryNamer implements DirectoryNamerInterface
     /**
      * Creates a directory name for the file being uploaded.
      *
-     * @param object $obj The object the upload is attached to.
-     * @param string $field The name of the uploadable field to generate a name for.
-     * @param string $uploadDir The upload directory set in config
+     * @param object          $object
+     * @param PropertyMapping $mapping
+     *
      * @return string The directory name.
      */
-    public function directoryName($obj, $field, $uploadDir)
+    public function directoryName($object, PropertyMapping $mapping)
     {
-        return $uploadDir . '/' . $obj->getAlbumId();
+        return $mapping->getUploadDestination() . '/' . $object->getAlbumId();
     }
 }
