@@ -1,0 +1,4 @@
+parameters:
+    database_name:     mura_show
+    database_user:     root
+    database_password:
