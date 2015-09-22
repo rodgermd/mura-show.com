@@ -14,14 +14,14 @@ role :app,        domain, :primary => true       # This may be the same as your 
 role :db,         domain, :primary => true       # This may be the same as your `Web` server
 
 set :keep_releases,   10
-set :shared_children, [app_path + "/logs", app_path + "/cache/sessions", app_path + "uploads", web_path + "/media"]
+set :shared_children, ["uploads", web_path + "/media"]
 set :shared_files,    ["app/config/parameters.private.yml"]
 set :use_composer,    true
 set :update_vendors,  false
 set :use_sudo,        true
 set :user,            "rodger"
 
-set :writable_dirs,     ["app/cache", "app/logs", "web", "web/media"]
+set :writable_dirs,     ["app/cache", "app/logs", "web", "web/media", "uploads"]
 set :webserver_user,    "www-data"
 set :permission_method, :acl
 

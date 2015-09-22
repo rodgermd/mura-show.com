@@ -4,7 +4,7 @@ require_once __DIR__.'/../app/bootstrap.php.cache';
 require_once __DIR__.'/../app/AppKernel.php';
 require_once __DIR__.'/../app/AppCache.php';
 
-umask(0000);
+umask(0002);
 
 use Symfony\Component\HttpFoundation\Request;
 
