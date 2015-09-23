@@ -1,4 +1,6 @@
 parameters:
+    database_driver:   pdo_mysql
+    database_host:     localhost
     database_name:     mura_show
     database_user:     root
     database_password:

@@ -21,6 +21,8 @@ set :update_vendors,  false
 set :use_sudo,        true
 set :user,            "rodger"
 
+
+set :app_config_file,  "parameters.private.yml"
 set :writable_dirs,     ["app/cache", "app/logs", "web", "web/media", "uploads"]
 set :webserver_user,    "www-data"
 set :permission_method, :acl
