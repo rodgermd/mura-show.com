@@ -37,3 +37,9 @@ _proxy:
 
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+liip_imagine_filter:
+  path: "/media/cache/resolve/{filter}/{path}"
+  methods: [GET]
+  defaults: { _controller: %liip_imagine.controller.filter_action% }
+  requirements: { path: .+, filter: "[\w\d\.]+" }
