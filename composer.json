@@ -11,7 +11,7 @@
     "symfony/assetic-bundle"               : "@stable",
     "symfony/swiftmailer-bundle"           : "@stable",
     "symfony/monolog-bundle"               : "@stable",
-    "sensio/distribution-bundle"           : "@stable",
+    "sensio/distribution-bundle"           : "~4.0",
     "sensio/framework-extra-bundle"        : "@stable",
     "sensio/generator-bundle"              : "@stable",
     "incenteev/composer-parameter-handler" : "@stable",
@@ -42,7 +42,7 @@
   "config"            : {
     "bin-dir" : "bin"
   },
-  "minimum-stability" : "dev",
+  "minimum-stability" : "stable",
   "extra"             : {
     "symfony-app-dir"        : "app",
     "symfony-web-dir"        : "web",
