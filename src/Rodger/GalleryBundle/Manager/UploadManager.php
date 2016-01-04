@@ -42,12 +42,12 @@ class UploadManager
 
     public function __construct(Container $container)
     {
-        $this->em = $container->get('doctrine')->getManager();
-        $this->router = $container->get('router');
+        $this->em            = $container->get('doctrine')->getManager();
+        $this->router        = $container->get('router');
         $this->vich_uploader = $container->get('vich_uploader.templating.helper.uploader_helper');
-        $this->liip_helper = $container->get('liip_imagine.templating.helper');
-        $this->storage = $container->get('vich_uploader.storage.file_system');
-        $this->container = $container;
+        $this->liip_helper   = $container->get('liip_imagine.templating.helper');
+        $this->storage       = $container->get('vich_uploader.storage.file_system');
+        $this->container     = $container;
     }
 
     public function save(Image $image)
@@ -67,18 +67,18 @@ class UploadManager
             'files' =>
                 array(
                     array(
-                        'name' => $uploaded_file->getFilename(),
-                        'size' => filesize($filepath),
-                        'url' => $this->router->generate(
+                        'name'          => $uploaded_file->getFilename(),
+                        'size'          => filesize($filepath),
+                        'url'           => $this->router->generate(
                             'image.show',
                             array('album' => $image->getAlbum()->getSlug(), 'id' => $image->getId())
                         ),
-                        'thumbnail_url' => $this->liip_helper->filter(
+                        'thumbnailUrl' => $this->liip_helper->filter(
                             $this->vich_uploader->asset($image, 'file'),
                             'list'
                         ),
-                        'delete_url' => $this->router->generate('image.delete', array('id' => $image->getId())),
-                        'delete_type' => 'POST'
+                        'deleteUrl'    => $this->router->generate('image.delete', array('id' => $image->getId())),
+                        'deleteType'   => 'POST'
                     )
                 )
         );
@@ -93,7 +93,7 @@ class UploadManager
         if ($image->getKeywordsRaw()) {
             $keywords = explode(',', $image->getKeywordsRaw());
             $keywords = array_filter(array_map('trim', $keywords));
-            $tags = array();
+            $tags     = array();
             foreach ($keywords as $keyword) {
                 $tags[] = $tags_repository->getOrCreate($keyword);
             }
@@ -105,7 +105,7 @@ class UploadManager
 
     protected function update_exif(Image $image)
     {
-        $exif = new ExifDataParser(@read_exif_data($this->getFilepath($image)));
+        $exif        = new ExifDataParser(@read_exif_data($this->getFilepath($image)));
         $exif_parsed = $exif->getParsed();
         $image->setExifData($exif_parsed);
 
@@ -123,32 +123,40 @@ class UploadManager
 
     /**
      * Rotates image
+     *
      * @param Image $image
-     * @param $degrees
+     * @param       $degrees
      */
     public function rotate_image(Image $image, $degrees)
     {
         $image_absolute = $this->getFilepath($image);
-        $imagine = new Imagine();
+        $imagine        = new Imagine();
         $imagine->open($image_absolute)->rotate($degrees)->save($image_absolute);
         $this->drop_thumbnails($image);
     }
 
     /**
      * Gets filepath
+     *
      * @param Image $image
-     * @return string
+     *
+     * @return string|null
      */
     protected function getFilepath(Image $image)
     {
-        return $this->storage->resolvePath($image, 'file');
+        $path = $this->storage->resolvePath($image, 'file');
+
+        return $path ? 'gaufrette://' . $path : null;
     }
 
+    /**
+     * @param Image $image
+     */
     protected function drop_thumbnails(Image $image)
     {
         $finder = new Finder();
         foreach ($finder->name($image->getFilename())->in($this->container->getParameter('web_root')) as $file) {
-            /** @var SplFileInfo $file */
+            /** @var \SplFileInfo $file */
             unlink($file->getPathname());
         }
     }

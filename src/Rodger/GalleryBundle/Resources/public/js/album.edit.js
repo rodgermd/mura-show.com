@@ -6,7 +6,9 @@ $.album_edit = function () {
         init: function () {
             $('#images-list', $holder).use_select_all();
             $images_upload_form.fileupload({
-                url: $images_upload_form.attr('action')
+                url: $images_upload_form.attr('action'),
+                singleFileUploads: true,
+                autoUpload: false
             });
         }
     };

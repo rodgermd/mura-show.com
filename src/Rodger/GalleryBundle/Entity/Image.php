@@ -400,6 +400,21 @@ class Image
     }
 
     /**
+     * Sets filename
+     *
+     * @param string $filename
+     *
+     * @return $this
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+
+    }
+
+    /**
      * @return File
      */
     public function getFile()
