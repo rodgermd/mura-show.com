@@ -25,9 +25,9 @@ class AppKernel extends Kernel
             new Rodger\GalleryBundle\RodgerGalleryBundle(),
             new Rodgermd\SfToolsBundle\RodgermdSfToolsBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
-            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

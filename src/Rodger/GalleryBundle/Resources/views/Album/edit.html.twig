@@ -29,33 +29,28 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css">
-    <link rel="stylesheet" href="/bundles/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+    <link rel="stylesheet" href="/jquery-file-upload/css/jquery.fileupload.css">
     <link rel="stylesheet" href="/jquery-file-upload/css/jquery.fileupload-ui.css">
-    <noscript>
-        <link rel="stylesheet" href="/bundles/bootstrap/css/jquery.fileupload-ui-noscript.css">
-    </noscript>
     <link rel="stylesheet" type="text/css" href="/bundles/rodgergallery/css/album.edit.css">
 {% endblock stylesheets %}
 
 {% block javascripts %}
     {{ parent() }}
-    {#<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
     <script src="/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
     <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
-    <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
+    <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
     <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-    <script src="/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
     <script src="/jquery-file-upload/js/jquery.fileupload.js"></script>
-    <script>window.testBasicWidget = $.blueimp.fileupload;</script>
-    <script src="/jquery-file-upload/js/jquery.fileupload-fp.js"></script>
+    <script src="/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+    <script src="/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+    <script src="/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+    <script src="/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+    <script src="/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
     <script src="/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
-    <script>window.testUIWidget = $.blueimp.fileupload;</script>
-    <script src="http://code.jquery.com/qunit/qunit-git.js"></scripst>
-        <script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
-        <
-        script
-        type = "text/javascript"
-        src = "/js/use_select_all.js" ></script>
+    <script type="text/javascript" src="/bundles/rodgergallery/js/autocomplete.keywords.js"></script>
+    <script type="text/javascript" src="/js/use_select_all.js"></script>
     <script type="text/javascript" src="/bundles/rodgergallery/js/album.edit.js"></script>
 {% endblock javascripts %}

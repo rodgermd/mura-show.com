@@ -14,16 +14,16 @@ security:
           id: fos_user.user_manager
 
     firewalls:
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+      dev:
+        pattern:  ^/(_(profiler|wdt)|css|images|js)/
+        security: false
 
-        main:
-            pattern: ^/
-            form_login:
-                provider: fos_userbundle
-            logout:       true
-            anonymous:    true
+      main:
+          pattern: ^/
+          form_login:
+              provider: fos_userbundle
+          logout:       true
+          anonymous:    true
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

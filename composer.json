@@ -1,8 +1,24 @@
 {
   "name"              : "symfony/framework-standard-edition",
   "description"       : "The \"Symfony Standard Edition\" distribution",
+  "autoload"          : {
+    "psr-4" : {
+      "" : "src/"
+    }
+  },
+  "classmap"          : [
+    "app/AppKernel.php",
+    "app/AppCache.php"
+  ],
   "require"           : {
-    "php"                                  : ">=5.3.3",
+    "php"                                  : ">=5.3.9",
+    "ext-pdo_sqlite"                       : "*",
+    "erusev/parsedown"                     : "~1.5",
+    "ezyang/htmlpurifier"                  : "~4.7",
+    "ircmaxell/password-compat"            : "~1.0",
+    "leafo/scssphp"                        : "~0.1.5",
+    "patchwork/jsqueeze"                   : "~1.0",
+    "sensio/distribution-bundle"           : "~4.0",
     "symfony/symfony"                      : "@stable",
     "doctrine/orm"                         : "@stable",
     "doctrine/doctrine-bundle"             : "@stable",
@@ -11,7 +27,6 @@
     "symfony/assetic-bundle"               : "@stable",
     "symfony/swiftmailer-bundle"           : "@stable",
     "symfony/monolog-bundle"               : "@stable",
-    "sensio/distribution-bundle"           : "~4.0",
     "sensio/framework-extra-bundle"        : "@stable",
     "sensio/generator-bundle"              : "@stable",
     "incenteev/composer-parameter-handler" : "@stable",
@@ -23,41 +38,41 @@
     "rodgermd/sftools-bundle"              : "@stable",
     "twitter/bootstrap"                    : "@stable"
   },
+  "require-dev"       : {
+    "sensio/generator-bundle" : "~3.0"
+  },
   "scripts"           : {
     "post-install-cmd" : [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
     "post-update-cmd"  : [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ]
   },
   "config"            : {
-    "bin-dir" : "bin"
+    "bin-dir"  : "bin",
+    "platform" : {
+      "php" : "5.3.9"
+    }
   },
   "minimum-stability" : "stable",
   "extra"             : {
     "symfony-app-dir"        : "app",
     "symfony-web-dir"        : "web",
-    "symfony-assets-install" : "symlink",
+    "symfony-assets-install" : "relative",
     "incenteev-parameters"   : {
       "file"      : "app/config/parameters.private.yml",
       "dist-file" : "app/config/parameters.private.dist.yml"
-    }
-  },
-  "branch-alias"      : {
-    "dev-master" : "2.7-dev"
-  },
-  "autoload"          : {
-    "psr-0" : {
-      "" : "src/"
     }
   }
 }

@@ -9,7 +9,7 @@ $.fn.autocomplete_keywords = function () {
 
     $field
         // don't navigate away from the field on tab when selecting an item
-        .bind("keydown", function (event) {
+        .on("keydown", function (event) {
             if (event.keyCode === $.ui.keyCode.TAB &&
                 $(this).data("autocomplete").menu.active) {
                 event.preventDefault();

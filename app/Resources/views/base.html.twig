@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>{% block title %}MuraShow.com{% endblock %}</title>
     {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="/css/default.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="/css/default.css">
     {% endblock %}
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-  </head>
-  <body>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body>
 
-    {% if form is defined %}
+{% if form is defined %}
     {% form_theme form "::form_div_theme.html.twig" %}
-    {% endif %}
+{% endif %}
 
-    {% block header %}
-      <div id="header">
+{% block header %}
+    <div id="header">
         <a href="{{ path('homepage') }}" title="{{ 'go to start page' | trans }}" id="sitelogo">murashow.com</a>
         {% block subsite_name %}{% endblock subsite_name %}
         {% block primary_menu %}{% endblock primary_menu %}
         {% block secondary_menu %}{% endblock secondary_menu %}
         <div id="user-data">
-          {% include "RodgerUserBundle:Default:user.login.html.twig" %}
+            {% include "RodgerUserBundle:Default:user.login.html.twig" %}
         </div>
-      </div>
-    {% endblock header %}
-    <div id="content-wrapper">
-    {% block body %}{% endblock %}
     </div>
-    {% block javascripts %}
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    {% endblock %}
-    {% include "::google_analytics.html.twig" %}
-  </body>
+{% endblock header %}
+<div id="content-wrapper">
+    {% block body %}{% endblock %}
+</div>
+{% block javascripts %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+{% include "::google_analytics.html.twig" %}
+</body>
 </html>

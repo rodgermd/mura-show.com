@@ -12,4 +12,5 @@ parameters:
     mailer_password:   ~
 
     locale:            en
+    app_locales: en
     secret:            ThisTokenIsNotSoSecretChangeIt
