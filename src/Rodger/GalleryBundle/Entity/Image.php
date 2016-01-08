@@ -90,13 +90,7 @@ class Image
      * @ORM\ManyToOne(targetEntity="Album", inversedBy="images")
      * @ORM\JoinColumn(name="album_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $album;
-
-    /**
-     * @var integer $album_id
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $album_id;
+    protected $album;
 
     /**
      * Related Tags
@@ -151,6 +145,9 @@ class Image
      */
     protected $keywords;
 
+    /**
+     * Image constructor.
+     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -262,11 +259,14 @@ class Image
      * Sets related album
      *
      * @param Album $album
+     *
+     * @return $this
      */
     public function setAlbum(Album $album)
     {
-        $this->album    = $album;
-        $this->album_id = $album->getId();
+        $this->album = $album;
+
+        return $this;
     }
 
     /**
