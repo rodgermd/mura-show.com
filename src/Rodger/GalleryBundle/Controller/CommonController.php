@@ -23,9 +23,9 @@ class CommonController extends Controller
 
     public function preExecute()
     {
-        $token = $this->get('security.context')->getToken();
-        $this->user = ($token && is_object($token->getUser())) ? $token->getUser() : null;
-        $this->em = $this->getDoctrine()->getManager();
+        $token         = $this->get('security.token_storage')->getToken();
+        $this->user    = ($token && is_object($token->getUser())) ? $token->getUser() : null;
+        $this->em      = $this->getDoctrine()->getManager();
         $this->session = $this->get('session');
     }
 
@@ -40,7 +40,7 @@ class CommonController extends Controller
         }
 
         $keywords = $this->em->getRepository('RodgerGalleryBundle:Tag')->search($search_string);
-        $result = array();
+        $result   = array();
         foreach ($keywords as $keyword) {
             $result[] = array('label' => (string)$keyword);
         }
@@ -60,6 +60,7 @@ class CommonController extends Controller
 
     /**
      * Sets filter tags
+     *
      * @param array $tags
      */
     public function set_filter_tags(array $tags)
@@ -69,6 +70,7 @@ class CommonController extends Controller
 
     /**
      * Gets filter tags
+     *
      * @return array
      */
     public function get_filter_tags()
@@ -96,6 +98,7 @@ class CommonController extends Controller
 
     /**
      * Gets filter year
+     *
      * @return type
      */
     public function get_selected_year()
