@@ -2,6 +2,7 @@
 /app/logs
 /app/bootstrap.php.cache
 /web/bundles
+/backups
 /.idea
 /uploads/images/
 /web/media
