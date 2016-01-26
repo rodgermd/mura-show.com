@@ -103,9 +103,16 @@ class UploadManager
         $this->em->persist($image);
     }
 
+    /**
+     * @param Image $image
+     */
     protected function update_exif(Image $image)
     {
-        $exif        = new ExifDataParser(@read_exif_data($this->getFilepath($image)));
+        $tmpFilename = tempnam(sys_get_temp_dir(), 'upload_image_');
+        // Fixes error reading gaufrette streaf for read_exif_data
+        file_put_contents($tmpFilename, file_get_contents($this->getFilepath($image)));
+        $exif        = new ExifDataParser(@read_exif_data($tmpFilename));
+        unlink($tmpFilename);
         $exif_parsed = $exif->getParsed();
         $image->setExifData($exif_parsed);
 
