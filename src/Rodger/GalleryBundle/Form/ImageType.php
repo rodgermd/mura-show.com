@@ -1,7 +1,10 @@
 <?php
 namespace Rodger\GalleryBundle\Form;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImageType extends AbstractType
@@ -11,25 +14,9 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
-            ->add('private', 'checkbox', array('required' => false))
-            ->add(
-                'file',
-                'file',
-                array('required' => false, 'data_class' => null, 'attr' => array('multiple' => 'multiple'))
-            )
-            ->add(
-                'keywords',
-                'text',
-                array(
-                    'required' => false,
-                    'attr'     => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')
-                )
-            );
-    }
-
-    public function getName()
-    {
-        return 'image';
+            ->add('private', CheckboxType::class, array('required' => false))
+            ->add('file', FileType::class, array('required' => false, 'data_class' => null, 'attr' => array('multiple' => 'multiple')))
+            ->add('keywords', 'text', array('required' => false, 'attr' => array('source' => $this->keywords_autocomplete_source, 'class' => 'keywords autocomplete')));
     }
 
     /**
@@ -42,13 +29,12 @@ class ImageType extends AbstractType
         $this->keywords_autocomplete_source = $url;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'csrf_protection' => false,
-            )
-        );
+        $resolver->setDefaults(array('csrf_protection' => false,));
     }
 }
 
