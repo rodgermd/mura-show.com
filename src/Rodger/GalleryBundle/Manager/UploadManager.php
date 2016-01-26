@@ -111,7 +111,7 @@ class UploadManager
         $tmpFilename = tempnam(sys_get_temp_dir(), 'upload_image_');
         // Fixes error reading gaufrette streaf for read_exif_data
         file_put_contents($tmpFilename, file_get_contents($this->getFilepath($image)));
-        $exif        = new ExifDataParser(@read_exif_data($tmpFilename));
+        $exif        = new ExifDataParser(@read_exif_data($tmpFilename) ?: array());
         unlink($tmpFilename);
         $exif_parsed = $exif->getParsed();
         $image->setExifData($exif_parsed);
