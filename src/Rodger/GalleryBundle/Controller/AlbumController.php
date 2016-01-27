@@ -93,7 +93,7 @@ class AlbumController extends CommonController
                 if ($album->getKeywords()) {
                     $keywords = explode(',', $album->getKeywords());
                     $keywords = array_filter(array_map('trim', $keywords));
-                    $tags = array();
+                    $tags     = array();
                     foreach ($keywords as $keyword) {
                         $tags[] = $tags_repository->getOrCreate($keyword);
                     }
@@ -114,6 +114,7 @@ class AlbumController extends CommonController
 
     /**
      * Renders images list
+     *
      * @param integer $page
      * @Route("/album/{slug}/list", name="admin.images.list", requirements={"page"="\d+"}, defaults={"page"=1})
      * @Template("RodgerGalleryBundle:Album:list.html.twig")
@@ -125,11 +126,11 @@ class AlbumController extends CommonController
         $this->list_common_procedures($album);
 
         return array(
-            'form' => $this->bulk_form->createView(),
+            'form'       => $this->bulk_form->createView(),
             'pagination' => $this->pagination,
-            'form_name' => $this->bulk_form->getName(),
-            'album' => $album,
-            'nocache' => uniqid()
+            'form_name'  => $this->bulk_form->getName(),
+            'album'      => $album,
+            'nocache'    => uniqid()
 
         );
     }
@@ -169,10 +170,10 @@ class AlbumController extends CommonController
             );
         } else {
             return array(
-                'form' => $this->bulk_form->createView(),
+                'form'       => $this->bulk_form->createView(),
                 'pagination' => $this->pagination,
-                'form_name' => $this->bulk_form->getName(),
-                'album' => $album,
+                'form_name'  => $this->bulk_form->getName(),
+                'album'      => $album,
             );
         }
     }
@@ -206,14 +207,16 @@ class AlbumController extends CommonController
             $this->em,
             $this->container
         );
-        $this->bulk_form = $this->createForm(new Forms\BulkImages(), $this->validating_object);
+        $this->bulk_form         = $this->createForm(new Forms\BulkImages(), $this->validating_object);
     }
 
     /**
      * @Route("/{slug}/upload", name="album.upload")
      * @Template
      * @Secure(roles="ROLE_USER")
+     *
      * @param Album $album
+     *
      * @throws AccessDeniedException
      * @return array|\Symfony\Component\HttpFoundation\Response
      */
