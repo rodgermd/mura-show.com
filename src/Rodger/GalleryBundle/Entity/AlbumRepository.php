@@ -15,30 +15,40 @@ use Doctrine\ORM\EntityRepository,
 class AlbumRepository extends EntityRepository
 {
     /**
-     * Prepares QUeryBuilder to show latest albums
+     * Prepares QueryBuilder to show latest albums
+     *
      * @param mixed $user
      * @param array $filters
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getLatestQueryBuilder($user, array $filters)
     {
         $qb = $this->createQueryBuilder('a');
-        $qb->innerJoin('a.images', 'i');
-        if (!$user instanceof \FOS\UserBundle\Model\UserInterface) {
-            $qb->where('a.private = false AND i.private = false');
+        if (!$user instanceof UserInterface) {
+            $qb->where('a.private = false');
         }
         if (is_numeric($filters['year'])) {
-            $qb->andWhere('i.year = :year')->setParameter('year', $filters['year']);
+            $existsQb = $this->_em->createQueryBuilder()
+                ->select('i2.id')
+                ->from('RodgerGalleryBundle:Image', 'i2')
+                ->where('i2.album = a.id AND i2.year = :year')
+                ->setParameter('year', $filters['year']);
+            $qb->andWhere($qb->expr()->exists($existsQb->getDQL()));
+            $qb->addSelect('(SELECT MAX(i3.takenAt) FROM RodgerGalleryBundle:Image i3 WHERE i3.album = a.id) sort_date');
+            $qb->setParameter('year', $filters['year']);
+        } else {
+            $qb->addSelect('(SELECT MAX(i3.takenAt) FROM RodgerGalleryBundle:Image i3 WHERE i3.album = a.id) sort_date');
         }
+
         if (count($filters['tags'])) {
             $album_ids = $this->getAlbumsIdUsingTags($user, $filters['tags'], $filters['year']);
             $qb->andWhere($qb->expr()->in('a.id', $album_ids + array(0)));
         }
 
-        $qb->addSelect('GREATEST(a.createdAt, i.uploadedAt) sort_date')
-            ->addSelect(
-                '(SELECT COUNT(i2.id) from RodgerGalleryBundle:Image i2 WHERE i2.album = a.id) album_images_count'
-            )
+
+        $qb
+            ->addSelect('(SELECT COUNT(i4.id) from RodgerGalleryBundle:Image i4 WHERE i4.album = a.id) album_images_count')
             ->orderBy('sort_date', 'desc');
 
         return $qb;
@@ -46,9 +56,11 @@ class AlbumRepository extends EntityRepository
 
     /**
      * Gets id of Albums matching filters
-     * @param mixed $user
-     * @param array $tags
+     *
+     * @param mixed   $user
+     * @param array   $tags
      * @param integer $year
+     *
      * @return array
      */
     public function getAlbumsIdUsingTags($user, array $tags = array(), $year = null)

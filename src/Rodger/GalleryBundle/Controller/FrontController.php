@@ -18,7 +18,6 @@ class FrontController extends CommonController
     /**
      * @Route("/", name="homepage")
      * @Route("/albums", name="albums")
-     * @Template()
      */
     public function albumsAction()
     {
@@ -51,7 +50,7 @@ class FrontController extends CommonController
 
         }
 
-        return array('albums' => $albums, 'images' => $images_holder, 'filters' => $filters);
+        return $this->render("RodgerGalleryBundle:Front:albums.html.twig", array('albums' => $albums, 'images' => $images_holder, 'filters' => $filters));
     }
 
     /**
