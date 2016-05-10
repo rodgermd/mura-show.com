@@ -11,7 +11,7 @@ knp_gaufrette:
   adapters:
     images:
       local:
-        directory: %kernel.root_dir%/../uploads/images
+        directory: "%kernel.root_dir%/../uploads/images"
   filesystems:
     images_fs:
       adapter: images

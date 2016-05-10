@@ -25,7 +25,9 @@ class ImageController extends CommonController
      * @Route("/edit/{id}", name="image.edit", requirements={"id"="\d+"})
      * @Secure(roles="ROLE_USER")
      * @Template
+     *
      * @param Image $image
+     *
      * @return array
      */
     public function editAction(Image $image)
@@ -42,6 +44,7 @@ class ImageController extends CommonController
      * @Secure(roles="ROLE_USER")
      * @Template("RodgerGalleryBundle:Image:edit.html.twig")
      * @param Image $image
+     *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateAction(Image $image)
@@ -56,7 +59,7 @@ class ImageController extends CommonController
 
         if ($form->isValid()) {
             $keywords = array_filter(array_map('trim', explode(",", $image->getKeywords())));
-            $tags = array();
+            $tags     = array();
             if (count($keywords)) {
                 foreach ($keywords as $keyword) {
                     $tags [] = $this->em->getRepository('RodgerGalleryBundle:Tag')->getOrCreate($keyword);
@@ -92,7 +95,7 @@ class ImageController extends CommonController
     {
         /** @var FileSystemStorage $storage */
         $storage = $this->get('vich_uploader.storage.file_system');
-        $file = $storage->resolvePath($image, 'file');
+        $file    = 'gaufrette://' . $storage->resolvePath($image, 'file');
 
 
         $response = new Response(file_get_contents($file));
@@ -105,6 +108,7 @@ class ImageController extends CommonController
      * @Route("/{id}/delete", name="image.delete", requirements={"id"="\d+"})
      * @Secure(roles="ROLE_USER")
      * @param Image $image
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
@@ -114,7 +118,7 @@ class ImageController extends CommonController
             throw new AccessDeniedException();
         }
         $redirect = $this->generateUrl('album.show', array('slug' => $image->getAlbum()->getSlug()));
-        $em = $this->getDoctrine()->getManager();
+        $em       = $this->getDoctrine()->getManager();
         $em->remove($image);
         $em->flush();
 
